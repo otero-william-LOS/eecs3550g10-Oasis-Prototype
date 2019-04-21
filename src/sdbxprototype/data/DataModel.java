@@ -1,5 +1,9 @@
 package sdbxprototype.data;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -28,4 +32,30 @@ public abstract class DataModel {
     private Date _LastModified;
     public Date getLastModified() {return _LastModified;}
     public void setLastModified(Date val) {_LastModified = val;}
+    
+    // SDBX LOS:
+    /**
+     * I want to provide additional get/set for all Date attributes,
+     * to help the development of the schedulers.
+     * 
+     * This is additional functionality, and not intended to replace
+     * the original UML class
+     * 
+     * This fix is based off of this stackoverflow answer,
+     * https://stackoverflow.com/a/40143687
+     */
+    
+    public static LocalDate localDateFromUtilDate(Date date){
+        Instant instant = date.toInstant();
+        ZoneId zid = ZoneId.systemDefault();
+        ZonedDateTime zdt = instant.atZone(zid);
+        return zdt.toLocalDate();
+    }
+    
+    public static Date utilDateFromLocalDate(LocalDate local){
+        ZoneId zid = ZoneId.systemDefault();
+        ZonedDateTime zdt = local.atStartOfDay(zid);
+        Instant instant = zdt.toInstant();
+        return Date.from(instant);
+    }
 }
