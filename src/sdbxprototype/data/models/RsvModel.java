@@ -1,14 +1,18 @@
-package sdbxprototype.data;
+package sdbxprototype.data.models;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Date;
+import sdbxprototype.data.RsvType;
+import static sdbxprototype.data.models.DataModel.localDateFromUtilDate;
+import static sdbxprototype.data.models.DataModel.utilDateFromLocalDate;
 
 /**
  *
  * @author los
  */
-public class RsvModel {
+public class RsvModel extends DataModel {
     
     //  Attributes
     
@@ -32,6 +36,10 @@ public class RsvModel {
     public Date getDateArrive() {return _DateArrive;}
     public void setDateArrive(Date dateArrive) {this._DateArrive = dateArrive;}
     
+    //  Additional DateArrive Get/Set Using LocalDate Conversion
+    public LocalDate getDateArriveAsLocalDate() {return localDateFromUtilDate(_DateArrive);}
+    public void setDateArriveFromLocalDate(LocalDate dateArrive) {this._DateArrive = utilDateFromLocalDate(dateArrive);}
+    
     //  DateDepart Attribute
     /*
         CSV Column; non-volatile
@@ -42,6 +50,10 @@ public class RsvModel {
     public Date getDateDepart() {return _DateDepart;}
     public void setDateDepart(Date dateDepart) {this._DateDepart = dateDepart;}
     
+    //  Additional DateDepart Get/Set Using LocalDate Conversion
+    public LocalDate getDateDepartAsLocalDate() {return localDateFromUtilDate(_DateDepart);}
+    public void setDateDepartFromLocalDate(LocalDate dateDepart) {this._DateDepart = utilDateFromLocalDate(dateDepart);}
+    
     //  DatePaid Attribute
     /*
         CSV Column; non-volatile
@@ -51,6 +63,10 @@ public class RsvModel {
     private Date _DatePaid;
     public Date getDatePaid() {return _DatePaid;}
     public void setDatePaid(Date datePaid) {this._DatePaid = datePaid;}
+    
+    //  Additional DatePaid Get/Set Using LocalDate Conversion
+    public LocalDate getDatePaidAsLocalDate() {return localDateFromUtilDate(_DatePaid);}
+    public void setDatePaidFromLocalDate(LocalDate datePaid) {this._DatePaid = utilDateFromLocalDate(datePaid);}
     
     //  RsvType Attribute
     /*
@@ -161,17 +177,7 @@ public class RsvModel {
     
     // SDBX: DevConstructor Only
     public RsvModel(int rsvID) {
-        this._RsvID = rsvID;
-        this._DateArrive = null;
-        this._DateDepart = null;
-        this._DatePaid = null;
-        this._RsvType = null;
-        this._Room = null;
-        this._Guest = null;
-        this._ListBllchrg = null;
-        this._IsNoShow = false;
-        this._IsPaid = false;
-        this._IsConcluded = false;
+        this(rsvID, null, null, null, null, null, null, null, false, false, false);
     }    
     
     @Override
@@ -197,7 +203,7 @@ public class RsvModel {
     public String toString() {
         SimpleDateFormat fm = new SimpleDateFormat("MM-dd-yyyy");
     
-        String info = "Model [ rsvID=" + Integer.toString(_RsvID);
+        String info = "Rsv [ rsvID=" + Integer.toString(_RsvID);
         
         if (_DateArrive != null)
             info += " | dateArrive=" + fm.format(_DateArrive);

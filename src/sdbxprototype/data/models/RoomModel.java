@@ -1,10 +1,10 @@
-package sdbxprototype.data;
+package sdbxprototype.data.models;
 
 /**
  *
  * @author los
  */
-public class RoomModel {
+public class RoomModel extends DataModel {
     
     // RoomID attribute
     /*

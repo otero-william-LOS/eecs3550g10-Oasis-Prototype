@@ -1,4 +1,4 @@
-package sdbxprototype.data;
+package sdbxprototype.data.models;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -43,6 +43,9 @@ public abstract class DataModel {
      * 
      * This fix is based off of this stackoverflow answer,
      * https://stackoverflow.com/a/40143687
+     *
+     * @param date
+     * @return localDate
      */
     
     public static LocalDate localDateFromUtilDate(Date date){

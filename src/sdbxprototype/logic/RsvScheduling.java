@@ -1,11 +1,13 @@
 
-package sdbxprototype.data;
+package sdbxprototype.logic;
 
+import sdbxprototype.data.drivers.RsvDriver;
+import sdbxprototype.data.models.RsvModel;
 import java.util.ArrayList;
 import java.util.Date;
 
 
-public class RsvScheduler {
+public class RsvScheduling {
     
     // receive a date and dte depart
     // send these to payment processing, 

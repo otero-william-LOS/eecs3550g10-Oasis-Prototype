@@ -11,10 +11,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import sdbxprototype.data.DevDatabase;
-import sdbxprototype.data.RoomDriver;
-import sdbxprototype.data.RoomModel;
-import sdbxprototype.data.RsvDriver;
-import sdbxprototype.data.RsvModel;
+import sdbxprototype.data.drivers.RoomDriver;
+import sdbxprototype.data.models.RoomModel;
+import sdbxprototype.data.drivers.RsvDriver;
+import sdbxprototype.data.models.RsvModel;
 
 /**
  *
@@ -195,6 +195,7 @@ public class SdbxGitRepo {
 //         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
 //</editor-fold>
 
+        //new rate driver test scripts
     }
     
 }

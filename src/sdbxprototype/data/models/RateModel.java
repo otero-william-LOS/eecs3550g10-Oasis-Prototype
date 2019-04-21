@@ -1,13 +1,14 @@
-package sdbxprototype.data;
+package sdbxprototype.data.models;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
  *
  * @author los
  */
-public class RateModel {
+public class RateModel extends DataModel {
     
     //  Attributes
     
@@ -20,6 +21,10 @@ public class RateModel {
     private Date _RateDate;
     public Date getRateDate() {return _RateDate;}
     public void setRateDate(Date rateDate) {this._RateDate = rateDate;}
+    
+    //  Additional RateDate Get/Set Using LocalDate Conversion
+    public LocalDate getRateDateAsLocalDate() {return localDateFromUtilDate(_RateDate);}
+    public void setRateDateFromLocalDate(LocalDate rateDate) {this._RateDate = utilDateFromLocalDate(rateDate);}
     
     //  BaseRate Attribute
     /*

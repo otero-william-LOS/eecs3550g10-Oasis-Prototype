@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sdbxprototype.data;
+package sdbxprototype.data.drivers;
 
+import sdbxprototype.data.models.RsvModel;
+import sdbxprototype.data.models.RoomModel;
 import java.util.List;
+import sdbxprototype.data.DevDatabase;
 
 /** RoomDriver
  * Refactored from original implementation

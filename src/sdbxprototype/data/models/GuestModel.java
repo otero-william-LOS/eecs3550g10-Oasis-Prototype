@@ -1,4 +1,4 @@
-package sdbxprototype.data;
+package sdbxprototype.data.models;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import java.util.List;
  *
  * @author los
  */
-public class GuestModel {
+public class GuestModel extends DataModel {
     
     //  Attributes
     
@@ -109,7 +109,7 @@ public class GuestModel {
         info += " | email=" + _Email;
         info += " | ccInfo=" + _CCInfo;
         if (_ListRsv != null){
-            info += " | ListRsv.size=";
+            info += " | ListRsv.size=" + Integer.toString(_ListRsv.size());
         }
         info += " ]";
         return  info;

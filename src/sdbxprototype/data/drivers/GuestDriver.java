@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sdbxprototype.data;
+package sdbxprototype.data.drivers;
 
 /**
  *
  * @author wotero
  */
-public class BllchrgDriver implements DataDriver {
+public class GuestDriver implements DataDriver {
     
 }

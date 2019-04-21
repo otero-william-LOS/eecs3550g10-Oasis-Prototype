@@ -1,13 +1,14 @@
-package sdbxprototype.data;
+package sdbxprototype.data.models;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
  *
  * @author los
  */
-public class BllchrgModel {
+public class BllchrgModel extends DataModel {
     
     //  Attributes
     
@@ -61,6 +62,10 @@ public class BllchrgModel {
     public Date getDateCharged() {return _DateCharged;}
     public void setDateCharged(Date dateCharged) {this._DateCharged = dateCharged;}
     
+    //  Additional DateCharged Get/Set Using LocalDate Conversion
+    public LocalDate getDateChargedAsLocalDate() {return localDateFromUtilDate(_DateCharged);}
+    public void setDateChargedFromLocalDate(LocalDate dateCharged) {this._DateCharged = utilDateFromLocalDate(dateCharged);}
+    
     //  DatePaid Attribute
     /*
         CSV Column; non-volatile
@@ -70,6 +75,10 @@ public class BllchrgModel {
     private Date _DatePaid;
     public Date getDatePaid() {return _DatePaid;}
     public void setDatePaid(Date datePaid) {this._DatePaid = datePaid;}
+    
+    //  Additional DatePaid Get/Set Using LocalDate Conversion
+    public LocalDate getDatePaidAsLocalDate() {return localDateFromUtilDate(_DatePaid);}
+    public void setDatePaidFromLocalDate(LocalDate datePaid) {this._DatePaid = utilDateFromLocalDate(datePaid);}
     
     //  IsPaid Attribute
     /*

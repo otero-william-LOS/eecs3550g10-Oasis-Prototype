@@ -5,6 +5,11 @@
  */
 package sdbxprototype.data;
 
+import sdbxprototype.data.models.RsvModel;
+import sdbxprototype.data.models.RoomModel;
+import sdbxprototype.data.models.RateModel;
+import sdbxprototype.data.models.GuestModel;
+import sdbxprototype.data.models.BllchrgModel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -335,6 +340,23 @@ public class DevDatabase {
 //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Rate Entity Create & Retrieval Methods">
+    
+    // add single rate w/ base rate
+    public static void addRate(Date rateDate, Double baseRate){
+        rateTable.add(new RateModel(rateDate, baseRate));
+    }
+    // add single rate w/o base rate
+    public static void addEmptyRate(Date rateDate){
+        rateTable.add(new RateModel(rateDate, 0));
+    }
+    // add continuous range of rates w/ base rate
+    public static void addRate(Date startInclusive, Date endExclusive, Double baseRate){
+        //rateTable.add(new RateModel(rateDate, baseRate));
+    }
+    // add continuous range of rates w/o base rate
+    
+    // retrieve rate by date
+    // retrieve listRates by dateRange
     
 //</editor-fold>
     

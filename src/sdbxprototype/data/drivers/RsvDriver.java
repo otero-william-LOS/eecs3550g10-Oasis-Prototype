@@ -3,9 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sdbxprototype.data;
+package sdbxprototype.data.drivers;
+import sdbxprototype.data.models.RsvModel;
+import sdbxprototype.data.models.RoomModel;
+import sdbxprototype.data.models.GuestModel;
+import sdbxprototype.data.models.BllchrgModel;
 import java.util.ArrayList;
 import java.util.Date;
+import sdbxprototype.data.DevDatabase;
+import sdbxprototype.data.RsvType;
 /**
  *
  * @author los
