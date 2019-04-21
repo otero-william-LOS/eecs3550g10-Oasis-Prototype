@@ -138,6 +138,15 @@ public class DevDatabase {
         RsvModel reservation = new RsvModel(reservationTable.size() + 1, dateArrive, dateDepart);
         reservationTable.add(reservation);
     }
+    
+    // creates a new reservation for the fourth RsvModel constructor for use 
+    // in intitial creation in the scheduler
+    public static int addReservationSched(Date dateArrive, Date dateDepart) {
+        int id = reservationTable.size() + 1;
+        RsvModel reservation = new RsvModel(id, dateArrive, dateDepart);
+        reservationTable.add(reservation);
+        return id;
+    }
 
     // changes the DateArrive property of the Reservation
     public static void changeRsvArrival(int primaryKey, Date arrival) {
