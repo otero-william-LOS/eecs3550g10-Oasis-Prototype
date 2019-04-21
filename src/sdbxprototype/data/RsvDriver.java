@@ -37,6 +37,12 @@ public class RsvDriver implements DataDriver {
         DevDatabase.addReservation(dateArrive, dateDepart);
     }
     
+    // creates a new reservation for the fourth RsvModel constructor
+    public static int createRSVCSched(Date dateArrive, Date dateDepart){
+        int rsvID = DevDatabase.addReservationSched(dateArrive, dateDepart);
+        return rsvID;
+    }
+    
     public static void changeDateArrive(int primaryKey, Date arrival){
         DevDatabase.changeRsvArrival(primaryKey, arrival);
     }
