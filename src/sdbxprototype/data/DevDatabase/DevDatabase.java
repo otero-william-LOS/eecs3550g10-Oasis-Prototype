@@ -103,8 +103,8 @@ public class DevDatabase {
     //<editor-fold defaultstate="collapsed" desc="Rsv Entity Create & Retrieval Methods">
     
     // SDBX: Retrieve Simple RsvModel Table DEV Method
-    public static List<RsvModel> retrieveAllRsvs(){
-        List<RsvModel> rsvs = new ArrayList<>(rsvTable);
+    public static ArrayList<RsvModel> retrieveAllRsvs(){
+        ArrayList<RsvModel> rsvs = new ArrayList<>(rsvTable);
         return rsvs;
     }
     
@@ -114,7 +114,7 @@ public class DevDatabase {
     
     // Database RoomTbl Retrieval Methods
     public static List<RoomModel> rtrvAllRooms(){
-        List<RoomModel> rooms = new ArrayList<>(roomTable);
+        ArrayList<RoomModel> rooms = new ArrayList<>(roomTable);
         return rooms;
     }
     public static List<RoomModel> rtrvAvailableRooms(){
@@ -122,8 +122,8 @@ public class DevDatabase {
         rooms.removeIf(room -> room.getIsOccupied());
         return rooms;
     }
-    public static List<RoomModel> rtrvOccupiedRooms(){
-        List<RoomModel> rooms = new ArrayList<>(roomTable);
+    public static ArrayList<RoomModel> rtrvOccupiedRooms(){
+        ArrayList<RoomModel> rooms = new ArrayList<>(roomTable);
         rooms.removeIf(room -> !room.getIsOccupied());
         return rooms;
     }
