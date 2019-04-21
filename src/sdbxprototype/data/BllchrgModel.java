@@ -18,6 +18,18 @@ public class BllchrgModel {
         Unique id for this specific bill charge line item
     */
     private int _BllchrgID;
+
+    BllchrgModel(int i, Date DateCharged, double amount, String lineDesc) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    BllchrgModel(int i, Date DateCharged, double amount) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    BllchrgModel(int i, Date DateCharged) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     public int getBllchrgID() {return _BllchrgID;}
     public void setBllchrgID(int bllchrgID) {this._BllchrgID = bllchrgID;}    
     
@@ -141,5 +153,9 @@ public class BllchrgModel {
         info += " | isPaid=" + Boolean.toString(_IsPaid);
         info += " ]";
         return  info;
+    }
+
+    void setRsv(RsvModel rsv) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
