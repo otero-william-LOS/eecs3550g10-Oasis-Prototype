@@ -106,6 +106,197 @@ public class DevDatabase {
         return rsvs;
     }
     
+    // stuff from Austin =======================================================
+    //dummy database table for reservation
+    private static ArrayList<RsvModel> reservationTable = new ArrayList();
+
+    // creates a new reservation for the first RsvModel constructor
+    public static void addReservation(Date dateArrive, Date dateDepart, Date datePaid, RsvType rsvType,
+            RoomModel room, GuestModel guest, ArrayList<BllchrgModel> listBllchrg,
+            boolean isNoShow, boolean isPaid, boolean isConcluded) {
+        RsvModel reservation = new RsvModel(reservationTable.size() + 1, dateArrive, dateDepart, datePaid, rsvType, room, guest, listBllchrg,
+                isNoShow, isPaid, isConcluded);
+        reservationTable.add(reservation);
+    }
+
+    // creates a new reservation for the second RsvModel constructor
+    public static void addReservation(Date dateArrive, Date dateDepart, Date datePaid, RsvType rsvType,
+            boolean isNoShow, boolean isPaid, boolean isConcluded) {
+        RsvModel reservation = new RsvModel(reservationTable.size() + 1, dateArrive, dateDepart, datePaid, rsvType,
+                isNoShow, isPaid, isConcluded);
+        reservationTable.add(reservation);
+    }
+
+    // creates a new reservation for the third RsvModel constructor
+    public static void addReservation(Date dateArrive, Date dateDepart, RsvType rsvType) {
+        RsvModel reservation = new RsvModel(reservationTable.size() + 1, dateArrive, dateDepart, rsvType);
+        reservationTable.add(reservation);
+    }
+
+    // creates a new reservation for the fourth RsvModel constructor
+    public static void addReservation(Date dateArrive, Date dateDepart) {
+        RsvModel reservation = new RsvModel(reservationTable.size() + 1, dateArrive, dateDepart);
+        reservationTable.add(reservation);
+    }
+    
+    // creates a new reservation for the fourth RsvModel constructor for use 
+    // in intitial creation in the scheduler
+    public static int addReservationSched(Date dateArrive, Date dateDepart) {
+        int id = reservationTable.size() + 1;
+        RsvModel reservation = new RsvModel(id, dateArrive, dateDepart);
+        reservationTable.add(reservation);
+        return id;
+    }
+
+    // changes the DateArrive property of the Reservation
+    public static void changeRsvArrival(int primaryKey, Date arrival) {
+        RsvModel reservation = reservationTable.get(primaryKey);
+        reservation.setDateArrive(arrival);
+        reservationTable.set(primaryKey, reservation);
+    }
+
+    // changes the DateDepart property of the Reservation
+    public static void changeRsvDeparture(int primaryKey, Date departure) {
+        RsvModel reservation = reservationTable.get(primaryKey);
+        reservation.setDateDepart(departure);
+        reservationTable.set(primaryKey, reservation);
+    }
+
+    // changes the RsvType property of the Reservation
+    public static void changeRsvType(int primaryKey, RsvType rsvType) {
+        RsvModel reservation = reservationTable.get(primaryKey);
+        reservation.setRsvType(rsvType);
+        reservationTable.set(primaryKey, reservation);
+    }
+
+    public static ArrayList<RsvModel> searchRsvByGuest(GuestModel guest) {
+        ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
+        for (RsvModel rsv : reservationTable) {
+            if (rsv.getGuest().getGuestID() == guest.getGuestID()) {
+                matchingRsvs.add(rsv);
+            }
+        }      
+        return matchingRsvs;
+    }
+    
+    public static ArrayList<RsvModel> searchRsvByRoom(RoomModel room) {
+        ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
+        for (RsvModel rsv : reservationTable) {
+            if (rsv.getRoom().getRoomID() == room.getRoomID()) {
+                matchingRsvs.add(rsv);
+            }
+        }
+        return matchingRsvs;
+    }
+    
+    public static ArrayList<RsvModel> searchRsvByDtArrive(Date dateArrive) {
+        ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
+        for (RsvModel rsv : reservationTable) {
+            if (rsv.getDateArrive() == dateArrive) {
+                matchingRsvs.add(rsv);
+            }
+        }
+        return matchingRsvs;
+    }
+    
+    public static ArrayList<RsvModel> searchRsvByDtDepart(Date dateDepart) {
+        ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
+        for (RsvModel rsv : reservationTable) {
+            if (rsv.getDateArrive() == dateDepart) {
+                matchingRsvs.add(rsv);
+            }
+        }
+        return matchingRsvs;
+    }
+    
+    // returns all reservations that are arriving, departing or in middle of stay on given date
+    public static ArrayList<RsvModel> searchRsvByDtArriveBtwn(Date date) {
+        ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
+        for (RsvModel rsv : reservationTable) {
+            if((date.before(rsv.getDateDepart()) & date.after(rsv.getDateArrive()) || date.equals(rsv.getDateArrive()) || date.equals(rsv.getDateDepart())) == true){
+            //if (rsv.getDateArrive() == dateArrive) {
+                matchingRsvs.add(rsv);
+            }
+        }
+        return matchingRsvs;
+    }
+    
+    //returns all reservations of a given type
+    public static ArrayList<RsvModel> searchRsvByType(RsvType rsvType) {
+        ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
+        for (RsvModel rsv : reservationTable) {
+            if (rsv.getRsvType() == rsvType) {
+                matchingRsvs.add(rsv);
+            }
+        }
+        return matchingRsvs;
+    }
+    
+    // returns all paid reservations
+    public static ArrayList<RsvModel> getAllPaid() {
+        ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
+        for (RsvModel rsv : reservationTable) {
+            if (rsv.isIsPaid() == true) {
+                matchingRsvs.add(rsv);
+            }
+        }
+        return matchingRsvs;
+    }
+    
+    // returns all conclded reservations
+    public static ArrayList<RsvModel> getAllConcluded() {
+        ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
+        for (RsvModel rsv : reservationTable) {
+            if (rsv.isIsConcluded() == true) {
+                matchingRsvs.add(rsv);
+            }
+        }
+        return matchingRsvs;
+    }
+    
+    // returns all no show reservations
+    public static ArrayList<RsvModel> getAllnoShow() {
+        ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
+        for (RsvModel rsv : reservationTable) {
+            if (rsv.isIsNoShow()== true) {
+                matchingRsvs.add(rsv);
+            }
+        }
+        return matchingRsvs;
+    }
+
+    public static void assignRsvRoom(int primaryKey, RoomModel room) {
+        RsvModel reservation = reservationTable.get(primaryKey);
+        reservation.setRoom(room);
+        reservationTable.set(primaryKey, reservation);
+    }
+
+    public static void deassignRsvRoom(int primaryKey) {
+        RsvModel reservation = reservationTable.get(primaryKey);
+        RoomModel room = new RoomModel();
+        reservation.setRoom(room);
+        reservationTable.set(primaryKey, reservation);
+    }
+
+    public static void flagRsvNoShow(int primaryKey) {
+        RsvModel reservation = reservationTable.get(primaryKey);
+        reservation.setIsNoShow(true);
+        reservationTable.set(primaryKey, reservation);
+    }
+
+    public static void flagRsvIsPaid(int primaryKey) {
+        RsvModel reservation = reservationTable.get(primaryKey);
+        reservation.setIsPaid(true);
+        reservationTable.set(primaryKey, reservation);
+    }
+
+    public static void flagRsvIsConcluded(int primaryKey) {
+        RsvModel reservation = reservationTable.get(primaryKey);
+        reservation.setIsConcluded(true);
+        reservationTable.set(primaryKey, reservation);
+    }
+    // end of stuff from austin ================================================
+    
 //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Room Entity Create & Retrieval Methods">
@@ -237,4 +428,5 @@ public class DevDatabase {
     //<editor-fold defaultstate="collapsed" desc="Guest Entity Create & Retrieval Methods">
     
 //</editor-fold>
+    
 }
