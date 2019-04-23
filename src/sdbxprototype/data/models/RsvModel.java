@@ -117,7 +117,7 @@ public class RsvModel extends DataModel {
         Desc
     */
     private boolean _IsNoShow;
-    public boolean isIsNoShow() {return _IsNoShow;}
+    public boolean getIsNoShow() {return _IsNoShow;}
     public void setIsNoShow(boolean isNoShow) {this._IsNoShow = isNoShow;}
     
     //  IsPaid Attribute
@@ -127,7 +127,7 @@ public class RsvModel extends DataModel {
         Desc
     */
     private boolean _IsPaid;
-    public boolean isIsPaid() {return _IsPaid;}
+    public boolean getIsPaid() {return _IsPaid;}
     public void setIsPaid(boolean isPaid) {this._IsPaid = isPaid;}
     
     //  IsConcluded Attribute
@@ -137,7 +137,7 @@ public class RsvModel extends DataModel {
         Desc
     */
     private boolean _IsConcluded;
-    public boolean isIsConcluded() {return _IsConcluded;}
+    public boolean getIsConcluded() {return _IsConcluded;}
     public void setIsConcluded(boolean isConcluded) {this._IsConcluded = isConcluded;}
     
     

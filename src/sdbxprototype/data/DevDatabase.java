@@ -5,15 +5,20 @@
  */
 package sdbxprototype.data;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import sdbxprototype.data.models.RsvModel;
 import sdbxprototype.data.models.RoomModel;
 import sdbxprototype.data.models.RateModel;
 import sdbxprototype.data.models.GuestModel;
 import sdbxprototype.data.models.BllchrgModel;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import sdbxprototype.data.models.DataModel;
 
 /**
  *
@@ -88,6 +93,68 @@ public class DevDatabase {
 //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Rate Dummy DevGeneration Methods">
+    
+    //  SDBX: Dev special comparator, maybe
+    
+    //  SDBX: Dev dummy rate generation, creates rates for current year
+    public static void genRateTableForYear(){
+        rateTable.clear();
+        
+        LocalDate today = LocalDate.now();
+        LocalDate startYear = today.with(TemporalAdjusters.firstDayOfYear());
+        
+        Random rndm = new Random();
+        double[] variance = {-10.0, -8.0, -7.5, -6.0, -5.0, -4.0, -2.5, -2.0, -1.0, 0.0, 1.0, 2.0, 2.5, 4.0, 5.0};
+        int vSize = variance.length;
+        
+        System.out.println("jan to april");
+        
+        //  from jan to april, tourism is low, so rate should be low
+        double rate = 200.0;    // arbitrary testing
+        long numDays = ChronoUnit.DAYS.between(startYear, startYear.withMonth(5));
+        for(long i = 0; i < numDays; i++){
+            int rndmIndex = rndm.nextInt(vSize);
+            double vRate = rate + variance[rndmIndex];
+            Date dt = DataModel.utilDateFromLocalDate(startYear.plusDays(i));
+            addRate(dt, vRate);
+        }
+        
+        System.out.println("may to august");
+        
+        //  from may to august, tourism is high, so rate should be high
+        rate = 375.0;    // arbitrary testing
+        numDays = ChronoUnit.DAYS.between(startYear.withMonth(5), startYear.withMonth(9));
+        for(long i = 0; i < numDays; i++){
+            int rndmIndex = rndm.nextInt(vSize);
+            double vRate = rate + variance[rndmIndex];
+            Date dt = DataModel.utilDateFromLocalDate(startYear.withMonth(5).plusDays(i));
+            addRate(dt, vRate);
+        }
+        
+        System.out.println("sept to oct");
+        
+        //  from sept to oct, tourism is low, so rate should be low
+        rate = 175.0;    // arbitrary testing
+        numDays = ChronoUnit.DAYS.between(startYear.withMonth(9), startYear.withMonth(11));
+        for(long i = 0; i < numDays; i++){
+            int rndmIndex = rndm.nextInt(vSize);
+            double vRate = rate + variance[rndmIndex];
+            Date dt = DataModel.utilDateFromLocalDate(startYear.withMonth(9).plusDays(i));
+            addRate(dt, vRate);
+        }
+        
+        System.out.println("nov to dec");
+        
+        //  from nov to dec, tourism is high, so rate should be high
+        rate = 425.0;    // arbitrary testing
+        numDays = ChronoUnit.DAYS.between(startYear.withMonth(11), startYear.plusYears(1));
+        for(long i = 0; i < numDays; i++){
+            int rndmIndex = rndm.nextInt(vSize);
+            double vRate = rate + variance[rndmIndex];
+            Date dt = DataModel.utilDateFromLocalDate(startYear.withMonth(11).plusDays(i));
+            addRate(dt, vRate);
+        }
+    }
     
 //</editor-fold>
     
@@ -241,7 +308,7 @@ public class DevDatabase {
     public static ArrayList<RsvModel> getAllPaid() {
         ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
         for (RsvModel rsv : reservationTable) {
-            if (rsv.isIsPaid() == true) {
+            if (rsv.getIsPaid() == true) {
                 matchingRsvs.add(rsv);
             }
         }
@@ -252,7 +319,7 @@ public class DevDatabase {
     public static ArrayList<RsvModel> getAllConcluded() {
         ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
         for (RsvModel rsv : reservationTable) {
-            if (rsv.isIsConcluded() == true) {
+            if (rsv.getIsConcluded() == true) {
                 matchingRsvs.add(rsv);
             }
         }
@@ -263,7 +330,7 @@ public class DevDatabase {
     public static ArrayList<RsvModel> getAllnoShow() {
         ArrayList<RsvModel> matchingRsvs = new ArrayList<>();
         for (RsvModel rsv : reservationTable) {
-            if (rsv.isIsNoShow()== true) {
+            if (rsv.getIsNoShow()== true) {
                 matchingRsvs.add(rsv);
             }
         }
@@ -344,19 +411,73 @@ public class DevDatabase {
     // add single rate w/ base rate
     public static void addRate(Date rateDate, Double baseRate){
         rateTable.add(new RateModel(rateDate, baseRate));
+//        rateTable.sort(
+//            (r1,r2) -> {
+//                int result = 0;
+//                if (r1.equals(r2)){
+//                    System.out.println("Should have checked for existing date first");
+//                }
+//                else{
+//                    result = r1.getRateDate().compareTo(r2.getRateDate());
+//                }
+//                return result;
+//            }
+//        );
     }
-    // add single rate w/o base rate
-    public static void addEmptyRate(Date rateDate){
-        rateTable.add(new RateModel(rateDate, 0));
-    }
+    // SDBX DEV: add single rate w/o base rate
+//    public static void addEmptyRate(Date rateDate){
+//        addRate(rateDate, 0.0);
+//    }
     // add continuous range of rates w/ base rate
-    public static void addRate(Date startInclusive, Date endExclusive, Double baseRate){
-        //rateTable.add(new RateModel(rateDate, baseRate));
+    public static void addRateRange(Date startInclusive, Date endExclusive, Double baseRate){
+        Calendar c = Calendar.getInstance();
+        c.setTime(startInclusive);
+        Date dt = c.getTime();
+        while (dt.before(endExclusive)){
+            rateTable.add(new RateModel(dt, baseRate));
+            c.add(Calendar.DATE, 1);
+            dt = c.getTime();
+        }
+//        rateTable.sort(
+//            (r1,r2) -> {
+//                int result = 0;
+//                if (r1.equals(r2)){
+//                    System.out.println("Should have checked for existing date first");
+//                }
+//                else{
+//                    result = r1.getRateDate().compareTo(r2.getRateDate());
+//                }
+//                return result;
+//            }
+//        );
     }
-    // add continuous range of rates w/o base rate
+    // SDBX DEV: add continuous range of rates w/o base rate
+//    public static void addEmptyRateRange(Date startInclusive, Date endExclusive){
+//        addRateRange(startInclusive, endExclusive, 0.0);
+//    }
     
     // retrieve rate by date
+    public static RateModel rtrvByDate(Date date){
+        RateModel rate = 
+                rateTable.stream().filter(
+                        rt -> rt.getRateDate().equals(date)
+                ).findFirst().orElse(null);
+        return rate;
+    }
+    
     // retrieve listRates by dateRange
+    public static List<RateModel> rtrvByDateRange(Date startInclusive, Date endInclusive){
+        List<RateModel> rates = new ArrayList<>(rateTable);
+        rates.removeIf(rt -> rt.getRateDate().before(startInclusive));
+        rates.removeIf(rt -> rt.getRateDate().after(endInclusive));
+        return rates;
+    }
+    
+    // retrieve all rates
+    public static List<RateModel> rtrvAllRates(){
+        List<RateModel> rates = new ArrayList<>(rateTable);
+        return rates;
+    }
     
 //</editor-fold>
     

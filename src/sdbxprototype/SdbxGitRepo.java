@@ -11,9 +11,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import sdbxprototype.data.DevDatabase;
+import sdbxprototype.data.drivers.RateDriver;
 import sdbxprototype.data.drivers.RoomDriver;
 import sdbxprototype.data.models.RoomModel;
 import sdbxprototype.data.drivers.RsvDriver;
+import sdbxprototype.data.models.RateModel;
 import sdbxprototype.data.models.RsvModel;
 
 /**
@@ -196,6 +198,12 @@ public class SdbxGitRepo {
 //</editor-fold>
 
         //new rate driver test scripts
+        System.out.println("Testing Gen Rates for Year Method");
+        DevDatabase.genRateTableForYear();
+        System.out.println("\tRequesting All Rates");
+        List<RateModel> rtList = DevDatabase.rtrvAllRates();
+        rtList.forEach(rt -> System.out.println("\t\t" + rt));
+        System.out.println("\tNumber of Rates:" + Integer.toString(rtList.size()));
     }
     
 }

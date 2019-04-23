@@ -5,6 +5,14 @@
  */
 package sdbxprototype.data.drivers;
 
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import sdbxprototype.data.DevDatabase;
+import sdbxprototype.data.RsvType;
+import sdbxprototype.data.models.DataModel;
+import sdbxprototype.data.models.RateModel;
+
 /**
  *
  * @author jon
@@ -21,17 +29,155 @@ public class RateDriver implements DataDriver {
     public final static double MLTPLR_INCNTV = 0.80;
     
     // create single rate w/ base rate
-    // create single rate w/o base rate
+    public static void createRate(Date date, double baseRate){
+        DevDatabase.addRate(date, baseRate);
+    }
+    public static void createRate(LocalDate localDate, double baseRate){
+        Date dt = DataModel.utilDateFromLocalDate(localDate);
+        createRate(dt, baseRate);
+    }
+    
     // create continuous range of rates w/ base rate
-    // create continuous range of rates w/o base rate
+    public static void createRateRange(Date startInclusive, Date endExclusive, Double baseRate){
+        DevDatabase.addRateRange(startInclusive, endExclusive, baseRate);
+    }
+    public static void createRateRange(LocalDate startInclusive, LocalDate endExclusive, Double baseRate){
+        Date startIn = DataModel.utilDateFromLocalDate(startInclusive);
+        Date endEx = DataModel.utilDateFromLocalDate(endExclusive);
+        createRateRange(startIn, endEx, baseRate);
+    }
+    
+    // SDBX ONLY: create single rate w/o base rate
+    // SDBX ONLY: create continuous range of rates w/o base rate
     
     // modify single rate w/ new base rate
-    // variation w/ date param
+    public static void mdfyBaseRate(RateModel existingRate, double newBaseRate){
+        // TODO: Warning 
+        // - this method will require null checks
+        existingRate.setBaseRate(newBaseRate);
+    }
+    public static void mdfyBaseRate(Date date, double newBaseRate){
+        RateModel existingRate = DevDatabase.rtrvByDate(date);
+        mdfyBaseRate(existingRate, newBaseRate);
+    }
+    public static void mdfyBaseRate(LocalDate localDate, double newBaseRate){
+        Date dt = DataModel.utilDateFromLocalDate(localDate);
+        mdfyBaseRate(dt, newBaseRate);
+    }
+    
     // modify continuous range of rates w/ base rate
-    // variation w/ date param
+    public static void mdfyBaseRateRange(List<RateModel> existingRates, double newBaseRate){
+        existingRates.forEach(rt -> rt.setBaseRate(newBaseRate));
+    }
+    public static void mdfyBaseRateRange(Date startInclusive, Date endInclusive, double newBaseRate){
+        List<RateModel> existingRates = DevDatabase.rtrvByDateRange(startInclusive, endInclusive);
+        mdfyBaseRateRange(existingRates, newBaseRate);
+    }
+    public static void mdfyBaseRateRange(LocalDate startInclusive, LocalDate endInclusive, double newBaseRate){
+        Date startIn = DataModel.utilDateFromLocalDate(startInclusive);
+        Date endIn = DataModel.utilDateFromLocalDate(endInclusive);
+        mdfyBaseRateRange(startIn, endIn, newBaseRate);
+    }
+    
+    // searchByDate
+    public static RateModel srchByDate(Date date){
+        return DevDatabase.rtrvByDate(date);
+    }
+    public static RateModel srchByDate(LocalDate localDate){
+        Date dt = DataModel.utilDateFromLocalDate(localDate);
+        return DevDatabase.rtrvByDate(dt);
+    }
+    
+    // searchByDateRange
+    public static List<RateModel> srchByDateRange(Date startInclusive, Date endInclusive){
+        return DevDatabase.rtrvByDateRange(startInclusive, endInclusive);
+    }
+    public static List<RateModel> srchByDateRange(LocalDate startInclusive, LocalDate endInclusive){
+        Date startIn = DataModel.utilDateFromLocalDate(startInclusive);
+        Date endIn = DataModel.utilDateFromLocalDate(endInclusive);
+        return DevDatabase.rtrvByDateRange(startIn, endIn);
+    }
+    
+    // return all rates in table
+    public static List<RateModel> rtrnAllRates(){
+        return DevDatabase.rtrvAllRates();
+    }
     
     // returnRsvTypeRate
+    public static double rtrnRsvTypeRate(RateModel rate, RsvType type){
+        // TODO: Warning 
+        // - this method will require null checks
+        double typeRate = 0;
+        switch(type){
+            case PREPAID:
+                typeRate = MLTPLR_PREPAID;
+                break;
+            case SIXTYADV:
+                typeRate = MLTPLR_SIXTYADV;
+                break;
+            case CONVENTIONAL:
+                typeRate = MLTPLR_CNVNTNL;
+                break;
+            case INCENTIVE:
+                typeRate = MLTPLR_INCNTV;
+                break;
+            default:
+                System.out.println("Something fucked up, if here");
+                //throw new AssertionError(type.name());
+        }
+        return rate.getBaseRate() * typeRate;
+    }
+    public static double rtrnRsvTypeRate(Date date, RsvType type){
+        RateModel rate = DevDatabase.rtrvByDate(date);
+        return rtrnRsvTypeRate(rate, type);
+    }
+    public static double rtrnRsvTypeRate(LocalDate localDate, RsvType type){
+        Date date = DataModel.utilDateFromLocalDate(localDate);
+        return rtrnRsvTypeRate(date, type);
+    }
+    
     // returnRsvModifyRate
+    public static double rtrnRsvModifyRate(RateModel rate){
+        // TODO: Warning 
+        // - this method will require null checks
+        return rate.getBaseRate() * MLTPLR_RSVMDFY;
+    }
+    public static double rtrnRsvModifyRate(Date date){
+        RateModel rate = DevDatabase.rtrvByDate(date);
+        return rtrnRsvModifyRate(rate);
+    }
+    public static double rtrnRsvModifyRate(LocalDate localDate){
+        Date date = DataModel.utilDateFromLocalDate(localDate);
+        return rtrnRsvModifyRate(date);
+    }
+    
     // returnRsvNoShowRate
+    public static double rtrnRsvNoShowRate(RateModel rate){
+        // TODO: Warning 
+        // - this method will require null checks
+        return rate.getBaseRate() * MLTPLR_NOSHOW;
+    }
+    public static double rtrnRsvNoShowRate(Date date){
+        RateModel rate = DevDatabase.rtrvByDate(date);
+        return rtrnRsvNoShowRate(rate);
+    }
+    public static double rtrnRsvNoShowRate(LocalDate localDate){
+        Date date = DataModel.utilDateFromLocalDate(localDate);
+        return rtrnRsvNoShowRate(date);
+    }
+    
     // returnRsvCancelRate
+    public static double rtrnRsvCancelRate(RateModel rate){
+        // TODO: Warning 
+        // - this method will require null checks
+        return rate.getBaseRate() * MLTPLR_CANCEL;
+    }
+    public static double rtrnRsvCancelRate(Date date){
+        RateModel rate = DevDatabase.rtrvByDate(date);
+        return rtrnRsvCancelRate(rate);
+    }
+    public static double rtrnRsvCancelRate(LocalDate localDate){
+        Date date = DataModel.utilDateFromLocalDate(localDate);
+        return rtrnRsvCancelRate(date);
+    }
 }
