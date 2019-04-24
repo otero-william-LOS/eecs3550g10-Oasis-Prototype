@@ -481,7 +481,90 @@ public class DevDatabase {
     
 //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="Bllchrg Entity Create & Retrieval Methods">
+  
+
+    public static void addBllCharge(Date DateCharged, double amount, String lineDesc) {
+        BllchrgModel billing = new BllchrgModel(bllchrgTable.size() + 1, DateCharged, amount, lineDesc);
+        bllchrgTable.add(billing);
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    static void addBllCharge(Date DateCharged, double amount) {
+        BllchrgModel billing = new BllchrgModel(bllchrgTable.size() + 1, DateCharged, amount);
+        bllchrgTable.add(billing);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    static void addBllCharge(Date DateCharged) {
+        BllchrgModel billing = new BllchrgModel(bllchrgTable.size() + 1, DateCharged);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public static ArrayList<BllchrgModel> searchByReservation(RsvModel rsv) {
+        ArrayList<BllchrgModel> matchingRsv = new  ArrayList<BllchrgModel>();
+        for (BllchrgModel billing: bllchrgTable) {
+            if (billing.getReservation().getRsvID() == rsv.getRsvID()) {
+                matchingRsv.add(billing);
+            }
+        }
+        return matchingRsv;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public static ArrayList<BllchrgModel> searchByBllChrgID(BllchrgModel bllchrgID) {
+        ArrayList<BllchrgModel> matchingBllChrgID = new  ArrayList<BllchrgModel>();
+        for (BllchrgModel billing : bllchrgTable) {
+            if (billing.getBllchrgID() == billing.getBllchrgID()) {
+                matchingBllChrgID.add(billing);
+            }
+        }
+        return matchingBllChrgID;
+    }
+
+    public static ArrayList<BllchrgModel>  searchByDateCharged(BllchrgModel DateCharged) {
+        ArrayList<BllchrgModel> matchingDateCharged= new  ArrayList<BllchrgModel>();
+        for (BllchrgModel billing:bllchrgTable) {
+            if (billing.getDateCharged() == billing.getDateCharged()) {
+                matchingDateCharged.add(billing);
+            }
+        }
+        return matchingDateCharged;
+    }
+    public static ArrayList<BllchrgModel>  searchByDatePaid(BllchrgModel DatePaid) {
+        ArrayList<BllchrgModel> matchingDatePaid= new  ArrayList<BllchrgModel>();
+        for (BllchrgModel billing:bllchrgTable) {
+            if (billing.getDatePaid() == billing.getDatePaid()) {
+                matchingDatePaid.add(billing);
+            }
+        }
+        return matchingDatePaid;
+    }
+
+    static void flagBillIsPaid(int primaryKey) {
+        BllchrgModel billingPaid = bllchrgTable.get(primaryKey);
+        billingPaid.setIsPaid(true);
+        bllchrgTable.set(primaryKey, billingPaid);
+        System.out.println("Bill is Paid.");
+    }
+
+     public List<BllchrgModel> retrieveAllBllchrgs() {
+         List<BllchrgModel> bllchrgID = new ArrayList<>(bllchrgTable);
+         return bllchrgID;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+     //Ask For help got stuck
+    List<BllchrgModel> retrieveAllPaidchrgs() {
+     List<BllchrgModel> isPaidCharge = new ArrayList<>(bllchrgTable);
+       isPaidCharge.removeIf(isPaidC-> isPaidC.isIsPaid());
+       return isPaidCharge; 
+    } 
+    List<BllchrgModel> retrieveAllUnpaidchrgs() {
+        List<BllchrgModel> isPaidCharge = new ArrayList<>(bllchrgTable);
+       isPaidCharge.removeIf(isPaidC-> !isPaidC.isIsPaid());
+       return isPaidCharge; 
+    }
+
+//<editor-fold defaultstate="collapsed" desc="Bllchrg Entity Create & Retrieval Methods">
     
 //</editor-fold>
     
