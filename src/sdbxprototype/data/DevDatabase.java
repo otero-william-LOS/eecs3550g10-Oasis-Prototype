@@ -483,22 +483,22 @@ public class DevDatabase {
     
   
 
-    public static void addBllCharge(Date DateCharged, double amount, String lineDesc) {
-        BllchrgModel billing = new BllchrgModel(bllchrgTable.size() + 1, DateCharged, amount, lineDesc);
-        bllchrgTable.add(billing);
-       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    static void addBllCharge(Date DateCharged, double amount) {
-        BllchrgModel billing = new BllchrgModel(bllchrgTable.size() + 1, DateCharged, amount);
-        bllchrgTable.add(billing);
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    static void addBllCharge(Date DateCharged) {
-        BllchrgModel billing = new BllchrgModel(bllchrgTable.size() + 1, DateCharged);
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    public static void addBllCharge(Date DateCharged, double amount, String lineDesc) {
+//        BllchrgModel billing = new BllchrgModel(bllchrgTable.size() + 1, DateCharged, amount, lineDesc);
+//        bllchrgTable.add(billing);
+//       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+//
+//    static void addBllCharge(Date DateCharged, double amount) {
+//        BllchrgModel billing = new BllchrgModel(bllchrgTable.size() + 1, DateCharged, amount);
+//        bllchrgTable.add(billing);
+//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+//
+//    static void addBllCharge(Date DateCharged) {
+//        BllchrgModel billing = new BllchrgModel(bllchrgTable.size() + 1, DateCharged);
+//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 
     public static ArrayList<BllchrgModel> searchByReservation(RsvModel rsv) {
         ArrayList<BllchrgModel> matchingRsv = new  ArrayList<BllchrgModel>();
