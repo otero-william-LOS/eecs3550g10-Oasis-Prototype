@@ -11,63 +11,63 @@ public class GuestModel extends DataModel {
     //  Attributes
     
     //  GuestID Attribute
-    /*
+    /**
         CSV Column; non-volatile
         int; (String in CSV)
         Provides unique id for guest infro
     */
-    private int _GuestID;
-    public int getGuestID() {return _GuestID;}
-    public void setGuestID(int guestID) {this._GuestID = guestID;}
+    private int m_GuestID;
+    public int getGuestID() {return m_GuestID;}
+    public void setGuestID(int guestID) {this.m_GuestID = guestID;}
     
     //  Name Attribute
-    /*
+    /**
         CSV Column; non-volatile
         String
         Guest's Last Name
     */
-    private String _Name;
-    public String getName() {return _Name;}
-    public void setName(String name) {this._Name = name;}
+    private String m_Name;
+    public String getName() {return m_Name;}
+    public void setName(String name) {this.m_Name = name;}
     
     //  CCInfo Attribute
-    /*
+    /**
         CSV Column; non-volatile
         String
         Provided credit card info for payment processing
     */
-    private String _CCInfo;
-    public String getCCInfo() {return _CCInfo;}
-    public void setCCInfo(String ccInfo) {this._CCInfo = ccInfo;}
+    private String m_CCInfo;
+    public String getCCInfo() {return m_CCInfo;}
+    public void setCCInfo(String ccInfo) {this.m_CCInfo = ccInfo;}
     
     //  Email Attribute
-    /*
+    /**
         CSV Column; non-volatile
         String
         Guest's email for communication
     */
-    private String _Email;
-    public String getEmail() {return _Email;}
-    public void setEmail(String email) {this._Email = email;}
+    private String m_Email;
+    public String getEmail() {return m_Email;}
+    public void setEmail(String email) {this.m_Email = email;}
     
     //  ListRsv Attribute
-    /*
+    /**
         Entity Relation; volatile
         DataModel
         one-to-(1+) rsv relation
     */
-    private List<RsvModel> _ListRsv;
-    public List<RsvModel> getListRsv() {return _ListRsv;}
-    public void setListRsv(List<RsvModel> list) {this._ListRsv = list;}
+    private List<ReservationModel> m_ListRsv;
+    public List<ReservationModel> getListRsv() {return m_ListRsv;}
+    public void setListRsv(List<ReservationModel> list) {this.m_ListRsv = list;}
     
     
     //  Model Constructor
-    public GuestModel(int guestID, String name, String ccInfo, String email, List<RsvModel> listRsv) {
-        this._GuestID = guestID;
-        this._Name = name;
-        this._CCInfo = ccInfo;
-        this._Email = email;
-        this._ListRsv = listRsv;
+    public GuestModel(int guestID, String name, String ccInfo, String email, List<ReservationModel> listRsv) {
+        this.m_GuestID = guestID;
+        this.m_Name = name;
+        this.m_CCInfo = ccInfo;
+        this.m_Email = email;
+        this.m_ListRsv = listRsv;
     }
     
     public GuestModel(int guestID, String name, String ccInfo, String email) {
@@ -75,11 +75,11 @@ public class GuestModel extends DataModel {
     }
     
     public GuestModel(int guestID, String name, String email) {
-        this(guestID, name, null, email, null);
+        this(guestID, name, "", email, null);
     }
     
     public GuestModel() {
-        this(0, null, null, null, null);
+        this(0, "", "", "", null);
     }
     
     // Overrides
@@ -89,7 +89,7 @@ public class GuestModel extends DataModel {
         // - this method can create orphans when using a HashSet, or similar
         // - highly recommend to use some immutable Attribute (strings)
         int hash = 1;
-        hash += hash * 23 + _GuestID;
+        hash += hash * 23 + m_GuestID;
         return hash;
     }
 
@@ -99,17 +99,20 @@ public class GuestModel extends DataModel {
             return false;
         }        
         GuestModel other = (GuestModel) obj;        
-        return (this._GuestID != other._GuestID);
+        return (this.m_GuestID != other.m_GuestID);
     }
     
     @Override
     public String toString() {
-        String info = "Guest [ guestID=" + Integer.toString(_GuestID);
-        info += " | name=" + _Name;
-        info += " | email=" + _Email;
-        info += " | ccInfo=" + _CCInfo;
-        if (_ListRsv != null){
-            info += " | ListRsv.size=" + Integer.toString(_ListRsv.size());
+        String info = "Guest [ guestID=" + Integer.toString(m_GuestID);
+        if (m_Name != null)
+            info += " | name=" + m_Name;
+        if (m_Email != null)
+            info += " | email=" + m_Email;
+        if (m_CCInfo != null)
+            info += " | ccInfo=" + m_CCInfo;
+        if (m_ListRsv != null){
+            info += " | ListRsv.size=" + Integer.toString(m_ListRsv.size());
         }
         info += " ]";
         return  info;

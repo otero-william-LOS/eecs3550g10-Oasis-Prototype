@@ -2,7 +2,7 @@
 package sdbxprototype.logic;
 
 import sdbxprototype.data.drivers.RsvDriver;
-import sdbxprototype.data.models.RsvModel;
+import sdbxprototype.data.models.ReservationModel;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -19,7 +19,7 @@ public class RsvScheduling {
         // over any of the requested reservation days
         // if the reservation cannot be made will return a value to main 
         // stating so, for now assume unlimited reservations can be made
-        int rsvID = RsvDriver.createRSVCSched(dateArrive, dateDepart);
+//        int rsvID = RsvDriver.createRSVCSched(dateArrive, dateDepart);
         
         // I have generated the new Reservation and the ID
         // send all nescessary info to payment procssing
@@ -41,17 +41,17 @@ public class RsvScheduling {
         return returnstring;
     }
     
-    public static void modifyReservation(RsvModel reservation){
+    public static void modifyReservation(ReservationModel reservation){
     // probably wont receive RsvModels but rather ID's not too sure yet
     }
     
-    public static ArrayList<RsvModel> getReservations(){
+    public static ArrayList<ReservationModel> getReservations(){
     // this will be used to retreive more than one reservation based on some
     // criteria. any modifications will be done in a seperate method simillar
     // to modifyReservation()
         
         
-        ArrayList<RsvModel> reservations = new ArrayList();
+        ArrayList<ReservationModel> reservations = new ArrayList();
         return reservations;
     }
     

@@ -16,7 +16,7 @@ import sdbxprototype.data.drivers.RoomDriver;
 import sdbxprototype.data.models.RoomModel;
 import sdbxprototype.data.drivers.RsvDriver;
 import sdbxprototype.data.models.RateModel;
-import sdbxprototype.data.models.RsvModel;
+import sdbxprototype.data.models.ReservationModel;
 
 /**
  *
@@ -113,89 +113,89 @@ public class SdbxGitRepo {
 //        System.out.println();
 //</editor-fold>
 
-//<editor-fold defaultstate="collapsed" desc="Reservation Driver Test Stuff">
-//       Random rand = new Random();
-//        
-//         ArrayList<RsvModel> reservationTable = new ArrayList();
-//         for(int i = 0; i < 40; i++){
-//          RsvModel reservation = new RsvModel();
-//          reservationTable.add(reservation);
-//         }
-//         
-//         // create two day stays
-//         for (int i = 0; i < 20; i++){
-//            RsvModel reservation = reservationTable.get(i);
-//            int start = rand.nextInt(50) + 1;
-//            Date startDate = new Date();
-//            Date endDate = new Date();
-//            Calendar c = Calendar.getInstance(); 
-//            c.setTime(startDate); 
-//            c.add(Calendar.DATE, start);
-//            startDate = c.getTime();
-//            
-//            c.setTime(endDate); 
-//            c.add(Calendar.DATE, start + 2);
-//            endDate = c.getTime();
-//            
-//            reservation.setDateArrive(startDate);
-//            reservation.setDateDepart(endDate);
-//            
-//            reservationTable.set(i, reservation);
-//         }
-//         
-//         // create 5 day stays
-//         for (int i = 20; i < 40; i++){
-//            RsvModel reservation = reservationTable.get(i);
-//            int start = rand.nextInt(50) + 1;
-//            Date startDate = new Date();
-//            Date endDate = new Date();
-//            Calendar c = Calendar.getInstance(); 
-//            c.setTime(startDate); 
-//            c.add(Calendar.DATE, start);
-//            startDate = c.getTime();
-//            
-//            c.setTime(endDate); 
-//            c.add(Calendar.DATE, start + 5);
-//            endDate = c.getTime();
-//            
-//            reservation.setDateArrive(startDate);
-//            reservation.setDateDepart(endDate);
-//            
-//            reservationTable.set(i, reservation);
-//         }
-//         
-//         for (RsvModel rsv : reservationTable) {
-//            RsvDriver.createRSVC(rsv.getDateArrive(), rsv.getDateDepart());
-//        }
-//         
-//         Date lookFor = new Date();
-//         Calendar c = Calendar.getInstance(); 
-//         c.setTime(lookFor); 
-//         c.add(Calendar.DATE, 3);
-//         lookFor = c.getTime();
-//            
-//         ArrayList<RsvModel> matchingRsvs = RsvDriver.searchByDateArriveBtwn(lookFor);
-//         
-//         c.setTime(lookFor); 
-//         c.add(Calendar.DATE, 10);
-//         lookFor = c.getTime();
-//         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
-//         
-//         c.setTime(lookFor); 
-//         c.add(Calendar.DATE, 20);
-//         lookFor = c.getTime();
-//         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
-//         
-//         c.setTime(lookFor); 
-//         c.add(Calendar.DATE, 30);
-//         lookFor = c.getTime();
-//         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
-//         
-//         c.setTime(lookFor); 
-//         c.add(Calendar.DATE, 25);
-//         lookFor = c.getTime();
-//         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
-//</editor-fold>
+        //<editor-fold defaultstate="collapsed" desc="Reservation Driver Test Stuff">
+        //       Random rand = new Random();
+        //        
+        //         ArrayList<RsvModel> reservationTable = new ArrayList();
+        //         for(int i = 0; i < 40; i++){
+        //          ReservationModel reservation = new ReservationModel();
+        //          reservationTable.add(reservation);
+        //         }
+        //         
+        //         // create two day stays
+        //         for (int i = 0; i < 20; i++){
+        //            ReservationModel reservation = reservationTable.get(i);
+        //            int start = rand.nextInt(50) + 1;
+        //            Date startDate = new Date();
+        //            Date endDate = new Date();
+        //            Calendar c = Calendar.getInstance(); 
+        //            c.setTime(startDate); 
+        //            c.add(Calendar.DATE, start);
+        //            startDate = c.getTime();
+        //            
+        //            c.setTime(endDate); 
+        //            c.add(Calendar.DATE, start + 2);
+        //            endDate = c.getTime();
+        //            
+        //            reservation.setDateArrive(startDate);
+        //            reservation.setDateDepart(endDate);
+        //            
+        //            reservationTable.set(i, reservation);
+        //         }
+        //         
+        //         // create 5 day stays
+        //         for (int i = 20; i < 40; i++){
+        //            ReservationModel reservation = reservationTable.get(i);
+        //            int start = rand.nextInt(50) + 1;
+        //            Date startDate = new Date();
+        //            Date endDate = new Date();
+        //            Calendar c = Calendar.getInstance(); 
+        //            c.setTime(startDate); 
+        //            c.add(Calendar.DATE, start);
+        //            startDate = c.getTime();
+        //            
+        //            c.setTime(endDate); 
+        //            c.add(Calendar.DATE, start + 5);
+        //            endDate = c.getTime();
+        //            
+        //            reservation.setDateArrive(startDate);
+        //            reservation.setDateDepart(endDate);
+        //            
+        //            reservationTable.set(i, reservation);
+        //         }
+        //         
+        //         for (ReservationModel rsv : reservationTable) {
+        //            RsvDriver.createRSVC(rsv.getDateArrive(), rsv.getDateDepart());
+        //        }
+        //         
+        //         Date lookFor = new Date();
+        //         Calendar c = Calendar.getInstance(); 
+        //         c.setTime(lookFor); 
+        //         c.add(Calendar.DATE, 3);
+        //         lookFor = c.getTime();
+        //            
+        //         ArrayList<RsvModel> matchingRsvs = RsvDriver.searchByDateArriveBtwn(lookFor);
+        //         
+        //         c.setTime(lookFor); 
+        //         c.add(Calendar.DATE, 10);
+        //         lookFor = c.getTime();
+        //         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
+        //         
+        //         c.setTime(lookFor); 
+        //         c.add(Calendar.DATE, 20);
+        //         lookFor = c.getTime();
+        //         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
+        //         
+        //         c.setTime(lookFor); 
+        //         c.add(Calendar.DATE, 30);
+        //         lookFor = c.getTime();
+        //         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
+        //         
+        //         c.setTime(lookFor); 
+        //         c.add(Calendar.DATE, 25);
+        //         lookFor = c.getTime();
+        //         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
+        //</editor-fold>
 
         //new rate driver test scripts
         System.out.println("Testing Gen Rates for Year Method");

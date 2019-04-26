@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sdbxprototype.data;
+package sdbxprototype.data.models;
 
 /**
  *
  * @author los
  */
-public enum RsvType {
+public enum ReservationType {
+    CONVENTIONAL,
     PREPAID,
     SIXTYADV,
-    CONVENTIONAL,
     INCENTIVE
 }

@@ -5,7 +5,7 @@
  */
 package sdbxprototype.data.drivers;
 
-import sdbxprototype.data.models.RsvModel;
+import sdbxprototype.data.models.ReservationModel;
 import sdbxprototype.data.models.RoomModel;
 import java.util.List;
 import sdbxprototype.data.DevDatabase;
@@ -27,14 +27,14 @@ import sdbxprototype.data.DevDatabase;
 public class RoomDriver implements DataDriver {
     
     // SDBX: expose DevDatabase rsvTbl for DEV
-    public static List<RsvModel> devRtrnAllRsvs(){return DevDatabase.retrieveAllRsvs();}
+    public static List<ReservationModel> devRtrnAllRsvs(){return DevDatabase.retrieveAllRsvs();}
     
     // SDBX: Dev Linkage Method; No RsvDriver to use
-    public static void devLinkRsvAndRoom(RsvModel rsv, RoomModel rm){
+    public static void devLinkRsvAndRoom(ReservationModel rsv, RoomModel rm){
         // Dev Debug info
         System.out.println("\tLinking " + rsv + " & " + rm);
         rsv.setRoom(rm);
-        rm.setRsv(rsv);
+        rm.setReservation(rsv);
     }
     
     /**
@@ -66,16 +66,16 @@ public class RoomDriver implements DataDriver {
     }
     
     // search by rsv
-    public static RoomModel srchRoomByRsv(RsvModel rsv){
+    public static RoomModel srchRoomByRsv(ReservationModel rsv){
         return DevDatabase.rtrvByRsv(rsv);
     }
     
     // assignRsvToRoom
-    public static void asignRsvToRoom(RoomModel rm, RsvModel rsv){
-        rm.setRsv(rsv);
+    public static void asignRsvToRoom(RoomModel rm, ReservationModel rsv){
+        rm.setReservation(rsv);
     }
     // deassignRsvFromRoom
     public static void dsignRsvFromRoom(RoomModel rm){
-        rm.setRsv(null);
+        rm.setReservation(null);
     }
 }
