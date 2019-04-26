@@ -1,4 +1,4 @@
-package sdbxprototype.data.models;
+package prototype.data.models;
 
 import java.time.LocalDate;
 import java.sql.Date;

@@ -1,4 +1,4 @@
-package sdbxprototype.data.models;
+package prototype.data.models;
 
 /**
  *

@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sdbxprototype.data.drivers;
+package prototype.data.drivers;
 
-import sdbxprototype.data.models.ReservationModel;
-import sdbxprototype.data.models.RoomModel;
+import prototype.data.models.ReservationModel;
+import prototype.data.models.RoomModel;
 import java.util.List;
-import sdbxprototype.data.DevDatabase;
+import prototype.data.persistence.EntityDatabase;
 
 /** RoomDriver
  * Refactored from original implementation
@@ -18,16 +18,16 @@ import sdbxprototype.data.DevDatabase;
  * Pass queried list of entities
  *
  * @author los; 
- * 
- * Note:
- * original implementation was not used
- * rewritten to use single src DevDatabase
- * methods reduced to rtrn, flag, srch, asign, dsign
+ 
+ Note:
+ original implementation was not used
+ rewritten to use single src EntityDatabase
+ methods reduced to rtrn, flag, srch, asign, dsign
  */
 public class RoomDriver implements DataDriver {
     
-    // SDBX: expose DevDatabase rsvTbl for DEV
-    public static List<ReservationModel> devRtrnAllRsvs(){return DevDatabase.retrieveAllRsvs();}
+    // SDBX: expose EntityDatabase rsvTbl for DEV
+    public static List<ReservationModel> devRtrnAllRsvs(){return EntityDatabase.retrieveAllRsvs();}
     
     // SDBX: Dev Linkage Method; No RsvDriver to use
     public static void devLinkRsvAndRoom(ReservationModel rsv, RoomModel rm){
@@ -45,15 +45,15 @@ public class RoomDriver implements DataDriver {
     
     // return all rooms
     public static List<RoomModel> rtrnAllRooms(){
-        return DevDatabase.rtrvAllRooms();
+        return EntityDatabase.rtrvAllRooms();
     }
     // return available rooms
     public static List<RoomModel> rtrnAvailableRooms(){
-        return DevDatabase.rtrvAvailableRooms();
+        return EntityDatabase.rtrvAvailableRooms();
     }
     // return occupied rooms
     public static List<RoomModel> rtrnOccupiedRooms(){
-        return DevDatabase.rtrvOccupiedRooms();
+        return EntityDatabase.rtrvOccupiedRooms();
     }
     
     // flag room occupied
@@ -67,7 +67,7 @@ public class RoomDriver implements DataDriver {
     
     // search by rsv
     public static RoomModel srchRoomByRsv(ReservationModel rsv){
-        return DevDatabase.rtrvByRsv(rsv);
+        return EntityDatabase.rtrvByRsv(rsv);
     }
     
     // assignRsvToRoom

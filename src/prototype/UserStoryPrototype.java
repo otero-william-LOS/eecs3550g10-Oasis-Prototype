@@ -3,26 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sdbxprototype;
+package prototype;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import sdbxprototype.data.DevDatabase;
-import sdbxprototype.data.drivers.RateDriver;
-import sdbxprototype.data.drivers.RoomDriver;
-import sdbxprototype.data.models.RoomModel;
-import sdbxprototype.data.drivers.RsvDriver;
-import sdbxprototype.data.models.RateModel;
-import sdbxprototype.data.models.ReservationModel;
+import prototype.data.persistence.EntityDatabase;
+import prototype.data.drivers.RateDriver;
+import prototype.data.drivers.RoomDriver;
+import prototype.data.models.RoomModel;
+import prototype.data.drivers.ReservationDriver;
+import prototype.data.models.RateModel;
+import prototype.data.models.ReservationModel;
 
 /**
  *
  * @author wotero
  */
-public class SdbxGitRepo {
+public class UserStoryPrototype {
 
     /**
      * @param args the command line arguments
@@ -32,7 +32,7 @@ public class SdbxGitRepo {
         
         //<editor-fold defaultstate="collapsed" desc="Room Driver Test Scripts">
 //        System.out.println("Testing Gen All Empty");
-//        DevDatabase.genRoomTblAllAvailable();
+//        EntityDatabase.genRoomTblAllAvailable();
 //        System.out.println("\tRequesting All Rooms");
 //        List<RoomModel> rmList = RoomDriver.rtrnAllRooms();
 //        rmList.forEach(rm -> System.out.println("\t\t" + rm));
@@ -41,7 +41,7 @@ public class SdbxGitRepo {
 //        System.out.println();
 //        
 //        System.out.println("Testing Gen All Occupied");
-//        DevDatabase.genRoomTblAllOccupied();
+//        EntityDatabase.genRoomTblAllOccupied();
 //        System.out.println("\tRequesting All Rooms");
 //        rmList = RoomDriver.rtrnAllRooms();
 //        rmList.forEach(rm -> System.out.println("\t\t" + rm));
@@ -50,7 +50,7 @@ public class SdbxGitRepo {
 //        System.out.println();
 //        
 //        System.out.println("Testing Gen Partial Occupied");
-//        DevDatabase.genRoomTblPartialOccupied(5);
+//        EntityDatabase.genRoomTblPartialOccupied(5);
 //        System.out.println("\tRequesting All Rooms");
 //        rmList = RoomDriver.rtrnAllRooms();
 //        rmList.forEach(rm -> System.out.println("\t\t" + rm));
@@ -69,7 +69,7 @@ public class SdbxGitRepo {
 //        System.out.println();
 //        
 //        System.out.println("Testing DEV-only gen Rsvs");
-//        DevDatabase.genRsvTblBase(10);
+//        EntityDatabase.genRsvTblBase(10);
 //        System.out.println("\tRequesting All Rsvs");
 //        List<RsvModel> rsvList = RoomDriver.devRtrnAllRsvs();
 //        rsvList.forEach(rsv -> System.out.println("\t\t" + rsv));
@@ -165,7 +165,7 @@ public class SdbxGitRepo {
         //         }
         //         
         //         for (ReservationModel rsv : reservationTable) {
-        //            RsvDriver.createRSVC(rsv.getDateArrive(), rsv.getDateDepart());
+        //            ReservationDriver.createRSVC(rsv.getDateArrive(), rsv.getDateDepart());
         //        }
         //         
         //         Date lookFor = new Date();
@@ -174,34 +174,34 @@ public class SdbxGitRepo {
         //         c.add(Calendar.DATE, 3);
         //         lookFor = c.getTime();
         //            
-        //         ArrayList<RsvModel> matchingRsvs = RsvDriver.searchByDateArriveBtwn(lookFor);
+        //         ArrayList<RsvModel> matchingRsvs = ReservationDriver.searchByDateArriveBtwn(lookFor);
         //         
         //         c.setTime(lookFor); 
         //         c.add(Calendar.DATE, 10);
         //         lookFor = c.getTime();
-        //         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
+        //         matchingRsvs.addAll(ReservationDriver.searchByDateArriveBtwn(lookFor));
         //         
         //         c.setTime(lookFor); 
         //         c.add(Calendar.DATE, 20);
         //         lookFor = c.getTime();
-        //         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
+        //         matchingRsvs.addAll(ReservationDriver.searchByDateArriveBtwn(lookFor));
         //         
         //         c.setTime(lookFor); 
         //         c.add(Calendar.DATE, 30);
         //         lookFor = c.getTime();
-        //         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
+        //         matchingRsvs.addAll(ReservationDriver.searchByDateArriveBtwn(lookFor));
         //         
         //         c.setTime(lookFor); 
         //         c.add(Calendar.DATE, 25);
         //         lookFor = c.getTime();
-        //         matchingRsvs.addAll(RsvDriver.searchByDateArriveBtwn(lookFor));
+        //         matchingRsvs.addAll(ReservationDriver.searchByDateArriveBtwn(lookFor));
         //</editor-fold>
 
         //new rate driver test scripts
         System.out.println("Testing Gen Rates for Year Method");
-        DevDatabase.genRateTableForYear();
+        EntityDatabase.genRateTableForYear();
         System.out.println("\tRequesting All Rates");
-        List<RateModel> rtList = DevDatabase.rtrvAllRates();
+        List<RateModel> rtList = EntityDatabase.rtrvAllRates();
         rtList.forEach(rt -> System.out.println("\t\t" + rt));
         System.out.println("\tNumber of Rates:" + Integer.toString(rtList.size()));
     }

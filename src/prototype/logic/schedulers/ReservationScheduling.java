@@ -1,14 +1,13 @@
 
-package sdbxprototype.logic;
+package prototype.logic.schedulers;
 
-import sdbxprototype.data.drivers.RsvDriver;
-import sdbxprototype.data.models.ReservationModel;
+import prototype.data.drivers.ReservationDriver;
+import prototype.data.models.ReservationModel;
 import java.util.ArrayList;
 import java.util.Date;
 
 
-public class RsvScheduling {
-    
+public class ReservationScheduling implements Scheduler {    
     // receive a date and dte depart
     // send these to payment processing, 
     public static String createReservation(Date dateArrive, Date dateDepart){
@@ -19,7 +18,7 @@ public class RsvScheduling {
         // over any of the requested reservation days
         // if the reservation cannot be made will return a value to main 
         // stating so, for now assume unlimited reservations can be made
-//        int rsvID = RsvDriver.createRSVCSched(dateArrive, dateDepart);
+//        int rsvID = ReservationDriver.createRSVCSched(dateArrive, dateDepart);
         
         // I have generated the new Reservation and the ID
         // send all nescessary info to payment procssing
@@ -55,5 +54,24 @@ public class RsvScheduling {
         return reservations;
     }
     
-    
+    @Override
+    public void openModule() {
+        //  TBD; possible future dev
+    }
+
+    @Override
+    public void closeModule() {
+        //  TBD; possible future dev
+    }
+
+    @Override
+    public void outputModuleMetrics() {
+        //  TODO will help with module unit testing
+    }
+
+    @Override
+    public void runModuleUserStories() {
+        //  TODO will be updated as new user stories are created.
+    }
+
 }

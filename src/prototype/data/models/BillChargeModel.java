@@ -1,4 +1,4 @@
-package sdbxprototype.data.models;
+package prototype.data.models;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;

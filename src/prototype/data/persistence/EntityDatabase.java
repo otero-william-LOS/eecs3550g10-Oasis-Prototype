@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sdbxprototype.data;
+package prototype.data.persistence;
 
-import sdbxprototype.data.models.ReservationType;
+import prototype.data.models.ReservationType;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import sdbxprototype.data.models.ReservationModel;
-import sdbxprototype.data.models.RoomModel;
-import sdbxprototype.data.models.RateModel;
-import sdbxprototype.data.models.GuestModel;
-import sdbxprototype.data.models.BillChargeModel;
+import prototype.data.models.ReservationModel;
+import prototype.data.models.RoomModel;
+import prototype.data.models.RateModel;
+import prototype.data.models.GuestModel;
+import prototype.data.models.BillChargeModel;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.Random;
  *
  * @author wotero
  */
-public class DevDatabase {
+public class EntityDatabase {
     
     private static final List<ReservationModel> rsvTable = new ArrayList<>();
     private static final List<RoomModel> roomTable = new ArrayList<>();
@@ -32,7 +32,7 @@ public class DevDatabase {
     private static final List<GuestModel> guestTable = new ArrayList<>();
     
     /**
-     *  DevDatabase Gen Methods for UnitTesting
+     *  EntityDatabase Gen Methods for UnitTesting
      */
     
     //<editor-fold defaultstate="collapsed" desc="Rsv Dummy DevGeneration Methods">
@@ -166,7 +166,7 @@ public class DevDatabase {
 //</editor-fold>
     
     /**
-     *  DevDatabase Create & Retrieval
+     *  EntityDatabase Create & Retrieval
      */
     
     //<editor-fold defaultstate="collapsed" desc="Rsv Entity Create & Retrieval Methods">

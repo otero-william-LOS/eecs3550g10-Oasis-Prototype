@@ -1,4 +1,4 @@
-package sdbxprototype.data.drivers;
+package prototype.data.drivers;
 
 /**
  * DataDriver interface

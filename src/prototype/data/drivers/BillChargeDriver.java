@@ -3,64 +3,64 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sdbxprototype.data.drivers;
+package prototype.data.drivers;
 
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
-import sdbxprototype.data.DevDatabase;
-import sdbxprototype.data.models.BillChargeModel;
-import sdbxprototype.data.models.ReservationModel;
+import prototype.data.persistence.EntityDatabase;
+import prototype.data.models.BillChargeModel;
+import prototype.data.models.ReservationModel;
 
 /**
  *
  * @author wotero
  */
-public class BllchrgDriver implements DataDriver {
+public class BillChargeDriver implements DataDriver {
 
     public static ArrayList<BillChargeModel> searchByDatePaid(BillChargeModel DatePaid) {
         ArrayList<BillChargeModel> matchingDatePaid = new ArrayList<BillChargeModel>();
-        DevDatabase.searchByDatePaid(DatePaid);
+        EntityDatabase.searchByDatePaid(DatePaid);
         return matchingDatePaid;
     }
 
     //Create BllCharge for 3 different constructors
     public static void createBllChrg(Date DateCharged, double amount, String lineDesc) {
-//        DevDatabase.addBllCharge(DateCharged, amount, lineDesc);
+//        EntityDatabase.addBllCharge(DateCharged, amount, lineDesc);
     }
 
     public static void createBllChrg(Date DateCharged, double amount) {
-//        DevDatabase.addBllCharge(DateCharged, amount);
+//        EntityDatabase.addBllCharge(DateCharged, amount);
     }
 
     public static void createBllChrg(Date DateCharged) {
-//        DevDatabase.addBllCharge(DateCharged);
+//        EntityDatabase.addBllCharge(DateCharged);
     }
 
     //search by reservation, or bill charge ID or the date charged or paid
     public static ArrayList<BillChargeModel> searchByReservation(ReservationModel rsv) {
         ArrayList<BillChargeModel> matchingRsv = new ArrayList<BillChargeModel>();
-        DevDatabase.searchByReservation(rsv);
+        EntityDatabase.searchByReservation(rsv);
         return matchingRsv;
     }
 
     public static ArrayList<BillChargeModel> searchByBllChrgID(BillChargeModel bllchrgID) {
         ArrayList<BillChargeModel> matchingBllChrgID = new ArrayList<BillChargeModel>();
-        DevDatabase.searchByBllChrgID(bllchrgID);
+        EntityDatabase.searchByBllChrgID(bllchrgID);
         return matchingBllChrgID;
     }
 
     public static ArrayList<BillChargeModel> searchByDateCharged(BillChargeModel DateCharged) {
         ArrayList<BillChargeModel> matchingDateCharged = new ArrayList<BillChargeModel>();
-        DevDatabase.searchByDateCharged(DateCharged);
+        EntityDatabase.searchByDateCharged(DateCharged);
         return matchingDateCharged;
     }
 
     public static void flagIsPaid(int primaryKey) {
-        DevDatabase.flagBillIsPaid(primaryKey);
+        EntityDatabase.flagBillIsPaid(primaryKey);
     }
     public String ModifyBilling;
-    private final DevDatabase devDB = new DevDatabase();
+    private final EntityDatabase devDB = new EntityDatabase();
 
     // asignRsvToBllchrg
     public void asignRsvToBllchrg(BillChargeModel bllchrgID, ReservationModel rsv) {

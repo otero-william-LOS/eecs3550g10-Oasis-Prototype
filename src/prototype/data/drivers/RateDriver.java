@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sdbxprototype.data.drivers;
+package prototype.data.drivers;
 
 import java.time.LocalDate;
 import java.sql.Date;
 import java.util.List;
-import sdbxprototype.data.DevDatabase;
-import sdbxprototype.data.models.ReservationType;
-import sdbxprototype.data.models.DataModel;
-import sdbxprototype.data.models.RateModel;
+import prototype.data.persistence.EntityDatabase;
+import prototype.data.models.ReservationType;
+import prototype.data.models.DataModel;
+import prototype.data.models.RateModel;
 
 /**
  *
@@ -30,7 +30,7 @@ public class RateDriver implements DataDriver {
     
     // create single rate w/ base rate
     public static void createRate(Date date, double baseRate){
-//        DevDatabase.addRate(date, baseRate);
+//        EntityDatabase.addRate(date, baseRate);
     }
     public static void createRate(LocalDate localDate, double baseRate){
         Date dt = Date.valueOf(localDate);
@@ -39,7 +39,7 @@ public class RateDriver implements DataDriver {
     
     // create continuous range of rates w/ base rate
     public static void createRateRange(Date startInclusive, Date endExclusive, Double baseRate){
-//        DevDatabase.addRateRange(startInclusive, endExclusive, baseRate);
+//        EntityDatabase.addRateRange(startInclusive, endExclusive, baseRate);
     }
     public static void createRateRange(LocalDate startInclusive, LocalDate endExclusive, Double baseRate){
         Date startIn = Date.valueOf(startInclusive);
@@ -57,7 +57,7 @@ public class RateDriver implements DataDriver {
         existingRate.setBaseRate(newBaseRate);
     }
     public static void mdfyBaseRate(Date date, double newBaseRate){
-        RateModel existingRate = DevDatabase.rtrvByDate(date);
+        RateModel existingRate = EntityDatabase.rtrvByDate(date);
         mdfyBaseRate(existingRate, newBaseRate);
     }
     public static void mdfyBaseRate(LocalDate localDate, double newBaseRate){
@@ -70,7 +70,7 @@ public class RateDriver implements DataDriver {
         existingRates.forEach(rt -> rt.setBaseRate(newBaseRate));
     }
     public static void mdfyBaseRateRange(Date startInclusive, Date endInclusive, double newBaseRate){
-        List<RateModel> existingRates = DevDatabase.rtrvByDateRange(startInclusive, endInclusive);
+        List<RateModel> existingRates = EntityDatabase.rtrvByDateRange(startInclusive, endInclusive);
         mdfyBaseRateRange(existingRates, newBaseRate);
     }
     public static void mdfyBaseRateRange(LocalDate startInclusive, LocalDate endInclusive, double newBaseRate){
@@ -81,26 +81,26 @@ public class RateDriver implements DataDriver {
     
     // searchByDate
     public static RateModel srchByDate(Date date){
-        return DevDatabase.rtrvByDate(date);
+        return EntityDatabase.rtrvByDate(date);
     }
     public static RateModel srchByDate(LocalDate localDate){
         Date dt = Date.valueOf(localDate);
-        return DevDatabase.rtrvByDate(dt);
+        return EntityDatabase.rtrvByDate(dt);
     }
     
     // searchByDateRange
     public static List<RateModel> srchByDateRange(Date startInclusive, Date endInclusive){
-        return DevDatabase.rtrvByDateRange(startInclusive, endInclusive);
+        return EntityDatabase.rtrvByDateRange(startInclusive, endInclusive);
     }
     public static List<RateModel> srchByDateRange(LocalDate startInclusive, LocalDate endInclusive){
         Date startIn = Date.valueOf(startInclusive);
         Date endIn = Date.valueOf(endInclusive);
-        return DevDatabase.rtrvByDateRange(startIn, endIn);
+        return EntityDatabase.rtrvByDateRange(startIn, endIn);
     }
     
     // return all rates in table
     public static List<RateModel> rtrnAllRates(){
-        return DevDatabase.rtrvAllRates();
+        return EntityDatabase.rtrvAllRates();
     }
     
     // returnRsvTypeRate
@@ -128,7 +128,7 @@ public class RateDriver implements DataDriver {
         return rate.getBaseRate() * typeRate;
     }
     public static double rtrnRsvTypeRate(Date date, ReservationType type){
-        RateModel rate = DevDatabase.rtrvByDate(date);
+        RateModel rate = EntityDatabase.rtrvByDate(date);
         return rtrnRsvTypeRate(rate, type);
     }
     public static double rtrnRsvTypeRate(LocalDate localDate, ReservationType type){
@@ -143,7 +143,7 @@ public class RateDriver implements DataDriver {
         return rate.getBaseRate() * MLTPLR_RSVMDFY;
     }
     public static double rtrnRsvModifyRate(Date date){
-        RateModel rate = DevDatabase.rtrvByDate(date);
+        RateModel rate = EntityDatabase.rtrvByDate(date);
         return rtrnRsvModifyRate(rate);
     }
     public static double rtrnRsvModifyRate(LocalDate localDate){
@@ -158,7 +158,7 @@ public class RateDriver implements DataDriver {
         return rate.getBaseRate() * MLTPLR_NOSHOW;
     }
     public static double rtrnRsvNoShowRate(Date date){
-        RateModel rate = DevDatabase.rtrvByDate(date);
+        RateModel rate = EntityDatabase.rtrvByDate(date);
         return rtrnRsvNoShowRate(rate);
     }
     public static double rtrnRsvNoShowRate(LocalDate localDate){
@@ -173,7 +173,7 @@ public class RateDriver implements DataDriver {
         return rate.getBaseRate() * MLTPLR_CANCEL;
     }
     public static double rtrnRsvCancelRate(Date date){
-        RateModel rate = DevDatabase.rtrvByDate(date);
+        RateModel rate = EntityDatabase.rtrvByDate(date);
         return rtrnRsvCancelRate(rate);
     }
     public static double rtrnRsvCancelRate(LocalDate localDate){
