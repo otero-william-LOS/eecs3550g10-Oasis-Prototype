@@ -25,145 +25,12 @@ import java.util.Random;
  */
 public class EntityDatabase {
     
-    private static final List<ReservationModel> rsvTable = new ArrayList<>();
-    private static final List<RoomModel> roomTable = new ArrayList<>();
-    private static final List<RateModel> rateTable = new ArrayList<>();
-    private static final List<BillChargeModel> bllchrgTable = new ArrayList<>();
-    private static final List<GuestModel> guestTable = new ArrayList<>();
+    private static final List<ReservationModel> TBL_RSV_ENTITY = new ArrayList<>();
+    private static final List<RoomModel> TBL_ROOM_ENTITY = new ArrayList<>();
+    private static final List<RateModel> TBL_RATE_ENTITY = new ArrayList<>();
+    private static final List<BillChargeModel> TBL_BLLCHRG_ENTITY = new ArrayList<>();
+    private static final List<GuestModel> TBL_GUEST_ENTITY = new ArrayList<>();
     
-    /**
-     *  EntityDatabase Gen Methods for UnitTesting
-     */
-    
-    //<editor-fold defaultstate="collapsed" desc="Rsv Dummy DevGeneration Methods">
-    
-    // SDBX: Gen Simple ReservationModel with RsvID only
-    public static void genRsvTblBase(int numRsv){
-        rsvTable.clear();
-        for(int i = 0; i < numRsv; i++) 
-            rsvTable.add(new ReservationModel(i + 1, LocalDate.now(), LocalDate.now()));
-        
-        System.out.println("\tNumber of rsv generated: " + Integer.toString(numRsv));
-    }
-    
-//</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="Room Dummy DevGeneration Methods">
-    
-    // SDBX: Private base gen method for rooms
-    private static void genRoomTableBase(boolean allOccupied, boolean partialOccupied, int numOccupied){
-        roomTable.clear();
-        
-        for(short i = 0; i < 45; i++) {
-            short x = (short)(i + 1);
-            roomTable.add(new RoomModel(x, false));
-        } //all rooms are available
-        
-        //debug info
-        System.out.println("\tAll rooms are generated and set as available.");
-        if (allOccupied) 
-            System.out.println("\tAll rooms are set as occupied");
-        else if (partialOccupied)
-            System.out.println("\tPartial amount occupied: " + Integer.toString(numOccupied));
-        
-        if (allOccupied) 
-            roomTable.forEach((room)->room.setIsOccupied(true));
-        else if (partialOccupied){
-            Random rndm = new Random();
-            int cap = Math.min(numOccupied, 45);
-            for(int i = 0; i < cap; i++) {
-                int x = rndm.nextInt(45);
-                if (!roomTable.get(x).isOccupied())
-                    roomTable.get(x).setIsOccupied(true);
-                else
-                    i--; // try again
-                //debug info
-                System.out.println("\tPartial Set Attempt Index: " + Integer.toString(x));
-            }
-        }
-    }
-    // SDBX: Accesible room generation methods
-    public static void genRoomTblAllAvailable(){genRoomTableBase(false, false, 0);}
-    public static void genRoomTblAllOccupied(){genRoomTableBase(true, false, 0);}
-    public static void genRoomTblPartialOccupied(int numOccupied){
-        genRoomTableBase(false, true, numOccupied);
-    }
-    
-//</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="Rate Dummy DevGeneration Methods">
-    
-    //  SDBX: Dev special comparator, maybe
-    
-    //  SDBX: Dev dummy rate generation, creates rates for current year
-    public static void genRateTableForYear(){
-        rateTable.clear();
-        
-        LocalDate today = LocalDate.now();
-        LocalDate startYear = today.with(TemporalAdjusters.firstDayOfYear());
-        
-        Random rndm = new Random();
-        double[] variance = {-10.0, -8.0, -7.5, -6.0, -5.0, -4.0, -2.5, -2.0, -1.0, 0.0, 1.0, 2.0, 2.5, 4.0, 5.0};
-        int vSize = variance.length;
-        
-        System.out.println("jan to april");
-        
-        //  from jan to april, tourism is low, so rate should be low
-        double rate = 200.0;    // arbitrary testing
-        long numDays = ChronoUnit.DAYS.between(startYear, startYear.withMonth(5));
-        for(long i = 0; i < numDays; i++){
-            int rndmIndex = rndm.nextInt(vSize);
-            double vRate = rate + variance[rndmIndex];
-            LocalDate dt = startYear.plusDays(i);
-            addRate(dt, vRate);
-        }
-        
-        System.out.println("may to august");
-        
-        //  from may to august, tourism is high, so rate should be high
-        rate = 375.0;    // arbitrary testing
-        numDays = ChronoUnit.DAYS.between(startYear.withMonth(5), startYear.withMonth(9));
-        for(long i = 0; i < numDays; i++){
-            int rndmIndex = rndm.nextInt(vSize);
-            double vRate = rate + variance[rndmIndex];
-            LocalDate dt = startYear.withMonth(5).plusDays(i);
-            addRate(dt, vRate);
-        }
-        
-        System.out.println("sept to oct");
-        
-        //  from sept to oct, tourism is low, so rate should be low
-        rate = 175.0;    // arbitrary testing
-        numDays = ChronoUnit.DAYS.between(startYear.withMonth(9), startYear.withMonth(11));
-        for(long i = 0; i < numDays; i++){
-            int rndmIndex = rndm.nextInt(vSize);
-            double vRate = rate + variance[rndmIndex];
-            LocalDate dt = startYear.withMonth(9).plusDays(i);
-            addRate(dt, vRate);
-        }
-        
-        System.out.println("nov to dec");
-        
-        //  from nov to dec, tourism is high, so rate should be high
-        rate = 425.0;    // arbitrary testing
-        numDays = ChronoUnit.DAYS.between(startYear.withMonth(11), startYear.plusYears(1));
-        for(long i = 0; i < numDays; i++){
-            int rndmIndex = rndm.nextInt(vSize);
-            double vRate = rate + variance[rndmIndex];
-            LocalDate dt = startYear.withMonth(11).plusDays(i);
-            addRate(dt, vRate);
-        }
-    }
-    
-//</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="Bllchrg Dummy DevGeneration Methods">
-    
-//</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="Guest Dummy DevGeneration Methods">
-    
-//</editor-fold>
     
     /**
      *  EntityDatabase Create & Retrieval
@@ -173,7 +40,7 @@ public class EntityDatabase {
     
     // SDBX: Retrieve Simple ReservationModel Table DEV Method
     public static List<ReservationModel> retrieveAllRsvs(){
-        List<ReservationModel> rsvs = new ArrayList<>(rsvTable);
+        List<ReservationModel> rsvs = new ArrayList<>(TBL_RSV_ENTITY);
         return rsvs;
     }
     
@@ -369,101 +236,26 @@ public class EntityDatabase {
     // end of stuff from austin ================================================
     
 //</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="Room Entity Create & Retrieval Methods">
-    
-    // Database RoomTbl Retrieval Methods
-    public static List<RoomModel> rtrvAllRooms(){
-        List<RoomModel> rooms = new ArrayList<>(roomTable);
-        return rooms;
-    }
-    public static List<RoomModel> rtrvAvailableRooms(){
-        List<RoomModel> rooms = new ArrayList<>(roomTable);
-        rooms.removeIf(room -> room.isOccupied());
-        return rooms;
-    }
-    public static List<RoomModel> rtrvOccupiedRooms(){
-        List<RoomModel> rooms = new ArrayList<>(roomTable);
-        rooms.removeIf(room -> !room.isOccupied());
-        return rooms;
-    }
-    public static RoomModel rtrvByRsv(ReservationModel queryRsv){
-        // TODO: Warning 
-        // - this method won't work if the unique Rsv and Room aren't linked
-        RoomModel room = 
-                rtrvOccupiedRooms().stream().map(RoomModel::getReservation
-                ).peek( // DEV Debug Method
-                        rsv -> System.out.println("\tChecking: " + rsv + "\tAgainst: " + queryRsv)
-                ).filter(
-                        rsv -> rsv.equals(queryRsv)
-                ).map(ReservationModel::getRoom
-                ).findFirst().orElse(null);
-        return room;
-    }
-    
-//</editor-fold>
-    
-    //<editor-fold defaultstate="collapsed" desc="Rate Entity Create & Retrieval Methods">
-    
-    // add single rate w/ base rate
-    public static void addRate(LocalDate rateDate, double baseRate){
-        rateTable.add(new RateModel(rateDate, baseRate));
-    }
-    // add continuous range of rates w/ base rate
-    public static void addRateRange(LocalDate startInclusive, LocalDate endExclusive, double baseRate){
-//        Calendar c = Calendar.getInstance();
-//        c.setTime(startInclusive);
-        LocalDate dt = startInclusive.plusDays(0);
-        while (dt.isBefore(endExclusive)){
-            rateTable.add(new RateModel(dt, baseRate));
-            dt = dt.plusDays(1);
-        }
-    }
-    
-    // retrieve rate by date
-    public static RateModel rtrvByDate(Date date){
-        RateModel rate = 
-                rateTable.stream().filter(
-                        rt -> rt.getRateSqlDate().equals(date)
-                ).findFirst().orElse(null);
-        return rate;
-    }
-    
-    // retrieve listRates by dateRange
-    public static List<RateModel> rtrvByDateRange(Date startInclusive, Date endInclusive){
-        List<RateModel> rates = new ArrayList<>(rateTable);
-        rates.removeIf(rt -> rt.getRateSqlDate().before(startInclusive));
-        rates.removeIf(rt -> rt.getRateSqlDate().after(endInclusive));
-        return rates;
-    }
-    
-    // retrieve all rates
-    public static List<RateModel> rtrvAllRates(){
-        List<RateModel> rates = new ArrayList<>(rateTable);
-        return rates;
-    }
-    
-//</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Bllchrg Entity Create & Retrieval Methods">
 
     public static void addBllCharge(LocalDate DateCharged, double amount, String lineDesc) {
-        BillChargeModel billing = new BillChargeModel(bllchrgTable.size() + 1, lineDesc, amount, DateCharged);
-        bllchrgTable.add(billing);
+        BillChargeModel billing = new BillChargeModel(TBL_BLLCHRG_ENTITY.size() + 1, lineDesc, amount, DateCharged);
+        TBL_BLLCHRG_ENTITY.add(billing);
     }
 
     public static void addBllCharge(LocalDate DateCharged, double amount) {
-        BillChargeModel billing = new BillChargeModel(bllchrgTable.size() + 1, "", amount, DateCharged);
-        bllchrgTable.add(billing);
+        BillChargeModel billing = new BillChargeModel(TBL_BLLCHRG_ENTITY.size() + 1, "", amount, DateCharged);
+        TBL_BLLCHRG_ENTITY.add(billing);
     }
 
     public static void addBllCharge(LocalDate DateCharged) {
-        BillChargeModel billing = new BillChargeModel(bllchrgTable.size() + 1, "", 0, DateCharged);
+        BillChargeModel billing = new BillChargeModel(TBL_BLLCHRG_ENTITY.size() + 1, "", 0, DateCharged);
     }
 
     public static ArrayList<BillChargeModel> searchByReservation(ReservationModel rsv) {
         ArrayList<BillChargeModel> matchingRsv = new  ArrayList<BillChargeModel>();
-        for (BillChargeModel billing: bllchrgTable) {
+        for (BillChargeModel billing: TBL_BLLCHRG_ENTITY) {
             if (billing.getReservation().getReservationID() == rsv.getReservationID()) {
                 matchingRsv.add(billing);
             }
@@ -473,7 +265,7 @@ public class EntityDatabase {
 
     public static ArrayList<BillChargeModel> searchByBllChrgID(BillChargeModel bllchrgID) {
         ArrayList<BillChargeModel> matchingBllChrgID = new  ArrayList<BillChargeModel>();
-        for (BillChargeModel billing : bllchrgTable) {
+        for (BillChargeModel billing : TBL_BLLCHRG_ENTITY) {
             if (billing.getBillChargeID() == billing.getBillChargeID()) {
                 matchingBllChrgID.add(billing);
             }
@@ -483,7 +275,7 @@ public class EntityDatabase {
 
     public static ArrayList<BillChargeModel>  searchByDateCharged(BillChargeModel DateCharged) {
         ArrayList<BillChargeModel> matchingDateCharged= new  ArrayList<BillChargeModel>();
-        for (BillChargeModel billing:bllchrgTable) {
+        for (BillChargeModel billing:TBL_BLLCHRG_ENTITY) {
             if (billing.getDateCharged().equals(billing.getDateCharged())) {
                 matchingDateCharged.add(billing);
             }
@@ -492,7 +284,7 @@ public class EntityDatabase {
     }
     public static ArrayList<BillChargeModel>  searchByDatePaid(BillChargeModel DatePaid) {
         ArrayList<BillChargeModel> matchingDatePaid= new  ArrayList<BillChargeModel>();
-        for (BillChargeModel billing:bllchrgTable) {
+        for (BillChargeModel billing:TBL_BLLCHRG_ENTITY) {
             if (billing.getDatePaid().equals(billing.getDatePaid())) {
                 matchingDatePaid.add(billing);
             }
@@ -501,24 +293,24 @@ public class EntityDatabase {
     }
 
     public static void flagBillIsPaid(int primaryKey) {
-        BillChargeModel billingPaid = bllchrgTable.get(primaryKey);
+        BillChargeModel billingPaid = TBL_BLLCHRG_ENTITY.get(primaryKey);
         billingPaid.setIsPaid(true);
-        bllchrgTable.set(primaryKey, billingPaid);
+        TBL_BLLCHRG_ENTITY.set(primaryKey, billingPaid);
         System.out.println("Bill is Paid.");
     }
 
     public static List<BillChargeModel> retrieveAllBllchrgs() {
-         List<BillChargeModel> bllchrgID = new ArrayList<>(bllchrgTable);
+         List<BillChargeModel> bllchrgID = new ArrayList<>(TBL_BLLCHRG_ENTITY);
          return bllchrgID;
     }
      //Ask For help got stuck
     public static List<BillChargeModel> retrieveAllPaidchrgs() {
-     List<BillChargeModel> isPaidCharge = new ArrayList<>(bllchrgTable);
+     List<BillChargeModel> isPaidCharge = new ArrayList<>(TBL_BLLCHRG_ENTITY);
        isPaidCharge.removeIf(isPaidC-> isPaidC.isPaid());
        return isPaidCharge; 
     } 
     public static List<BillChargeModel> retrieveAllUnpaidchrgs() {
-       List<BillChargeModel> isPaidCharge = new ArrayList<>(bllchrgTable);
+       List<BillChargeModel> isPaidCharge = new ArrayList<>(TBL_BLLCHRG_ENTITY);
        isPaidCharge.removeIf(isPaidC-> !isPaidC.isPaid());
        return isPaidCharge; 
     }
@@ -574,4 +366,195 @@ public class EntityDatabase {
     }
 //</editor-fold>
     
+    //  nested class for rsv entity table
+    public final static class ReservationTable {
+    
+    }
+    
+    //  nested class for room entity table
+    public final static class RoomTable {
+        // Database RoomTbl Retrieval Methods
+        public static List<RoomModel> rtrvAllRooms() {
+            List<RoomModel> rooms = new ArrayList<>(EntityDatabase.TBL_ROOM_ENTITY);
+            return rooms;
+        }
+
+        public static List<RoomModel> rtrvOccupiedRooms() {
+            List<RoomModel> rooms = new ArrayList<>(EntityDatabase.TBL_ROOM_ENTITY);
+            rooms.removeIf((RoomModel room) -> !room.isOccupied());
+            return rooms;
+        }
+
+        public static List<RoomModel> rtrvAvailableRooms() {
+            List<RoomModel> rooms = new ArrayList<>(EntityDatabase.TBL_ROOM_ENTITY);
+            rooms.removeIf(rm -> rm.isOccupied());
+            return rooms;
+        }
+
+        public static RoomModel rtrvByReservation(ReservationModel queryRsv) {
+            // TODO: Warning
+            // - this method won't work if the unique Rsv and Room aren't linked
+            RoomModel room = rtrvOccupiedRooms().stream().map(
+                    RoomModel::getReservation
+            ).filter(
+                    rsv -> rsv.equals(queryRsv)
+            ).map(
+                    ReservationModel::getRoom
+            ).findFirst().orElse(null);
+            return room;
+        }
+    }
+    
+    //  nested class for rate entity table
+    public final static class RateTable {
+
+        // add continuous range of rates w/ base rate
+        public static void addRateRange(LocalDate startInclusive, LocalDate endExclusive, double baseRate) {
+            LocalDate dt = startInclusive.plusDays(0);
+            while (dt.isBefore(endExclusive)) {
+                EntityDatabase.TBL_RATE_ENTITY.add(new RateModel(dt, baseRate));
+                dt = dt.plusDays(1);
+            }
+        }
+
+        // retrieve listRates by dateRange
+        public static List<RateModel> rtrvByDateRange(Date startInclusive, Date endInclusive) {
+            List<RateModel> rates = new ArrayList<>(EntityDatabase.TBL_RATE_ENTITY);
+            rates.removeIf((RateModel rt) -> rt.getRateSqlDate().before(startInclusive));
+            rates.removeIf((RateModel rt) -> rt.getRateSqlDate().after(endInclusive));
+            return rates;
+        }
+
+        // retrieve all rates
+        public static List<RateModel> rtrvAllRates() {
+            List<RateModel> rates = new ArrayList<>(EntityDatabase.TBL_RATE_ENTITY);
+            return rates;
+        }
+
+        // add single rate w/ base rate
+        public static void addRate(LocalDate rateDate, double baseRate) {
+            EntityDatabase.TBL_RATE_ENTITY.add(new RateModel(rateDate, baseRate));
+        }
+
+        // retrieve rate by date
+        public static RateModel rtrvByDate(Date date) {
+            RateModel rate = EntityDatabase.TBL_RATE_ENTITY.stream().filter((RateModel rt) -> rt.getRateSqlDate().equals(date)).findFirst().orElse(null);
+            return rate;
+        }
+    }
+    
+    //  nested class for guest entity table
+    public final static class GuestTable {
+    
+    }
+    
+    //  nested class for bllchrg entity table
+    public final static class BillChargeTable {
+    
+    }
+    
+    //  nested class for development
+    public final static class DevUtilities {
+        
+        //Room generation utilities
+        private static void genRoomTableBase(boolean allOccupied, boolean partialOccupied, int nOccupied) {
+            EntityDatabase.TBL_ROOM_ENTITY.clear();
+            for (short i = 0; i < 45; i++) {
+                short x = (short) (i + 1);
+                EntityDatabase.TBL_ROOM_ENTITY.add(new RoomModel(x, false));
+            } //all rooms are available
+            //debug info
+            System.out.println("\tAll rooms are generated and set as available.");
+            if (allOccupied) {
+                System.out.println("\tAll rooms are set as occupied");
+            } else if (partialOccupied) {
+                System.out.println("\tPartial amount occupied: " + Integer.toString(nOccupied));
+            }
+            if (allOccupied) {
+                EntityDatabase.TBL_ROOM_ENTITY.forEach((RoomModel room) -> room.setIsOccupied(true));
+            } else if (partialOccupied) {
+                Random rndm = new Random();
+                int cap = Math.min(nOccupied, 45);
+                for (int i = 0; i < cap; i++) {
+                    int x = rndm.nextInt(45);
+                    if (!EntityDatabase.TBL_ROOM_ENTITY.get(x).isOccupied()) {
+                        EntityDatabase.TBL_ROOM_ENTITY.get(x).setIsOccupied(true);
+                    } else {
+                        i--; // try again
+                    }
+                    //debug info
+                    System.out.println("\tPartial Set Attempt Index: " + Integer.toString(x));
+                }
+            }
+        }
+        public static void generateRoomTableAllOccupied() {
+            genRoomTableBase(true, false, 0);
+        }
+        public static void generateRoomTableAllAvailable() {
+            genRoomTableBase(false, false, 0);
+        }
+        public static void generateRoomTablePartialOccupied(int nOccupied) {
+            genRoomTableBase(false, true, nOccupied);
+        }
+
+        // Reservation Generation
+        public static void generateReservationTable(int nRsv) {
+            EntityDatabase.TBL_RSV_ENTITY.clear();
+            for (int i = 0; i < nRsv; i++) {
+                EntityDatabase.TBL_RSV_ENTITY.add(new ReservationModel(i + 1, LocalDate.now(), LocalDate.now()));
+            }
+            System.out.println("\tNumber of rsv generated: " + Integer.toString(nRsv));
+        }
+
+        //  SDBX: Dev dummy rate generation, creates rates for current year
+        public static void genRateTableForYear() {
+            EntityDatabase.TBL_RATE_ENTITY.clear();
+            LocalDate today = LocalDate.now();
+            LocalDate startYear = today.with(TemporalAdjusters.firstDayOfYear());
+            Random rndm = new Random();
+            double[] variance = {-10.0, -8.0, -7.5, -6.0, -5.0, -4.0, -2.5, -2.0, -1.0, 0.0, 1.0, 2.0, 2.5, 4.0, 5.0};
+            int vSize = variance.length;
+            System.out.println("jan to april");
+            //  from jan to april, tourism is low, so rate should be low
+            double rate = 200.0;    // arbitrary testing
+            long numDays = ChronoUnit.DAYS.between(startYear, startYear.withMonth(5));
+            for (long i = 0; i < numDays; i++) {
+                int rndmIndex = rndm.nextInt(vSize);
+                double vRate = rate + variance[rndmIndex];
+                LocalDate dt = startYear.plusDays(i);
+                RateTable.addRate(dt, vRate);
+            }
+            System.out.println("may to august");
+            //  from may to august, tourism is high, so rate should be high
+            rate = 375.0; // arbitrary testing
+            numDays = ChronoUnit.DAYS.between(startYear.withMonth(5), startYear.withMonth(9));
+            for (long i = 0; i < numDays; i++) {
+                int rndmIndex = rndm.nextInt(vSize);
+                double vRate = rate + variance[rndmIndex];
+                LocalDate dt = startYear.withMonth(5).plusDays(i);
+                RateTable.addRate(dt, vRate);
+            }
+            System.out.println("sept to oct");
+            //  from sept to oct, tourism is low, so rate should be low
+            rate = 175.0; // arbitrary testing
+            numDays = ChronoUnit.DAYS.between(startYear.withMonth(9), startYear.withMonth(11));
+            for (long i = 0; i < numDays; i++) {
+                int rndmIndex = rndm.nextInt(vSize);
+                double vRate = rate + variance[rndmIndex];
+                LocalDate dt = startYear.withMonth(9).plusDays(i);
+                RateTable.addRate(dt, vRate);
+            }
+            System.out.println("nov to dec");
+            //  from nov to dec, tourism is high, so rate should be high
+            rate = 425.0; // arbitrary testing
+            numDays = ChronoUnit.DAYS.between(startYear.withMonth(11), startYear.plusYears(1));
+            for (long i = 0; i < numDays; i++) {
+                int rndmIndex = rndm.nextInt(vSize);
+                double vRate = rate + variance[rndmIndex];
+                LocalDate dt = startYear.withMonth(11).plusDays(i);
+                RateTable.addRate(dt, vRate);
+            }
+        }
+        
+    }
 }

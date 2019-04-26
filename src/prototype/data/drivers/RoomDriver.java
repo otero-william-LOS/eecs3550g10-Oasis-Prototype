@@ -45,15 +45,15 @@ public class RoomDriver implements DataDriver {
     
     // return all rooms
     public static List<RoomModel> rtrnAllRooms(){
-        return EntityDatabase.rtrvAllRooms();
+        return EntityDatabase.RoomTable.rtrvAllRooms();
     }
     // return available rooms
     public static List<RoomModel> rtrnAvailableRooms(){
-        return EntityDatabase.rtrvAvailableRooms();
+        return EntityDatabase.RoomTable.rtrvAvailableRooms();
     }
     // return occupied rooms
     public static List<RoomModel> rtrnOccupiedRooms(){
-        return EntityDatabase.rtrvOccupiedRooms();
+        return EntityDatabase.RoomTable.rtrvOccupiedRooms();
     }
     
     // flag room occupied
@@ -67,7 +67,7 @@ public class RoomDriver implements DataDriver {
     
     // search by rsv
     public static RoomModel srchRoomByRsv(ReservationModel rsv){
-        return EntityDatabase.rtrvByRsv(rsv);
+        return EntityDatabase.RoomTable.rtrvByReservation(rsv);
     }
     
     // assignRsvToRoom
