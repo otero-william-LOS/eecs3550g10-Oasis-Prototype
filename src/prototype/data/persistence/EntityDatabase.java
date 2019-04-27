@@ -262,34 +262,72 @@ public class EntityDatabase {
         }
         return matchingRsv;
     }
-
-    public static ArrayList<BillChargeModel> searchByBllChrgID(BillChargeModel bllchrgID) {
+    
+    public static ArrayList<BillChargeModel> searchByReservation(int rsvID) {
+        ArrayList<BillChargeModel> matchingRsv = new  ArrayList<BillChargeModel>();
+        for (BillChargeModel billing: TBL_BLLCHRG_ENTITY) {
+            if (billing.getReservation().getReservationID() == rsvID) {
+                matchingRsv.add(billing);
+            }
+        }
+        return matchingRsv;
+    }
+    
+        public static ArrayList<BillChargeModel> searchByBllChrgID(int bllchrgID) {
         ArrayList<BillChargeModel> matchingBllChrgID = new  ArrayList<BillChargeModel>();
         for (BillChargeModel billing : TBL_BLLCHRG_ENTITY) {
-            if (billing.getBillChargeID() == billing.getBillChargeID()) {
+            if (billing.getBillChargeID() == bllchrgID) {
                 matchingBllChrgID.add(billing);
             }
         }
         return matchingBllChrgID;
     }
-
-    public static ArrayList<BillChargeModel>  searchByDateCharged(BillChargeModel DateCharged) {
+    
+    public static ArrayList<BillChargeModel>  searchByDateCharged(LocalDate dateChrged ) {
         ArrayList<BillChargeModel> matchingDateCharged= new  ArrayList<BillChargeModel>();
         for (BillChargeModel billing:TBL_BLLCHRG_ENTITY) {
-            if (billing.getDateCharged().equals(billing.getDateCharged())) {
+            if (billing.getDateCharged().equals(dateChrged)) {
                 matchingDateCharged.add(billing);
             }
         }
         return matchingDateCharged;
     }
-    public static ArrayList<BillChargeModel>  searchByDatePaid(BillChargeModel DatePaid) {
+    
+        public static ArrayList<BillChargeModel>  searchByDateRangeCharged(LocalDate dateChrgedSart, LocalDate dateChrgedend ) {
+        ArrayList<BillChargeModel> matchingDateCharged= new  ArrayList<BillChargeModel>();
+        for (BillChargeModel billing:TBL_BLLCHRG_ENTITY) {
+            if ((billing.getDateCharged().equals(dateChrgedSart) || billing.getDateCharged().isAfter(dateChrgedSart)) && 
+                    ((billing.getDateCharged().equals(dateChrgedend) || billing.getDateCharged().isBefore(dateChrgedend)))) {
+                matchingDateCharged.add(billing);
+            }
+        }
+        return matchingDateCharged;
+    }
+    
+    public static ArrayList<BillChargeModel>  searchByDatePaid(LocalDate DatePaid) {
         ArrayList<BillChargeModel> matchingDatePaid= new  ArrayList<BillChargeModel>();
         for (BillChargeModel billing:TBL_BLLCHRG_ENTITY) {
-            if (billing.getDatePaid().equals(billing.getDatePaid())) {
+            if (billing.getDatePaid().equals(DatePaid)) {
                 matchingDatePaid.add(billing);
             }
         }
         return matchingDatePaid;
+    }
+    
+    public static BillChargeModel getSingleCharge(int billChargeID){
+        BillChargeModel returnbill = new BillChargeModel();
+        boolean wasFound = false;
+        for (BillChargeModel billing:TBL_BLLCHRG_ENTITY) {
+            if (billing.getBillChargeID() == (billChargeID)) {
+                returnbill = billing;
+                wasFound = true;
+            }
+        }
+        
+        if (wasFound == true)
+        return returnbill;
+        else
+        return null;
     }
 
     public static void flagBillIsPaid(int primaryKey) {
@@ -303,15 +341,17 @@ public class EntityDatabase {
          List<BillChargeModel> bllchrgID = new ArrayList<>(TBL_BLLCHRG_ENTITY);
          return bllchrgID;
     }
+    
      //Ask For help got stuck
     public static List<BillChargeModel> retrieveAllPaidchrgs() {
      List<BillChargeModel> isPaidCharge = new ArrayList<>(TBL_BLLCHRG_ENTITY);
        isPaidCharge.removeIf(isPaidC-> isPaidC.isPaid());
        return isPaidCharge; 
     } 
+    
     public static List<BillChargeModel> retrieveAllUnpaidchrgs() {
        List<BillChargeModel> isPaidCharge = new ArrayList<>(TBL_BLLCHRG_ENTITY);
-       isPaidCharge.removeIf(isPaidC-> !isPaidC.isPaid());
+       isPaidCharge.removeIf(bill-> !bill.isPaid());
        return isPaidCharge; 
     }
     
@@ -766,140 +806,106 @@ public class EntityDatabase {
     }
     
     //  nested class for bllchrg entity table
-    public final static class BillChargeTale {
-//    
-//    
-//    protected static ArrayList<LazyBllchrgModel> requestAll_LazyBllchrgData(ArrayList<BllchrgModel> bllList){
-//        ArrayList<LazyBllchrgModel> list = new ArrayList<>();
-//        
-//        for (int i = 0; i < bllList.size(); i++){
-//            LazyBllchrgModel lzyBll = new LazyBllchrgModel();
-//            lzyBll.setBllchrgID(bllList.get(i).getBllchrgID());
-//            lzyBll.setLineDescription(
-//                    bllList.get(i).getLineDescription());
-//            lzyBll.setAmount(bllList.get(i).getAmount());
-//            lzyBll.setDateCharged(bllList.get(i).getDateCharged());
-//            lzyBll.setDatePaid(bllList.get(i).getDatePaid());
-//            lzyBll.setIsPaid(bllList.get(i).isIsPaid());
-//            lzyBll.setReservation(bllList.get(i).getReservation().getRsvID());
-//            
-//            
-//            list.add(lzyBll);
-//        }
-//        
-//        return list;
-//    }
-////------------------------Request All Data -------------------------------//
-//        public static ArrayList<LazyBllchrgModel> requestAll_LazyBllchrgData() {
-//        return Database.Database.getBllchrg_Data();
-//    }
-//    public static ArrayList<BllchrgModel> requestAll_BllchrgData() {
-//        ArrayList<BllchrgModel> billList = new ArrayList<>();
-//        ArrayList<LazyBllchrgModel> lazyBllchrgList
-//                = Database.Database.getBllchrg_Data();
-//
-//        BllchrgModel newBllchrg;
-//        for (int i = 0; i < lazyBllchrgList.size(); i++) {
-//            newBllchrg = new BllchrgModel();
-//            newBllchrg.setBllchrgID(lazyBllchrgList.get(i).getBllchrgID());
-//            newBllchrg.setReservation(
-//                    createReservationModel(lazyBllchrgList.get(i)));
-//            newBllchrg.setLineDescription(
-//                    lazyBllchrgList.get(i).getLineDescription());
-//            newBllchrg.setAmount(lazyBllchrgList.get(i).getAmount());
-//            newBllchrg.setDateCharged(lazyBllchrgList.get(i).getDateCharged());
-//            newBllchrg.setDatePaid(lazyBllchrgList.get(i).getDatePaid());
-//            newBllchrg.setIsPaid(lazyBllchrgList.get(i).isIsPaid());
-//            billList.add(newBllchrg);
-//        }
-//
-//        return billList;
-//    }
-////------------------------<END> Request All Data ---------------------------//
-//    //------------------------Request Lists-------------------------------//
-//    public static ArrayList<BllchrgModel> requestBillchrgDateChargedList(
-//            Date startDate, Date endDate) {
-//        ArrayList<BllchrgModel> filteredList = new ArrayList<>();
-//        ArrayList<BllchrgModel> billList = requestAll_BllchrgData();
-//
-//        for (int i = 0; i < billList.size(); i++) {
-//            if ((billList.get(i).getDateCharged().equals(startDate)
-//                    || billList.get(i).getDateCharged().after(startDate))
-//                    && (billList.get(i).getDateCharged().equals(endDate)
-//                    || billList.get(i).getDateCharged().before(endDate))) {
-//                filteredList.add(billList.get(i));
-//            }
-//        }
-//        return filteredList;
-//    }
-//
-//    public static ArrayList<BllchrgModel> requestBillchrgPaidList(
-//            Date startDate, Date endDate) {
-//        ArrayList<BllchrgModel> filteredList = new ArrayList<>();
-//        ArrayList<BllchrgModel> billList = requestAll_BllchrgData();
-//
-//        for (int i = 0; i < billList.size(); i++) {
-//            if ((billList.get(i).getDatePaid().equals(startDate)
-//                    || billList.get(i).getDatePaid().after(startDate))
-//                    && (billList.get(i).getDatePaid().equals(endDate)
-//                    || billList.get(i).getDatePaid().before(endDate))) {
-//                filteredList.add(billList.get(i));
-//            }
-//        }
-//        return filteredList;
-//    }
-//
-//    public static ArrayList<BllchrgModel> requestBillchrgIsPaidList(
-//            Date startDate, Date endDate) {
-//        ArrayList<BllchrgModel> filteredList = new ArrayList<>();
-//        ArrayList<BllchrgModel> billList = requestAll_BllchrgData();
-//
-//        for (int i = 0; i < billList.size(); i++) {
-//            if ((billList.get(i).getDateCharged().equals(startDate)
-//                    || billList.get(i).getDateCharged().after(startDate))
-//                    && (billList.get(i).getDateCharged().equals(endDate)
-//                    || billList.get(i).getDateCharged().before(endDate))
-//                    && billList.get(i).isIsPaid()) {
-//                filteredList.add(billList.get(i));
-//            }
-//        }
-//        return filteredList;
-//    }
-//
-//    public static ArrayList<BllchrgModel> requestBillchrgIsNotPaidList(
-//            Date startDate, Date endDate) {
-//        ArrayList<BllchrgModel> filteredList = new ArrayList<>();
-//        ArrayList<BllchrgModel> billList = requestAll_BllchrgData();
-//
-//        for (int i = 0; i < billList.size(); i++) {
-//            if ((billList.get(i).getDateCharged().equals(startDate)
-//                    || billList.get(i).getDateCharged().after(startDate))
-//                    && (billList.get(i).getDateCharged().equals(endDate)
-//                    || billList.get(i).getDateCharged().before(endDate))
-//                    && !billList.get(i).isIsPaid()) {
-//                filteredList.add(billList.get(i));
-//            }
-//        }
-//        return filteredList;
-//    }
-//    //------------------------Request Lists-------------------------------//
-//    
-//    //---------------------Request Single Model---------------------//
-//    public static List<BillChargeModel> rtrvReservationBillCharges(int rsvID){
-//        List<BillChargeModel> reqList = new ArrayList<>();
-//         
-//        List<BillChargeModel> billList = requestAll_BllchrgData();
-//         
-//        for(int i = 0; i < billList.size(); i++ ){
-//            if (billList.get(i).getReservation().getRsvID() == rsvID){
-//                reqList.add(billList.get(i));
-//            
-//            }
-//        }
-//        return reqList;
-//     }
-//    
-//     //---------------------<END> Request Single Model---------------------//
+    public final static class BillChargeTable {
+        
+    public static void addBllCharge(LocalDate DateCharged, double amount, String lineDesc) {
+        BillChargeModel billing = new BillChargeModel(TBL_BLLCHRG_ENTITY.size() + 1, lineDesc, amount, DateCharged);
+        TBL_BLLCHRG_ENTITY.add(billing);
+    }
+
+    public static void addBllCharge(LocalDate DateCharged, double amount) {
+        BillChargeModel billing = new BillChargeModel(TBL_BLLCHRG_ENTITY.size() + 1, "", amount, DateCharged);
+        TBL_BLLCHRG_ENTITY.add(billing);
+    }
+
+    public static void addBllCharge(LocalDate DateCharged) {
+        BillChargeModel billing = new BillChargeModel(TBL_BLLCHRG_ENTITY.size() + 1, "", 0, DateCharged);
+    }
+
+    public static List<BillChargeModel> searchByReservation(int rsvID) {
+        List<BillChargeModel> matchingRsv = new  ArrayList<>();
+        for (BillChargeModel billing: TBL_BLLCHRG_ENTITY) {
+            if (billing.getReservation().getReservationID() == rsvID) {
+                matchingRsv.add(billing);
+            }
+        }
+        return matchingRsv;
+    }
+    
+    public static List<BillChargeModel> searchByBllChrgID(int bllchrgID) {
+        List<BillChargeModel> matchingBllChrgID = new  ArrayList<>();
+        for (BillChargeModel billing : TBL_BLLCHRG_ENTITY) {
+            if (billing.getBillChargeID() == bllchrgID) {
+                matchingBllChrgID.add(billing);
+            }
+        }
+        return matchingBllChrgID;
+    }
+    
+    public static List<BillChargeModel>  searchByDateCharged(LocalDate dateChrged ) {
+        List<BillChargeModel> matchingDateCharged= new  ArrayList<>();
+        for (BillChargeModel billing:TBL_BLLCHRG_ENTITY) {
+            if (billing.getDateCharged().equals(dateChrged)) {
+                matchingDateCharged.add(billing);
+            }
+        }
+        return matchingDateCharged;
+    }
+    
+    public static List<BillChargeModel>  searchByDateRangeCharged(LocalDate dateChrgedSart, LocalDate dateChrgedend ) {
+        List<BillChargeModel> matchingDateCharged= new  ArrayList<>();
+        for (BillChargeModel billing:TBL_BLLCHRG_ENTITY) {
+            if ((billing.getDateCharged().equals(dateChrgedSart) || billing.getDateCharged().isAfter(dateChrgedSart)) && 
+                    ((billing.getDateCharged().equals(dateChrgedend) || billing.getDateCharged().isBefore(dateChrgedend)))) {
+                matchingDateCharged.add(billing);
+            }
+        }
+        return matchingDateCharged;
+    }
+    
+    public static List<BillChargeModel>  searchByDatePaid(LocalDate DatePaid) {
+        List<BillChargeModel> matchingDatePaid= new  ArrayList<>();
+        for (BillChargeModel billing:TBL_BLLCHRG_ENTITY) {
+            if (billing.getDatePaid().equals(DatePaid)) {
+                matchingDatePaid.add(billing);
+            }
+        }
+        return matchingDatePaid;
+    }
+    
+    public static BillChargeModel getBillCharge(int billChargeID){
+        BillChargeModel returnbill = new BillChargeModel();
+        boolean wasFound = false;
+        for (BillChargeModel billing:TBL_BLLCHRG_ENTITY) {
+            if (billing.getBillChargeID() == (billChargeID)) {
+                returnbill = billing;
+                wasFound = true;
+            }
+        }
+        
+        if (wasFound == true)
+        return returnbill;
+        else
+        return null;
+    }
+
+    public static List<BillChargeModel> retrieveAllBllchrgs() {
+         List<BillChargeModel> bllchrgID = new ArrayList<>(TBL_BLLCHRG_ENTITY);
+         return bllchrgID;
+    }
+    
+     //Ask For help got stuck
+    public static List<BillChargeModel> retrieveAllPaidchrgs() {
+     List<BillChargeModel> isPaidCharge = new ArrayList<>(TBL_BLLCHRG_ENTITY);
+       isPaidCharge.removeIf(isPaidC-> isPaidC.isPaid());
+       return isPaidCharge; 
+    } 
+    
+    public static List<BillChargeModel> retrieveAllUnpaidchrgs() {
+       List<BillChargeModel> isPaidCharge = new ArrayList<>(TBL_BLLCHRG_ENTITY);
+       isPaidCharge.removeIf(bill-> !bill.isPaid());
+       return isPaidCharge; 
+    }
     
     }
     
