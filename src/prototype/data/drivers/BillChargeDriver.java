@@ -26,34 +26,34 @@ public class BillChargeDriver implements DataDriver {
     }
 
     //Create BllCharge for 3 different constructors
-    public static void createBllChrg(Date DateCharged, double amount, String lineDesc) {
-//        EntityDatabase.addBllCharge(DateCharged, amount, lineDesc);
+    public static void createBllChrg(LocalDate DateCharged, double amount, String lineDesc) {
+        EntityDatabase.addBllCharge(DateCharged, amount, lineDesc);
     }
 
-    public static void createBllChrg(Date DateCharged, double amount) {
-//        EntityDatabase.addBllCharge(DateCharged, amount);
+    public static void createBllChrg(LocalDate DateCharged, double amount) {
+        EntityDatabase.addBllCharge(DateCharged, amount);
     }
 
-    public static void createBllChrg(Date DateCharged) {
-//        EntityDatabase.addBllCharge(DateCharged);
+    public static void createBllChrg(LocalDate DateCharged) {
+        EntityDatabase.addBllCharge(DateCharged);
     }
 
     //search by reservation, or bill charge ID or the date charged or paid
     public static List<BillChargeModel> searchByReservation(ReservationModel rsv) {
         List<BillChargeModel> matchingRsv = new ArrayList<>();
-        EntityDatabase.searchByReservation(rsv);
+        matchingRsv = EntityDatabase.searchByReservation(rsv);
         return matchingRsv;
     }
 
     public static List<BillChargeModel> searchByBllChrgID(int bllchrgID) {
         List<BillChargeModel> matchingBllChrgID = new ArrayList<>();
-        EntityDatabase.searchByBllChrgID(bllchrgID);
+        matchingBllChrgID = EntityDatabase.searchByBllChrgID(bllchrgID);
         return matchingBllChrgID;
     }
 
     public static List<BillChargeModel> searchByDateCharged(LocalDate DateCharged) {
         List<BillChargeModel> matchingDateCharged = new ArrayList<>();
-        EntityDatabase.searchByDateCharged(DateCharged);
+        matchingDateCharged =EntityDatabase.searchByDateCharged(DateCharged);
         return matchingDateCharged;
     }
 
@@ -67,24 +67,24 @@ public class BillChargeDriver implements DataDriver {
     }
 
     // asignRsvToBllchrg
-    public void asignRsvToBllchrg(BillChargeModel bllchrgID, ReservationModel rsv) {
+    public static void asignRsvToBllchrg(BillChargeModel bllchrgID, ReservationModel rsv) {
         bllchrgID.setReservation(rsv);
     }
 
-    public List<BillChargeModel> rtrnAllPaidChrgs() {
+    public static List<BillChargeModel> rtrnAllPaidChrgs() {
         return EntityDatabase.retrieveAllPaidchrgs();
     }
 
     //Retrieve billing data
-    public List<BillChargeModel> rtrnAllBllChrgs() {
+    public static List<BillChargeModel> rtrnAllBllChrgs() {
         return EntityDatabase.retrieveAllBllchrgs();
     }
 
-    public List<BillChargeModel> rtrnAllUnpaidChrgs() {
+    public static List<BillChargeModel> rtrnAllUnpaidChrgs() {
         return EntityDatabase.retrieveAllUnpaidchrgs();
     }
     
-    public void modifyBillChargeLineDesc(int billID){
+    public static void modifyBillChargeLineDesc(int billID){
         BillChargeModel bill = EntityDatabase.BillChargeTable.getBillCharge(billID);
         String lineDesc = bill.getLineDescription();
         lineDesc += " REMOVED";
