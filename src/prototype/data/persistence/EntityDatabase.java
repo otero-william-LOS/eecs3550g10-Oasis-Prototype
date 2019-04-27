@@ -314,56 +314,64 @@ public class EntityDatabase {
        isPaidCharge.removeIf(isPaidC-> !isPaidC.isPaid());
        return isPaidCharge; 
     }
+
+    public static ArrayList<GuestModel> searchByGuest_ID(GuestModel Guest_ID) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public static ArrayList<GuestModel> searchByName(String Email) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Guest Entity Create & Retrieval Methods">
     
-    public static ArrayList<GuestModel> guestTableData = new ArrayList();
-    
-    public static void createGuest(String Name, String Email, String CC_info) {
-        GuestModel createGuest = new GuestModel(guestTableData.size() + 1, Name, Email, CC_info);
-        guestTableData.add(createGuest);
-    }
-        
-    public static void modifyGuest(String Name, String Email, String ccInfo) {
-        GuestModel modifyGuest = new GuestModel(guestTableData.size(), Name, Email, ccInfo);
-        guestTableData.add(modifyGuest);
-        guestTableData.clear();
-    }
-    
-    public static void modifyGuest(String Name, String Email) {
-        GuestModel modifyGuest = new GuestModel(guestTableData.size(), Name, Email);
-        guestTableData.add(modifyGuest);
-        guestTableData.clear();
-    }
-    
-    public static void retrieveGuest(String Name, String Email, String CC_info) {
-        GuestModel retrieveGuest = new GuestModel(guestTableData.size(), Name, Email, CC_info);
-        guestTableData.add(retrieveGuest);
-    }
-    
-    public static ArrayList<GuestModel> searchByName(String guestName) {
-        ArrayList<GuestModel> matchName = new  ArrayList<GuestModel>();
-        
-        for (GuestModel Name: guestTableData) {
-            if (Name.getName().equals(guestName)) {
-                matchName.add(Name);
-            }
-        }
-        return matchName;
-    }
-    
-    public static ArrayList<GuestModel> searchByGuest_ID(GuestModel Guest_ID) {
-        ArrayList<GuestModel> matchGuest_ID = new  ArrayList<GuestModel>();
-        
-        for (GuestModel GuestID: guestTableData) {
-            if (GuestID.getGuestID() != GuestID.getGuestID()) {
-                matchGuest_ID.add(GuestID);
-            }
-        }
-        return matchGuest_ID;
-    }
+//    public static ArrayList<GuestModel> guestTableData = new ArrayList();
+//    
+//    public static void createGuest(String Name, String Email, String CC_info) {
+//        GuestModel createGuest = new GuestModel(guestTableData.size() + 1, Name, Email, CC_info);
+//        guestTableData.add(createGuest);
+//    }
+//        
+//    public static void modifyGuest(String Name, String Email, String ccInfo) {
+//        GuestModel modifyGuest = new GuestModel(guestTableData.size(), Name, Email, ccInfo);
+//        guestTableData.add(modifyGuest);
+//        guestTableData.clear();
+//    }
+//    
+//    public static void modifyGuest(String Name, String Email) {
+//        GuestModel modifyGuest = new GuestModel(guestTableData.size(), Name, Email);
+//        guestTableData.add(modifyGuest);
+//        guestTableData.clear();
+//    }
+//    
+//    public static void retrieveGuest(String Name, String Email, String CC_info) {
+//        GuestModel retrieveGuest = new GuestModel(guestTableData.size(), Name, Email, CC_info);
+//        guestTableData.add(retrieveGuest);
+//    }
+//    
+//    public static ArrayList<GuestModel> searchByName(String guestName) {
+//        ArrayList<GuestModel> matchName = new  ArrayList<GuestModel>();
+//        
+//        for (GuestModel Name: guestTableData) {
+//            if (Name.getName().equals(guestName)) {
+//                matchName.add(Name);
+//            }
+//        }
+//        return matchName;
+//    }
+//    
+//    public static ArrayList<GuestModel> searchByGuest_ID(GuestModel Guest_ID) {
+//        ArrayList<GuestModel> matchGuest_ID = new  ArrayList<GuestModel>();
+//        
+//        for (GuestModel GuestID: guestTableData) {
+//            if (GuestID.getGuestID() != GuestID.getGuestID()) {
+//                matchGuest_ID.add(GuestID);
+//            }
+//        }
+//        return matchGuest_ID;
+//    }
 //</editor-fold>
     
     //  nested class for rsv entity table
@@ -676,93 +684,84 @@ public class EntityDatabase {
     
     //  nested class for guest entity table
     public final static class GuestTable {
-
-//      protected static ArrayList<LazyGuestModel> guestToLazyList(ArrayList<GuestModel> inList){
-//          ArrayList<LazyGuestModel> list = new ArrayList<>();
-//          
-//          
-//          for (int i =0; i < inList.size(); i++){
-//              LazyGuestModel temp = new LazyGuestModel();
-//              
-//              temp.setGuestID(inList.get(i).getGuestID());
-//              temp.setName(inList.get(i).getName());
-//              temp.setCCInfo(inList.get(i).getCCInfo());
-//              temp.setEmail(inList.get(i).getEmail());
-//             
-//              list.add(temp);
-//          }
-//          
-//          return list;
-//      }
-//    //------------------Request All ------------------------------//
-//     public static ArrayList<LazyGuestModel> requestAll_LazyGuestData() {
-//        return Database.Database.getGUEST_Data();
-//    }
-//    public static ArrayList<GuestModel> requestAll_GuestData() {
-//        ArrayList<GuestModel> guestList = new ArrayList<>();
-//        ArrayList<LazyGuestModel> lazyGuestList =
-//                Database.Database.getGUEST_Data();
-//
-//        GuestModel newGuest;
-//        for (int i = 0; i < lazyGuestList.size(); i++) {
-//            newGuest = new GuestModel();
-//            newGuest.setGuestID(lazyGuestList.get(i).getGuestID());
-//            newGuest.setName(lazyGuestList.get(i).getName());
-//            newGuest.setCCInfo(lazyGuestList.get(i).getCCInfo());
-//            newGuest.setEmail(lazyGuestList.get(i).getEmail());
-//
-//            guestList.add(newGuest);
-//        }
-//
-//        return guestList;
-//    }
-//    //------------------<END> Request All ------------------------------//   
-//
-//    //----------------------Request Lists---------------------------//
-//    public static ArrayList<GuestModel> requestGuestNameList(String name) {
-//        ArrayList<GuestModel> reqList = new ArrayList<>();
-//
-//        ArrayList<GuestModel> guestList = requestAll_GuestData();
-//
-//        for (int i = 0; i < guestList.size(); i++) {
-//            if (guestList.get(i).getName().contains(name)
-//                    || guestList.get(i).getName().equals(name)) {
-//                reqList.add(guestList.get(i));
-//            }
-//        }
-//        return reqList;
-//    }
-//
-//    public static ArrayList<GuestModel> requestGuestEmailList(String email) {
-//        ArrayList<GuestModel> reqList = new ArrayList<>();
-//
-//        ArrayList<GuestModel> guestList = requestAll_GuestData();
-//
-//        for (int i = 0; i < guestList.size(); i++) {
-//            if (guestList.get(i).getEmail().contains(email)
-//                    || guestList.get(i).getEmail().equals(email)) {
-//                reqList.add(guestList.get(i));
-//            }
-//        }
-//        return reqList;
-//    }
-//
-//    //----------------------<END> Request Lists---------------------------//
-//    //------------------Request Single Model------------------------//
-//    public static GuestModel requestGuest(int guestID) {
-//        GuestModel guest = new GuestModel();
-//
-//        ArrayList<GuestModel> guestList = requestAll_GuestData();
-//
-//        for (int i = 0; i < guestList.size(); i++) {
-//            if (guestList.get(i).getGuestID() == guestID) {
-//                guest = guestList.get(i);
-//            }
-//        }
-//        return guest;
-//    }
-//    //------------------<END> Request Single Model------------------------//
+        
+    private static final List<GuestModel> TBL_GUEST_ENTITY = new ArrayList<>();
     
+    public static void createGuest(String Name, String Email, String CC_info) {
+        GuestModel createGuest = new GuestModel(TBL_GUEST_ENTITY.size() + 1, Name, Email, CC_info);
+        TBL_GUEST_ENTITY.add(createGuest);
+    }
+        
+    public static void modifyGuest(String Name, String Email, String ccInfo) {
+        GuestModel modifyGuest = new GuestModel(TBL_GUEST_ENTITY.size(), Name, Email, ccInfo);
+        TBL_GUEST_ENTITY.add(modifyGuest);
+        TBL_GUEST_ENTITY.clear();
+    }
+    
+    public static void modifyGuest(String Name, String Email) {
+        GuestModel modifyGuest = new GuestModel(TBL_GUEST_ENTITY.size(), Name, Email);
+        TBL_GUEST_ENTITY.add(modifyGuest);
+        TBL_GUEST_ENTITY.clear();
+    }
+    
+    public static ArrayList<GuestModel> searchByName(String guestName) {
+        ArrayList<GuestModel> matchName = new  ArrayList<GuestModel>();
+        
+        for (GuestModel Name: TBL_GUEST_ENTITY) {
+            if (Name.getName().equals(guestName)) {
+                matchName.add(Name);
+            }
+        }
+        return matchName;
+    }
+    
+    public static GuestModel searchByGuest_ID(int Guest_ID) {
+        List<GuestModel> matchGuest_ID = new  ArrayList<GuestModel>();
+        
+        for (GuestModel GuestID: TBL_GUEST_ENTITY) {
+            if (GuestID.getGuestID() != GuestID.getGuestID()) {
+                matchGuest_ID.add(GuestID);
+            }
+        }
+        return null;
+    }
+    
+    //------------------Request All ------------------------------//
+    
+        public static List<GuestModel> requestAllGuests() {
+           return new ArrayList<>(TBL_GUEST_ENTITY);
+        }  
+        
+        public static GuestModel requestGuest(int guestID, String Name, String Email, String CC_info) {
+            GuestModel guest = new GuestModel();
+
+            List<GuestModel> guestList = requestAllGuests();
+
+            for (int i = 0; i < guestList.size(); i++) {
+                if (guestList.get(i).getGuestID() == guestID) {
+                guest = guestList.get(i);
+                }
+            } 
+        return guest;
+    }
+
+        protected static ArrayList<GuestModel> guestList(ArrayList<GuestModel> guestList){
+            ArrayList<GuestModel> list = new ArrayList<>();
+          
+          
+             for (int i =0; i < guestList.size(); i++){
+                GuestModel temp = new GuestModel();
+              
+                temp.setGuestID(guestList.get(i).getGuestID());
+                temp.setName(guestList.get(i).getName());
+                temp.setCCInfo(guestList.get(i).getCCInfo());
+                temp.setEmail(guestList.get(i).getEmail());
+             
+              list.add(temp);
+          }
+        return list;
+        
+      }
     }
     
     //  nested class for bllchrg entity table
