@@ -39,20 +39,20 @@ public class BillChargeDriver implements DataDriver {
     }
 
     //search by reservation, or bill charge ID or the date charged or paid
-    public static ArrayList<BillChargeModel> searchByReservation(ReservationModel rsv) {
-        ArrayList<BillChargeModel> matchingRsv = new ArrayList<BillChargeModel>();
+    public static List<BillChargeModel> searchByReservation(ReservationModel rsv) {
+        List<BillChargeModel> matchingRsv = new ArrayList<>();
         EntityDatabase.searchByReservation(rsv);
         return matchingRsv;
     }
 
-    public static ArrayList<BillChargeModel> searchByBllChrgID(int bllchrgID) {
-        ArrayList<BillChargeModel> matchingBllChrgID = new ArrayList<BillChargeModel>();
+    public static List<BillChargeModel> searchByBllChrgID(int bllchrgID) {
+        List<BillChargeModel> matchingBllChrgID = new ArrayList<>();
         EntityDatabase.searchByBllChrgID(bllchrgID);
         return matchingBllChrgID;
     }
 
-    public static ArrayList<BillChargeModel> searchByDateCharged(LocalDate DateCharged) {
-        ArrayList<BillChargeModel> matchingDateCharged = new ArrayList<BillChargeModel>();
+    public static List<BillChargeModel> searchByDateCharged(LocalDate DateCharged) {
+        List<BillChargeModel> matchingDateCharged = new ArrayList<>();
         EntityDatabase.searchByDateCharged(DateCharged);
         return matchingDateCharged;
     }
@@ -65,9 +65,6 @@ public class BillChargeDriver implements DataDriver {
         BillChargeModel bill = EntityDatabase.BillChargeTable.getBillCharge(billID);    
         bill.setIsPaid(true);
     }
-    
-    public String ModifyBilling;
-    private final EntityDatabase devDB = new EntityDatabase();
 
     // asignRsvToBllchrg
     public void asignRsvToBllchrg(BillChargeModel bllchrgID, ReservationModel rsv) {
@@ -83,13 +80,14 @@ public class BillChargeDriver implements DataDriver {
         return devDB.retrieveAllBllchrgs();
     }
 
-    //Modify Bill Charges
-    public void ModifyBilling(Date DateCharged, Date DatePaid, double amount, String lineDesc) {
-        this.ModifyBilling = ModifyBilling;
-    }
-
     public List<BillChargeModel> rtrnAllUnpaidChrgs() {
         return devDB.retrieveAllUnpaidchrgs();
     }
     
+    public void modifyBillChargeLineDesc(int billID){
+        BillChargeModel bill = EntityDatabase.BillChargeTable.getBillCharge(billID);
+        String lineDesc = bill.getLineDescription();
+        lineDesc += " REMOVED";
+        bill.setLineDescription(lineDesc);            
+    }
 }
