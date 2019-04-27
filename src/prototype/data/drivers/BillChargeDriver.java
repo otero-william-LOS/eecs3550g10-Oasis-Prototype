@@ -72,16 +72,16 @@ public class BillChargeDriver implements DataDriver {
     }
 
     public List<BillChargeModel> rtrnAllPaidChrgs() {
-        return devDB.retrieveAllPaidchrgs();
+        return EntityDatabase.retrieveAllPaidchrgs();
     }
 
     //Retrieve billing data
     public List<BillChargeModel> rtrnAllBllChrgs() {
-        return devDB.retrieveAllBllchrgs();
+        return EntityDatabase.retrieveAllBllchrgs();
     }
 
     public List<BillChargeModel> rtrnAllUnpaidChrgs() {
-        return devDB.retrieveAllUnpaidchrgs();
+        return EntityDatabase.retrieveAllUnpaidchrgs();
     }
     
     public void modifyBillChargeLineDesc(int billID){
