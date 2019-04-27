@@ -368,6 +368,236 @@ public class EntityDatabase {
     
     //  nested class for rsv entity table
     public final static class ReservationTable {
+
+//    protected static ArrayList<LazyRsvModel> rsvToLazyList(ArrayList<RsvModel> tempList) {
+//        ArrayList<LazyRsvModel> list = new ArrayList<>();
+//
+//        for (int i = 0; i < tempList.size(); i++) {
+//            LazyRsvModel newLzy = new LazyRsvModel();
+//            newLzy.setRsvID(tempList.get(i).getRsvID());
+//            newLzy.setDateArrive(tempList.get(i).getDateArrive());
+//            newLzy.setDateDepart(tempList.get(i).getDateDepart());
+//            newLzy.setDatePaid(tempList.get(i).getDatePaid());
+//            newLzy.setRsvType(tempList.get(i).getRsvType());
+//            if(tempList.get(i).getRoom() != null)
+//            newLzy.setRoom(tempList.get(i).getRoom().getRoomID());
+//            newLzy.setGuest(tempList.get(i).getGuest().getGuestID());
+//            newLzy.setIsNoShow(tempList.get(i).isIsNoShow());
+//            newLzy.setIsPaid(tempList.get(i).isIsPaid());
+//            newLzy.setIsConcluded(tempList.get(i).isIsConcluded());
+//            list.add(newLzy);
+//        }
+//        return list;
+//    }
+//
+//    //-----------------------Request All data--------------------------//
+//    public static ArrayList<LazyRsvModel> requestAll_LazyRSVData() {
+//
+//        return Database.Database.getRSV_Data();
+//    }
+//
+//    public static ArrayList<RsvModel> requestAll_RSVData() {
+//        ArrayList<RsvModel> rsvList = new ArrayList<>();
+//        ArrayList<LazyRsvModel> lazyRsvList
+//                = Database.Database.getRSV_Data();
+//        ArrayList<LazyBllchrgModel> billList
+//                = Database.Database.getBllchrg_Data();
+//
+//        RsvModel newRsv = new RsvModel();
+//        for (int i = 0; i < lazyRsvList.size(); i++) {
+//            newRsv = new RsvModel();
+//            newRsv.setRsvID(lazyRsvList.get(i).getRsvID());
+//            newRsv.setDateArrive(lazyRsvList.get(i).getDateArrive());
+//            newRsv.setDateDepart(lazyRsvList.get(i).getDateDepart());
+//            newRsv.setDatePaid(lazyRsvList.get(i).getDatePaid());
+//            newRsv.setRsvType(lazyRsvList.get(i).getRsvType());
+//            //createRoomModel(RsvID);
+//            RoomModel room = creatRoomModel(lazyRsvList.get(i), newRsv);
+//            room.setRsv(newRsv);
+//            newRsv.setRoom(room);
+//            //getGuestModel
+//            newRsv.setGuest(creatGuestModel(lazyRsvList.get(i), newRsv));
+//            newRsv.setIsNoShow(lazyRsvList.get(i).isIsNoShow());
+//            newRsv.setIsPaid(lazyRsvList.get(i).isIsPaid());
+//            newRsv.setIsConcluded(lazyRsvList.get(i).isIsConcluded());
+//            rsvList.add(newRsv);
+//        }
+//
+//        return rsvList;
+//    }
+//    //-----------------------<End> Request All data-----------------------//
+//
+//    //-------------------------Request Lists of Data --------------------//
+//    public static ArrayList<RsvModel> requestRsvList(Date date) {
+//        ArrayList<RsvModel> filteredList = new ArrayList<>();
+//        ArrayList<RsvModel> rsvList = requestAll_RSVData();
+//
+//        for (int i = 0; i < rsvList.size(); i++) {
+//            if (EntityDatabase.dateIsBetween(rsvList.get(i).getDateArrive(),
+//                    rsvList.get(i).getDateDepart(), date)) {
+//                filteredList.add(rsvList.get(i));
+//            }
+//        }
+//
+//        return filteredList;
+//    }
+//
+//    public static ArrayList<RsvModel> requestRsvList(Date dateStart,
+//            Date dateEnd) {
+//        ArrayList<RsvModel> filteredList = new ArrayList<>();
+//        ArrayList<RsvModel> rsvList = requestAll_RSVData();
+//
+//        for (int i = 0; i < rsvList.size(); i++) {
+//            if (EntityDatabase.dateOverlap(rsvList.get(i).getDateArrive(),
+//                    rsvList.get(i).getDateDepart(), dateStart, dateEnd)) {
+//                filteredList.add(rsvList.get(i));
+//            }
+//        }
+//
+//        return filteredList;
+//    }
+//
+//    public static ArrayList<RsvModel> requestRsvIsPaidList() {
+//        ArrayList<RsvModel> filteredList = new ArrayList<>();
+//        ArrayList<RsvModel> rsvList = requestAll_RSVData();
+//
+//        for (int i = 0; i < rsvList.size(); i++) {
+//            if (rsvList.get(i).isIsPaid()) {
+//                filteredList.add(rsvList.get(i));
+//            }
+//        }
+//        return filteredList;
+//    }
+//
+//    //Probably will need to be re written
+//    public static ArrayList<RsvModel> requestRsvIsPaidList(Date dateStart,
+//            Date dateEnd) {
+//
+//        ArrayList<RsvModel> filteredList = new ArrayList<>();
+//        ArrayList<RsvModel> rsvList = requestAll_RSVData();
+//
+//        for (int i = 0; i < rsvList.size(); i++) {
+//            if (EntityDatabase.dateOverlap(rsvList.get(i).getDateArrive(),
+//                    rsvList.get(i).getDateDepart(), dateStart, dateEnd)
+//                    && rsvList.get(i).isIsPaid()) {
+//                filteredList.add(rsvList.get(i));
+//            }
+//        }
+//
+//        return filteredList;
+//
+//    }
+//
+//    public static ArrayList<RsvModel> requestRsvIsNotPaidList() {
+//        ArrayList<RsvModel> filteredList = new ArrayList<>();
+//        ArrayList<RsvModel> rsvList = requestAll_RSVData();
+//
+//        for (int i = 0; i < rsvList.size(); i++) {
+//            if (!rsvList.get(i).isIsPaid()) {
+//                filteredList.add(rsvList.get(i));
+//            }
+//        }
+//        return filteredList;
+//    }
+//
+//    //Probably will need to be re written
+//    public static ArrayList<RsvModel> requestRsvIsNotPaidList(Date dateStart,
+//            Date dateEnd) {
+//
+//        ArrayList<RsvModel> filteredList = new ArrayList<>();
+//        ArrayList<RsvModel> rsvList = requestAll_RSVData();
+//
+//        for (int i = 0; i < rsvList.size(); i++) {
+//            if (EntityDatabase.dateOverlap(rsvList.get(i).getDateArrive(),
+//                    rsvList.get(i).getDateDepart(), dateStart, dateEnd)
+//                    && !rsvList.get(i).isIsPaid()) {
+//                filteredList.add(rsvList.get(i));
+//            }
+//        }
+//
+//        return filteredList;
+//
+//    }
+//
+//    public static ArrayList<RsvModel> requestRsvIsNoShowList() {
+//        ArrayList<RsvModel> filteredList = new ArrayList<>();
+//        ArrayList<RsvModel> rsvList = requestAll_RSVData();
+//
+//        for (int i = 0; i < rsvList.size(); i++) {
+//            if (rsvList.get(i).isIsNoShow()) {
+//                filteredList.add(rsvList.get(i));
+//            }
+//        }
+//        return filteredList;
+//    }
+//
+//    //Probably will need to be re written
+//    public static ArrayList<RsvModel> requestRsvIsNoShowList(Date dateStart,
+//            Date dateEnd) {
+//
+//        ArrayList<RsvModel> filteredList = new ArrayList<>();
+//        ArrayList<RsvModel> rsvList = requestAll_RSVData();
+//
+//        for (int i = 0; i < rsvList.size(); i++) {
+//            if (EntityDatabase.dateOverlap(rsvList.get(i).getDateArrive(),
+//                    rsvList.get(i).getDateDepart(), dateStart, dateEnd)
+//                    && rsvList.get(i).isIsNoShow()) {
+//                filteredList.add(rsvList.get(i));
+//            }
+//        }
+//
+//        return filteredList;
+//
+//    }
+//
+//    public static ArrayList<RsvModel> requestRsvIsConcludedList() {
+//        ArrayList<RsvModel> filteredList = new ArrayList<>();
+//        ArrayList<RsvModel> rsvList = requestAll_RSVData();
+//
+//        for (int i = 0; i < rsvList.size(); i++) {
+//            if (rsvList.get(i).isIsConcluded()) {
+//                filteredList.add(rsvList.get(i));
+//            }
+//        }
+//        return filteredList;
+//    }
+//
+//    //Probably will need to be re written
+//    public static ArrayList<RsvModel> requestRsvIsPaidConcluded(Date dateStart,
+//            Date dateEnd) {
+//
+//        ArrayList<RsvModel> filteredList = new ArrayList<>();
+//        ArrayList<RsvModel> rsvList = requestAll_RSVData();
+//
+//        for (int i = 0; i < rsvList.size(); i++) {
+//            if (EntityDatabase.dateOverlap(rsvList.get(i).getDateArrive(),
+//                    rsvList.get(i).getDateDepart(), dateStart, dateEnd)
+//                    && rsvList.get(i).isIsPaid()) {
+//                filteredList.add(rsvList.get(i));
+//            }
+//        }
+//
+//        return filteredList;
+//
+//    }
+//    //-----------------------<END>Request Lists of Data ------------------//
+//
+//    //-------------------------Single Model Request --------------------//
+//    public static RsvModel requestRSV(int rsvID) {
+//        RsvModel reqRsv = new RsvModel();
+//
+//        ArrayList<RsvModel> rsvList = requestAll_RSVData();
+//
+//        for (int i = 0; i < rsvList.size(); i++) {
+//            if (rsvList.get(i).getRsvID() == rsvID) {
+//                reqRsv = rsvList.get(i);
+//                i = rsvList.size() + 1;
+//            }
+//        }
+//        return reqRsv;
+//    }
+//
+//    //-----------------------<END> Single Model Reques-------------------//
     
     }
     
@@ -394,13 +624,14 @@ public class EntityDatabase {
         public static RoomModel rtrvByReservation(ReservationModel queryRsv) {
             // TODO: Warning
             // - this method won't work if the unique Rsv and Room aren't linked
-            RoomModel room = rtrvOccupiedRooms().stream().map(
-                    RoomModel::getReservation
-            ).filter(
-                    rsv -> rsv.equals(queryRsv)
-            ).map(
-                    ReservationModel::getRoom
-            ).findFirst().orElse(null);
+            RoomModel room = 
+                    rtrvOccupiedRooms().stream().map(
+                        RoomModel::getReservation
+                    ).filter(
+                        rsv -> rsv.equals(queryRsv)
+                    ).map(
+                        ReservationModel::getRoom
+                    ).findFirst().orElse(null);
             return room;
         }
     }
@@ -445,11 +676,230 @@ public class EntityDatabase {
     
     //  nested class for guest entity table
     public final static class GuestTable {
+
+//      protected static ArrayList<LazyGuestModel> guestToLazyList(ArrayList<GuestModel> inList){
+//          ArrayList<LazyGuestModel> list = new ArrayList<>();
+//          
+//          
+//          for (int i =0; i < inList.size(); i++){
+//              LazyGuestModel temp = new LazyGuestModel();
+//              
+//              temp.setGuestID(inList.get(i).getGuestID());
+//              temp.setName(inList.get(i).getName());
+//              temp.setCCInfo(inList.get(i).getCCInfo());
+//              temp.setEmail(inList.get(i).getEmail());
+//             
+//              list.add(temp);
+//          }
+//          
+//          return list;
+//      }
+//    //------------------Request All ------------------------------//
+//     public static ArrayList<LazyGuestModel> requestAll_LazyGuestData() {
+//        return Database.Database.getGUEST_Data();
+//    }
+//    public static ArrayList<GuestModel> requestAll_GuestData() {
+//        ArrayList<GuestModel> guestList = new ArrayList<>();
+//        ArrayList<LazyGuestModel> lazyGuestList =
+//                Database.Database.getGUEST_Data();
+//
+//        GuestModel newGuest;
+//        for (int i = 0; i < lazyGuestList.size(); i++) {
+//            newGuest = new GuestModel();
+//            newGuest.setGuestID(lazyGuestList.get(i).getGuestID());
+//            newGuest.setName(lazyGuestList.get(i).getName());
+//            newGuest.setCCInfo(lazyGuestList.get(i).getCCInfo());
+//            newGuest.setEmail(lazyGuestList.get(i).getEmail());
+//
+//            guestList.add(newGuest);
+//        }
+//
+//        return guestList;
+//    }
+//    //------------------<END> Request All ------------------------------//   
+//
+//    //----------------------Request Lists---------------------------//
+//    public static ArrayList<GuestModel> requestGuestNameList(String name) {
+//        ArrayList<GuestModel> reqList = new ArrayList<>();
+//
+//        ArrayList<GuestModel> guestList = requestAll_GuestData();
+//
+//        for (int i = 0; i < guestList.size(); i++) {
+//            if (guestList.get(i).getName().contains(name)
+//                    || guestList.get(i).getName().equals(name)) {
+//                reqList.add(guestList.get(i));
+//            }
+//        }
+//        return reqList;
+//    }
+//
+//    public static ArrayList<GuestModel> requestGuestEmailList(String email) {
+//        ArrayList<GuestModel> reqList = new ArrayList<>();
+//
+//        ArrayList<GuestModel> guestList = requestAll_GuestData();
+//
+//        for (int i = 0; i < guestList.size(); i++) {
+//            if (guestList.get(i).getEmail().contains(email)
+//                    || guestList.get(i).getEmail().equals(email)) {
+//                reqList.add(guestList.get(i));
+//            }
+//        }
+//        return reqList;
+//    }
+//
+//    //----------------------<END> Request Lists---------------------------//
+//    //------------------Request Single Model------------------------//
+//    public static GuestModel requestGuest(int guestID) {
+//        GuestModel guest = new GuestModel();
+//
+//        ArrayList<GuestModel> guestList = requestAll_GuestData();
+//
+//        for (int i = 0; i < guestList.size(); i++) {
+//            if (guestList.get(i).getGuestID() == guestID) {
+//                guest = guestList.get(i);
+//            }
+//        }
+//        return guest;
+//    }
+//    //------------------<END> Request Single Model------------------------//
     
     }
     
     //  nested class for bllchrg entity table
-    public final static class BillChargeTable {
+    public final static class BillChargeTale {
+//    
+//    
+//    protected static ArrayList<LazyBllchrgModel> requestAll_LazyBllchrgData(ArrayList<BllchrgModel> bllList){
+//        ArrayList<LazyBllchrgModel> list = new ArrayList<>();
+//        
+//        for (int i = 0; i < bllList.size(); i++){
+//            LazyBllchrgModel lzyBll = new LazyBllchrgModel();
+//            lzyBll.setBllchrgID(bllList.get(i).getBllchrgID());
+//            lzyBll.setLineDescription(
+//                    bllList.get(i).getLineDescription());
+//            lzyBll.setAmount(bllList.get(i).getAmount());
+//            lzyBll.setDateCharged(bllList.get(i).getDateCharged());
+//            lzyBll.setDatePaid(bllList.get(i).getDatePaid());
+//            lzyBll.setIsPaid(bllList.get(i).isIsPaid());
+//            lzyBll.setReservation(bllList.get(i).getReservation().getRsvID());
+//            
+//            
+//            list.add(lzyBll);
+//        }
+//        
+//        return list;
+//    }
+////------------------------Request All Data -------------------------------//
+//        public static ArrayList<LazyBllchrgModel> requestAll_LazyBllchrgData() {
+//        return Database.Database.getBllchrg_Data();
+//    }
+//    public static ArrayList<BllchrgModel> requestAll_BllchrgData() {
+//        ArrayList<BllchrgModel> billList = new ArrayList<>();
+//        ArrayList<LazyBllchrgModel> lazyBllchrgList
+//                = Database.Database.getBllchrg_Data();
+//
+//        BllchrgModel newBllchrg;
+//        for (int i = 0; i < lazyBllchrgList.size(); i++) {
+//            newBllchrg = new BllchrgModel();
+//            newBllchrg.setBllchrgID(lazyBllchrgList.get(i).getBllchrgID());
+//            newBllchrg.setReservation(
+//                    createReservationModel(lazyBllchrgList.get(i)));
+//            newBllchrg.setLineDescription(
+//                    lazyBllchrgList.get(i).getLineDescription());
+//            newBllchrg.setAmount(lazyBllchrgList.get(i).getAmount());
+//            newBllchrg.setDateCharged(lazyBllchrgList.get(i).getDateCharged());
+//            newBllchrg.setDatePaid(lazyBllchrgList.get(i).getDatePaid());
+//            newBllchrg.setIsPaid(lazyBllchrgList.get(i).isIsPaid());
+//            billList.add(newBllchrg);
+//        }
+//
+//        return billList;
+//    }
+////------------------------<END> Request All Data ---------------------------//
+//    //------------------------Request Lists-------------------------------//
+//    public static ArrayList<BllchrgModel> requestBillchrgDateChargedList(
+//            Date startDate, Date endDate) {
+//        ArrayList<BllchrgModel> filteredList = new ArrayList<>();
+//        ArrayList<BllchrgModel> billList = requestAll_BllchrgData();
+//
+//        for (int i = 0; i < billList.size(); i++) {
+//            if ((billList.get(i).getDateCharged().equals(startDate)
+//                    || billList.get(i).getDateCharged().after(startDate))
+//                    && (billList.get(i).getDateCharged().equals(endDate)
+//                    || billList.get(i).getDateCharged().before(endDate))) {
+//                filteredList.add(billList.get(i));
+//            }
+//        }
+//        return filteredList;
+//    }
+//
+//    public static ArrayList<BllchrgModel> requestBillchrgPaidList(
+//            Date startDate, Date endDate) {
+//        ArrayList<BllchrgModel> filteredList = new ArrayList<>();
+//        ArrayList<BllchrgModel> billList = requestAll_BllchrgData();
+//
+//        for (int i = 0; i < billList.size(); i++) {
+//            if ((billList.get(i).getDatePaid().equals(startDate)
+//                    || billList.get(i).getDatePaid().after(startDate))
+//                    && (billList.get(i).getDatePaid().equals(endDate)
+//                    || billList.get(i).getDatePaid().before(endDate))) {
+//                filteredList.add(billList.get(i));
+//            }
+//        }
+//        return filteredList;
+//    }
+//
+//    public static ArrayList<BllchrgModel> requestBillchrgIsPaidList(
+//            Date startDate, Date endDate) {
+//        ArrayList<BllchrgModel> filteredList = new ArrayList<>();
+//        ArrayList<BllchrgModel> billList = requestAll_BllchrgData();
+//
+//        for (int i = 0; i < billList.size(); i++) {
+//            if ((billList.get(i).getDateCharged().equals(startDate)
+//                    || billList.get(i).getDateCharged().after(startDate))
+//                    && (billList.get(i).getDateCharged().equals(endDate)
+//                    || billList.get(i).getDateCharged().before(endDate))
+//                    && billList.get(i).isIsPaid()) {
+//                filteredList.add(billList.get(i));
+//            }
+//        }
+//        return filteredList;
+//    }
+//
+//    public static ArrayList<BllchrgModel> requestBillchrgIsNotPaidList(
+//            Date startDate, Date endDate) {
+//        ArrayList<BllchrgModel> filteredList = new ArrayList<>();
+//        ArrayList<BllchrgModel> billList = requestAll_BllchrgData();
+//
+//        for (int i = 0; i < billList.size(); i++) {
+//            if ((billList.get(i).getDateCharged().equals(startDate)
+//                    || billList.get(i).getDateCharged().after(startDate))
+//                    && (billList.get(i).getDateCharged().equals(endDate)
+//                    || billList.get(i).getDateCharged().before(endDate))
+//                    && !billList.get(i).isIsPaid()) {
+//                filteredList.add(billList.get(i));
+//            }
+//        }
+//        return filteredList;
+//    }
+//    //------------------------Request Lists-------------------------------//
+//    
+//    //---------------------Request Single Model---------------------//
+//    public static List<BillChargeModel> rtrvReservationBillCharges(int rsvID){
+//        List<BillChargeModel> reqList = new ArrayList<>();
+//         
+//        List<BillChargeModel> billList = requestAll_BllchrgData();
+//         
+//        for(int i = 0; i < billList.size(); i++ ){
+//            if (billList.get(i).getReservation().getRsvID() == rsvID){
+//                reqList.add(billList.get(i));
+//            
+//            }
+//        }
+//        return reqList;
+//     }
+//    
+//     //---------------------<END> Request Single Model---------------------//
     
     }
     
