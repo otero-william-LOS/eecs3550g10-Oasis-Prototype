@@ -89,8 +89,7 @@ public class BillChargeModel extends DataModel {
     private boolean m_IsPaid;
     public boolean isPaid() {return m_IsPaid;}
     public void setIsPaid(boolean isPaid) {this.m_IsPaid = isPaid;}
-    
-    
+        
     //  Model Constructor
     private BillChargeModel(int bllchrgID, ReservationModel rsv, String lineDesc, double amount, Date dateCharged, Date datePaid, boolean isPaid) {
         this.m_BllchrgID = bllchrgID;
@@ -108,11 +107,11 @@ public class BillChargeModel extends DataModel {
     }
     
     public BillChargeModel(int bllchrgID, ReservationModel rsv, String lineDesc, double amount, LocalDate dateCharged) {
-        this(bllchrgID, rsv, lineDesc, amount, dateCharged, null, false);
+        this(bllchrgID, rsv, lineDesc, amount, dateCharged, LocalDate.now(), false);
     }
     
     public BillChargeModel(int bllchrgID, String lineDesc, double amount, LocalDate dateCharged) {
-        this(bllchrgID, null, lineDesc, amount, dateCharged, null, false);
+        this(bllchrgID, null, lineDesc, amount, dateCharged, LocalDate.now(), false);
     }
     
     public BillChargeModel() {
