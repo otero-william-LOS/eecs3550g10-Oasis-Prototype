@@ -7,6 +7,7 @@ package prototype.data.drivers;
 
 import java.util.ArrayList;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import prototype.data.persistence.EntityDatabase;
 import prototype.data.models.BillChargeModel;
@@ -18,7 +19,7 @@ import prototype.data.models.ReservationModel;
  */
 public class BillChargeDriver implements DataDriver {
 
-    public static ArrayList<BillChargeModel> searchByDatePaid(BillChargeModel DatePaid) {
+    public static ArrayList<BillChargeModel> searchByDatePaid(LocalDate DatePaid) {
         ArrayList<BillChargeModel> matchingDatePaid = new ArrayList<BillChargeModel>();
         EntityDatabase.searchByDatePaid(DatePaid);
         return matchingDatePaid;
@@ -44,21 +45,27 @@ public class BillChargeDriver implements DataDriver {
         return matchingRsv;
     }
 
-    public static ArrayList<BillChargeModel> searchByBllChrgID(BillChargeModel bllchrgID) {
+    public static ArrayList<BillChargeModel> searchByBllChrgID(int bllchrgID) {
         ArrayList<BillChargeModel> matchingBllChrgID = new ArrayList<BillChargeModel>();
         EntityDatabase.searchByBllChrgID(bllchrgID);
         return matchingBllChrgID;
     }
 
-    public static ArrayList<BillChargeModel> searchByDateCharged(BillChargeModel DateCharged) {
+    public static ArrayList<BillChargeModel> searchByDateCharged(LocalDate DateCharged) {
         ArrayList<BillChargeModel> matchingDateCharged = new ArrayList<BillChargeModel>();
         EntityDatabase.searchByDateCharged(DateCharged);
         return matchingDateCharged;
     }
 
-    public static void flagIsPaid(int primaryKey) {
-        EntityDatabase.flagBillIsPaid(primaryKey);
+    public static void flagIsPaid(BillChargeModel bill) {
+        bill.setIsPaid(true);
     }
+    
+    public static void flagIsPaid(int billID) {
+        BillChargeModel bill = EntityDatabase.BillChargeTable.getBillCharge(billID);    
+        bill.setIsPaid(true);
+    }
+    
     public String ModifyBilling;
     private final EntityDatabase devDB = new EntityDatabase();
 
