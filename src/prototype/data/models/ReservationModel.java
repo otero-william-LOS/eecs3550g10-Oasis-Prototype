@@ -34,8 +34,12 @@ public class ReservationModel extends DataModel {
     protected Date getSqlDateArrive() {return m_DateArrive;}
     protected void setSqlDateArrive(Date dateArrive) {this.m_DateArrive = dateArrive;}
     //  Additional DateArrive Get/Set Using LocalDate Conversion
-    public LocalDate getDateArrive() {return m_DateArrive.toLocalDate();}
-    public void setDateArrive(LocalDate dateArrive) {this.m_DateArrive = Date.valueOf(dateArrive);}
+    public LocalDate getDateArrive() {
+        return (m_DateArrive != null) ? m_DateArrive.toLocalDate() : null;
+    }
+    public void setDateArrive(LocalDate dateArrive) {
+        this.m_DateArrive = (dateArrive != null) ? Date.valueOf(dateArrive) : null;
+    }
     
     //  DateDepart Attribute
     /**
@@ -48,8 +52,12 @@ public class ReservationModel extends DataModel {
     protected Date getSqlDateDepart() {return m_DateDepart;}
     protected void setSqlDateDepart(Date dateDepart) {this.m_DateDepart = dateDepart;}
     //  Additional DateDepart Get/Set Using LocalDate Conversion
-    public LocalDate getDateDepart() {return m_DateDepart.toLocalDate();}
-    public void setDateDepart(LocalDate dateDepart) {this.m_DateDepart = Date.valueOf(dateDepart);}
+    public LocalDate getDateDepart() {
+        return (m_DateDepart != null) ? m_DateDepart.toLocalDate() : null;
+    }
+    public void setDateDepart(LocalDate dateDepart) {
+        this.m_DateDepart = (dateDepart != null) ? Date.valueOf(dateDepart) : null;
+    }
     
     //  DatePaid Attribute
     /**
@@ -62,8 +70,12 @@ public class ReservationModel extends DataModel {
     protected Date getSqlDatePaid() {return m_DatePaid;}
     protected void setSqlDatePaid(Date datePaid) {this.m_DatePaid = datePaid;}
     //  Additional DatePaid Get/Set Using LocalDate Conversion
-    public LocalDate getDatePaid() {return m_DatePaid.toLocalDate();}
-    public void setDatePaid(LocalDate datePaid) {this.m_DatePaid = Date.valueOf(datePaid);}
+    public LocalDate getDatePaid() {
+        return (m_DatePaid != null) ? m_DatePaid.toLocalDate() : null;
+    }
+    public void setDatePaid(LocalDate datePaid) {
+        this.m_DatePaid = (datePaid != null) ? Date.valueOf(datePaid) : null;
+    }
     
     //  ReservationType Attribute
     /**
@@ -157,7 +169,10 @@ public class ReservationModel extends DataModel {
     public ReservationModel(int rsvID, LocalDate dArrv, LocalDate dDprt, LocalDate dPaid, 
             ReservationType rsvType, RoomModel room, GuestModel guest, List<BillChargeModel> listBllchrg, 
             boolean isNoShow, boolean isPaid, boolean isConcluded) {
-        this(rsvID, Date.valueOf(dArrv), Date.valueOf(dDprt), Date.valueOf(dPaid), rsvType, room, guest, listBllchrg, isNoShow, isPaid, isConcluded);
+        this(rsvID, (Date)null, null, null, rsvType, room, guest, listBllchrg, isNoShow, isPaid, isConcluded);
+        this.m_DateArrive = (dArrv != null) ? Date.valueOf(dArrv) : null;
+        this.m_DateDepart = (dDprt != null) ? Date.valueOf(dDprt) : null;
+        this.m_DatePaid = (dPaid != null) ? Date.valueOf(dPaid) : null;
     }
 
     public ReservationModel(int rsvID, LocalDate dArrv, LocalDate dDprt, LocalDate dPaid, 

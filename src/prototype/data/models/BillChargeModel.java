@@ -63,8 +63,12 @@ public class BillChargeModel extends DataModel {
     protected Date getSqlDateCharged() {return m_DateCharged;}
     protected void setSqlDateCharged(Date dCharged) {this.m_DateCharged = dCharged;}
     //  Additional DateCharged Get/Set Using LocalDate Conversion
-    public LocalDate getDateCharged() {return m_DateCharged.toLocalDate();}
-    public void setDateCharged(LocalDate ldCharged) {this.m_DateCharged = Date.valueOf(ldCharged);}
+    public LocalDate getDateCharged() {
+        return (m_DateCharged != null) ?  m_DateCharged.toLocalDate() : null;
+    }
+    public void setDateCharged(LocalDate ldCharged) {
+        this.m_DateCharged = (ldCharged != null) ? Date.valueOf(ldCharged) : null;
+    }
     
     //  DatePaid Attribute
     /**
@@ -77,8 +81,12 @@ public class BillChargeModel extends DataModel {
     protected Date getSqlDatePaid() {return m_DatePaid;}
     protected void setSqlDatePaid(Date dPaid) {this.m_DatePaid = dPaid;}
     //  Additional DatePaid Get/Set Using LocalDate Conversion
-    public LocalDate getDatePaid() {return m_DatePaid.toLocalDate();}
-    public void setDatePaid(LocalDate ldPaid) {this.m_DatePaid = Date.valueOf(ldPaid);}
+    public LocalDate getDatePaid() {
+        return (m_DatePaid != null) ? m_DatePaid.toLocalDate() : null;
+    }
+    public void setDatePaid(LocalDate ldPaid) {
+        this.m_DatePaid = (ldPaid != null) ? Date.valueOf(ldPaid) : null;
+    }
     
     //  IsPaid Attribute
     /**
@@ -102,16 +110,17 @@ public class BillChargeModel extends DataModel {
     }
     
     public BillChargeModel(int bllchrgID, ReservationModel rsv, String lineDesc, double amount, LocalDate dateCharged, LocalDate datePaid, boolean isPaid) {
-        this(bllchrgID, rsv, lineDesc, amount, 
-                Date.valueOf(dateCharged), Date.valueOf(datePaid), isPaid);
+        this(bllchrgID, rsv, lineDesc, amount, (Date)null, null, isPaid);
+        this.m_DateCharged = (dateCharged != null) ? Date.valueOf(dateCharged) : null;
+        this.m_DatePaid = (datePaid != null) ? Date.valueOf(datePaid) : null;
     }
     
     public BillChargeModel(int bllchrgID, ReservationModel rsv, String lineDesc, double amount, LocalDate dateCharged) {
-        this(bllchrgID, rsv, lineDesc, amount, dateCharged, LocalDate.now(), false);
+        this(bllchrgID, rsv, lineDesc, amount, dateCharged, null, false);
     }
     
     public BillChargeModel(int bllchrgID, String lineDesc, double amount, LocalDate dateCharged) {
-        this(bllchrgID, null, lineDesc, amount, dateCharged, LocalDate.now(), false);
+        this(bllchrgID, null, lineDesc, amount, dateCharged, null, false);
     }
     
     public BillChargeModel() {
@@ -144,14 +153,14 @@ public class BillChargeModel extends DataModel {
         
         String info = "Bllchrg [ bllchrgID=" + m_BllchrgID;
         if (m_Rsv != null)
-            info += " | Rsv [ rsvID=" + Integer.toString(m_Rsv.getReservationID()) + " ]";
+        {info += " | Rsv [ rsvID=" + Integer.toString(m_Rsv.getReservationID()) + " ]";}
         if (m_LineDesc != null)
-            info += " | lineDesc=" + m_LineDesc;
+        {info += " | lineDesc=" + m_LineDesc;}
         info += " | amount=" + Double.toString(m_Amount);
         if (m_DateCharged != null)
-            info += " | dateCharged=" + fm.format(m_DateCharged);
+        {info += " | dateCharged=" + fm.format(m_DateCharged);}
         if (m_DatePaid != null)
-            info += " | datePaid=" + fm.format(m_DatePaid);
+        {info += " | datePaid=" + fm.format(m_DatePaid);}
         info += " | isPaid=" + Boolean.toString(m_IsPaid);
         info += " ]";
         return  info;
