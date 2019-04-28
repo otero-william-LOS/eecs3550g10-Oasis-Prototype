@@ -36,7 +36,7 @@ public class ReservationDriver implements DataDriver {
     public static int createReservationReturnID(LocalDate dateArrive, LocalDate dateDepart){
         return EntityDatabase.ReservationTable.addReservationReturnID(dateArrive, dateDepart);
     }
-//    
+  
     public static void modifyDateArrive(ReservationModel rsv, LocalDate arrv){
         rsv.setDateArrive(arrv);
     }
@@ -44,7 +44,6 @@ public class ReservationDriver implements DataDriver {
         ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
         modifyDateArrive(rsv, arrv);
     }
-//  
     public static void modifyDateDepart(ReservationModel rsv, LocalDate dprt) {
         rsv.setDateDepart(dprt);
     }
@@ -52,7 +51,6 @@ public class ReservationDriver implements DataDriver {
         ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
         modifyDateDepart(rsv, dprt);
     }
-//    
     public static void modifyDatePaid(ReservationModel rsv, LocalDate paid) {
         rsv.setDatePaid(paid);
     }  
@@ -60,8 +58,6 @@ public class ReservationDriver implements DataDriver {
         ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
         modifyDatePaid(rsv, paid);
     }
-//  
-    
     public static void modifyReservationType(ReservationModel rsv, ReservationType type) {
         rsv.setReservationType(type);
     }
@@ -83,90 +79,86 @@ public class ReservationDriver implements DataDriver {
     public static List<ReservationModel> srchByDate(LocalDate date){
         return EntityDatabase.ReservationTable.retrieveByDate(date);
     }
-    
     public static List<ReservationModel> searchByGuest(int guestID){
         return EntityDatabase.ReservationTable.retrieveByGuest(guestID);
     }
     public static List<ReservationModel> searchByGuest(GuestModel guest){
         return searchByGuest(guest.getGuestID());
     }
-    
     public static ReservationModel searchByRoom(int RoomID) {
         return EntityDatabase.ReservationTable.retrieveByRoom(RoomID);
     }
     public static ReservationModel searchByRoom(RoomModel room){
         return searchByRoom(room.getRoomID());
     }
-    
-//  TODO START HERE  
-    //returns all reservations of a given type
     public static List<ReservationModel> searchByType(ReservationType rsvType){
         return EntityDatabase.ReservationTable.retrieveByType(rsvType);
     }
-//    
-//    // returns all paid reservations
-//    public static ArrayList<ReservationModel> retrieveAllPaid(){
-//        return EntityDatabase.retrieveAllPaid();
-//    }
-//    
-//    // returns all conclded reservations
-//    public static ArrayList<ReservationModel> retrieveAllConcluded(){
-//        return EntityDatabase.retrieveAllConcluded();
-//    }
-//    
-//    // returns all noo show reservations
-//    public static ArrayList<ReservationModel> getAllnoShow(){
-//        return EntityDatabase.getAllnoShow();
-//    }
-//    
-//    public static void assignRoom(int primaryKey, RoomModel room){
-//        EntityDatabase.assignRsvRoom(primaryKey, room);
-//    }
-//    
-//    public static void deassignRoom(int primaryKey){
-//        EntityDatabase.deassignRsvRoom(primaryKey);
-//    }
-//    
-//    public static void flagIsNoShow(int primaryKey){
-//        EntityDatabase.flagRsvNoShow(primaryKey);
-//    }
-//    
-//    public static void flagIsPaid(int primaryKey){
-//        EntityDatabase.flagRsvIsPaid(primaryKey);
-//    }
-//    
-//    public static void flagIsConcluded(int primaryKey){
-//        EntityDatabase.flagRsvIsConcluded(primaryKey);
-//    }
-//
-//    public static void assignRsvRoom(int primaryKey, RoomModel room) {
-//        ReservationModel reservation = TBL_RSV_ENTITY.get(primaryKey);
-//        reservation.setRoom(room);
-//        TBL_RSV_ENTITY.set(primaryKey, reservation);
-//    }
-//
-//    public static void deassignRsvRoom(int primaryKey) {
-//        ReservationModel reservation = TBL_RSV_ENTITY.get(primaryKey);
-//        RoomModel room = new RoomModel();
-//        reservation.setRoom(room);
-//        TBL_RSV_ENTITY.set(primaryKey, reservation);
-//    }
-//
-//    public static void flagRsvNoShow(int primaryKey) {
-//        ReservationModel reservation = TBL_RSV_ENTITY.get(primaryKey);
-//        reservation.setIsNoShow(true);
-//        TBL_RSV_ENTITY.set(primaryKey, reservation);
-//    }
-//
-//    public static void flagRsvIsPaid(int primaryKey) {
-//        ReservationModel reservation = TBL_RSV_ENTITY.get(primaryKey);
-//        reservation.setIsPaid(true);
-//        TBL_RSV_ENTITY.set(primaryKey, reservation);
-//    }
-//
-//    public static void flagRsvIsConcluded(int primaryKey) {
-//        ReservationModel reservation = TBL_RSV_ENTITY.get(primaryKey);
-//        reservation.setIsConcluded(true);
-//        TBL_RSV_ENTITY.set(primaryKey, reservation);
-//    }
+ 
+    // returns reservations
+    public static List<ReservationModel> returnAllReservations(){
+        return EntityDatabase.ReservationTable.retrieveAllReservations();
+    }
+    public static List<ReservationModel> returnAllNoShow(){
+        return EntityDatabase.ReservationTable.retrieveAllNoShow();
+    }
+    public static List<ReservationModel> returnAllPaid(){
+        return EntityDatabase.ReservationTable.retrieveAllPaid();
+    }
+    public static List<ReservationModel> returnAllConcluded(){
+        return EntityDatabase.ReservationTable.retrieveAllConcluded();
+    }
+
+    // (de-)attach Entities
+    public static void attachRoom(ReservationModel rsv, RoomModel room){
+        rsv.setRoom(room);
+    }
+    public static void attachRoom(int rsvID, RoomModel room){
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        attachRoom(rsv, room);
+    }
+    public static void deattachRoom(ReservationModel rsv){
+        rsv.setRoom(null);
+    }
+    public static void deattachRoom(int rsvID){
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        deattachRoom(rsv);
+    }
+    public static void attachGuest(ReservationModel rsv, GuestModel guest){
+        rsv.setGuest(guest);
+    }
+    public static void attachGuest(int rsvID, GuestModel guest){
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        attachGuest(rsv, guest);
+    }
+    public static void attachBillCharge(ReservationModel rsv, BillChargeModel bllchrg){
+        rsv.getListBillCharges().add(bllchrg);
+    }
+    public static void attachBillCharge(int rsvID, BillChargeModel bllchrg){
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        rsv.getListBillCharges().add(bllchrg);
+    }
+
+    // flags
+    public static void flagAsNoShow(ReservationModel rsv) {
+        rsv.setIsNoShow(true);
+    }
+    public static void flagAsNoShow(int rsvID) {
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        flagAsNoShow(rsv);
+    }
+    public static void flagAsPaid(ReservationModel rsv) {
+        rsv.setIsPaid(true);
+    }
+    public static void flagAsPaid(int rsvID){
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        flagAsPaid(rsv);
+    }
+    public static void flagAsConcluded(ReservationModel rsv) {
+        rsv.setIsConcluded(true);
+    }
+    public static void flagAsConcluded(int rsvID){
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        flagAsConcluded(rsv);
+    }
 }
