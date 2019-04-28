@@ -18,38 +18,38 @@ public class GuestDriver implements DataDriver {
 
     public static List<GuestModel> searchByGuest_ID(int Guest_ID) {
         List<GuestModel> matchGuest_ID = new ArrayList<>();
-        EntityDatabase.GuestTable.searchByGuest_ID(Guest_ID);
+        EntityDatabase.GuestTable.retrieveByID(Guest_ID);
         return matchGuest_ID;
     }
 
     public static GuestModel returnByGuest_ID(int Guest_ID) {
-        return EntityDatabase.GuestTable.searchByGuest_ID(Guest_ID);
+        return EntityDatabase.GuestTable.retrieveByID(Guest_ID);
     }
 
-    public static List<GuestModel> returnByEmail(String Email) {
-        return EntityDatabase.GuestTable.searchByName(Email);
+    public static GuestModel returnByEmail(String Email) {
+        return EntityDatabase.GuestTable.retrieveByEmail(Email);
     }
 
     public static GuestModel retrieveByGuest_ID(int Guest_ID) {
-        return EntityDatabase.GuestTable.searchByGuest_ID(Guest_ID);
+        return EntityDatabase.GuestTable.retrieveByID(Guest_ID);
     }
 
     public static List<GuestModel> searchByName(String Name) {
         List<GuestModel> matchName = new ArrayList<>();
-        EntityDatabase.GuestTable.searchByName(Name);
+        EntityDatabase.GuestTable.retrieveByEmail(Name);
         return matchName;
     }
 
 //    public static List<GuestModel> returnByName(String Name) {
-//        return EntityDatabase.GuestTable.searchByGuest_ID(Name);
+//        return EntityDatabase.GuestTable.retrieveByID(Name);
 //    }
 //
 //    public static List<GuestModel> retrieveByName(String Name) {
-//        return EntityDatabase.GuestTable.searchByGuest_ID(Name);
+//        return EntityDatabase.GuestTable.retrieveByID(Name);
 //    }
 //
 //    public static List<GuestModel> retrieveByEmail(String Email) {
-//        return EntityDatabase.GuestTable.searchByGuest_ID(Email);
+//        return EntityDatabase.GuestTable.retrieveByID(Email);
 //    }
 
     public void requestAllGuest(String Name, String Email, String Guest_ID) {
@@ -65,7 +65,7 @@ public class GuestDriver implements DataDriver {
     }
 
     public void createGuest(String Name, String Email, String Guest_ID, String CC_info, boolean isConcluded) {
-//        EntityDatabase.createGuest(Name, Email, Guest_ID, CC_info, isConcluded);
+//        EntityDatabase.addGuest(Name, Email, Guest_ID, CC_info, isConcluded);
     }
 
     public void retrieveGuest(String Name, String Email, String Guest_ID, boolean isConcluded) {

@@ -29,82 +29,48 @@ public class RateDriver implements DataDriver {
     public final static double MLTPLR_INCNTV = 0.80;
     
     // create single rate w/ base rate
-    public static void createRate(Date date, double baseRate){
-//        EntityDatabase.addRate(date, baseRate);
-    }
     public static void createRate(LocalDate localDate, double baseRate){
-        Date dt = Date.valueOf(localDate);
-        createRate(dt, baseRate);
+        EntityDatabase.RateTable.addRate(localDate, baseRate);
     }
-    
     // create continuous range of rates w/ base rate
-    public static void createRateRange(Date startInclusive, Date endExclusive, Double baseRate){
-//        EntityDatabase.addRateRange(startInclusive, endExclusive, baseRate);
+    public static void createRateRange(LocalDate startInclusive, LocalDate endExclusive, double baseRate){
+        EntityDatabase.RateTable.addRateRange(startInclusive, endExclusive, baseRate);
     }
-    public static void createRateRange(LocalDate startInclusive, LocalDate endExclusive, Double baseRate){
-        Date startIn = Date.valueOf(startInclusive);
-        Date endEx = Date.valueOf(endExclusive);
-        createRateRange(startIn, endEx, baseRate);
-    }
-    
-    // SDBX ONLY: create single rate w/o base rate
-    // SDBX ONLY: create continuous range of rates w/o base rate
     
     // modify single rate w/ new base rate
-    public static void mdfyBaseRate(RateModel existingRate, double newBaseRate){
-        // TODO: Warning 
-        // - this method will require null checks
-        existingRate.setBaseRate(newBaseRate);
+    public static void modifyBaseRate(RateModel existingRate, double newBaseRate){
+        if (existingRate != null) existingRate.setBaseRate(newBaseRate);
     }
-    public static void mdfyBaseRate(Date date, double newBaseRate){
-        RateModel existingRate = EntityDatabase.RateTable.rtrvByDate(date);
-        mdfyBaseRate(existingRate, newBaseRate);
-    }
-    public static void mdfyBaseRate(LocalDate localDate, double newBaseRate){
-        Date dt = Date.valueOf(localDate);
-        mdfyBaseRate(dt, newBaseRate);
+    public static void modifyBaseRate(LocalDate date, double newBaseRate){
+        RateModel existingRate = EntityDatabase.RateTable.retrieveRateByDate(date);
+        modifyBaseRate(existingRate, newBaseRate);
     }
     
     // modify continuous range of rates w/ base rate
-    public static void mdfyBaseRateRange(List<RateModel> existingRates, double newBaseRate){
+    public static void modifyBaseRateRange(List<RateModel> existingRates, double newBaseRate){
         existingRates.forEach(rt -> rt.setBaseRate(newBaseRate));
     }
-    public static void mdfyBaseRateRange(Date startInclusive, Date endInclusive, double newBaseRate){
-        List<RateModel> existingRates = EntityDatabase.RateTable.rtrvByDateRange(startInclusive, endInclusive);
-        mdfyBaseRateRange(existingRates, newBaseRate);
-    }
-    public static void mdfyBaseRateRange(LocalDate startInclusive, LocalDate endInclusive, double newBaseRate){
-        Date startIn = Date.valueOf(startInclusive);
-        Date endIn = Date.valueOf(endInclusive);
-        mdfyBaseRateRange(startIn, endIn, newBaseRate);
+    public static void modifyBaseRateRange(LocalDate startInclusive, LocalDate endInclusive, double newBaseRate){
+        List<RateModel> existingRates = EntityDatabase.RateTable.retrieveByDateRange(startInclusive, endInclusive);
+        RateDriver.modifyBaseRateRange(existingRates, newBaseRate);
     }
     
     // searchByDate
-    public static RateModel srchByDate(Date date){
-        return EntityDatabase.RateTable.rtrvByDate(date);
+    public static RateModel searchByDate(LocalDate date){
+        return EntityDatabase.RateTable.retrieveRateByDate(date);
     }
-    public static RateModel srchByDate(LocalDate localDate){
-        Date dt = Date.valueOf(localDate);
-        return EntityDatabase.RateTable.rtrvByDate(dt);
-    }
-    
     // searchByDateRange
-    public static List<RateModel> srchByDateRange(Date startInclusive, Date endInclusive){
-        return EntityDatabase.RateTable.rtrvByDateRange(startInclusive, endInclusive);
-    }
-    public static List<RateModel> srchByDateRange(LocalDate startInclusive, LocalDate endInclusive){
-        Date startIn = Date.valueOf(startInclusive);
-        Date endIn = Date.valueOf(endInclusive);
-        return EntityDatabase.RateTable.rtrvByDateRange(startIn, endIn);
+    public static List<RateModel> searchByDateRange(LocalDate startInclusive, LocalDate endInclusive){
+        return EntityDatabase.RateTable.retrieveByDateRange(startInclusive, endInclusive);
     }
     
     // return all rates in table
-    public static List<RateModel> rtrnAllRates(){
-        return EntityDatabase.RateTable.rtrvAllRates();
+    public static List<RateModel> returnAllRates(){
+        return EntityDatabase.RateTable.retriveAllRates();
     }
     
-    // returnRsvTypeRate
-    public static double rtrnRsvTypeRate(RateModel rate, ReservationType type){
+    // returnReservationTypeRate
+    public static double returnReservationTypeRate(RateModel rate, ReservationType type){
         // TODO: Warning 
         // - this method will require null checks
         double typeRate = 0;
@@ -127,57 +93,41 @@ public class RateDriver implements DataDriver {
         }
         return rate.getBaseRate() * typeRate;
     }
-    public static double rtrnRsvTypeRate(Date date, ReservationType type){
-        RateModel rate = EntityDatabase.RateTable.rtrvByDate(date);
-        return rtrnRsvTypeRate(rate, type);
-    }
-    public static double rtrnRsvTypeRate(LocalDate localDate, ReservationType type){
-        Date date = Date.valueOf(localDate);
-        return rtrnRsvTypeRate(date, type);
+    public static double returnReservationTypeRate(LocalDate date, ReservationType type){
+        RateModel rate = EntityDatabase.RateTable.retrieveRateByDate(date);
+        return returnReservationTypeRate(rate, type);
     }
     
     // returnRsvModifyRate
-    public static double rtrnRsvModifyRate(RateModel rate){
+    public static double returnReservationModifyRate(RateModel rate){
         // TODO: Warning 
         // - this method will require null checks
         return rate.getBaseRate() * MLTPLR_RSVMDFY;
     }
-    public static double rtrnRsvModifyRate(Date date){
-        RateModel rate = EntityDatabase.RateTable.rtrvByDate(date);
-        return rtrnRsvModifyRate(rate);
-    }
-    public static double rtrnRsvModifyRate(LocalDate localDate){
-        Date date = Date.valueOf(localDate);
-        return rtrnRsvModifyRate(date);
+    public static double returnReservationModifyRate(LocalDate date){
+        RateModel rate = EntityDatabase.RateTable.retrieveRateByDate(date);
+        return RateDriver.returnReservationModifyRate(rate);
     }
     
     // returnRsvNoShowRate
-    public static double rtrnRsvNoShowRate(RateModel rate){
+    public static double returnNoShowRate(RateModel rate){
         // TODO: Warning 
         // - this method will require null checks
         return rate.getBaseRate() * MLTPLR_NOSHOW;
     }
-    public static double rtrnRsvNoShowRate(Date date){
-        RateModel rate = EntityDatabase.RateTable.rtrvByDate(date);
-        return rtrnRsvNoShowRate(rate);
-    }
-    public static double rtrnRsvNoShowRate(LocalDate localDate){
-        Date date = Date.valueOf(localDate);
-        return rtrnRsvNoShowRate(date);
+    public static double returnNoShowRate(LocalDate date){
+        RateModel rate = EntityDatabase.RateTable.retrieveRateByDate(date);
+        return RateDriver.returnNoShowRate(rate);
     }
     
     // returnRsvCancelRate
-    public static double rtrnRsvCancelRate(RateModel rate){
+    public static double returnCancelRate(RateModel rate){
         // TODO: Warning 
         // - this method will require null checks
         return rate.getBaseRate() * MLTPLR_CANCEL;
     }
-    public static double rtrnRsvCancelRate(Date date){
-        RateModel rate = EntityDatabase.RateTable.rtrvByDate(date);
-        return rtrnRsvCancelRate(rate);
-    }
-    public static double rtrnRsvCancelRate(LocalDate localDate){
-        Date date = Date.valueOf(localDate);
-        return rtrnRsvCancelRate(date);
+    public static double returnCancelRate(LocalDate date){
+        RateModel rate = EntityDatabase.RateTable.retrieveRateByDate(date);
+        return RateDriver.returnCancelRate(rate);
     }
 }

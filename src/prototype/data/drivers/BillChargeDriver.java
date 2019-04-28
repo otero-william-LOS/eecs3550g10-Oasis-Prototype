@@ -20,39 +20,39 @@ public class BillChargeDriver implements DataDriver {
 
     public static ArrayList<BillChargeModel> searchByDatePaid(LocalDate DatePaid) {
         ArrayList<BillChargeModel> matchingDatePaid = new ArrayList<BillChargeModel>();
-        EntityDatabase.BillChargeTable.searchByDatePaid(DatePaid);
+        EntityDatabase.BillChargeTable.retrieveByDatePaid(DatePaid);
         return matchingDatePaid;
     }
 
     //Create BllCharge for 3 different constructors
     public static void createBllChrg(LocalDate DateCharged, double amount, String lineDesc) {
-        EntityDatabase.BillChargeTable.addBllCharge(DateCharged, amount, lineDesc);
+        EntityDatabase.BillChargeTable.addBillCharge(DateCharged, amount, lineDesc);
     }
 
     public static void createBllChrg(LocalDate DateCharged, double amount) {
-        EntityDatabase.BillChargeTable.addBllCharge(DateCharged, amount);
+        EntityDatabase.BillChargeTable.addBillCharge(DateCharged, amount);
     }
 
     public static void createBllChrg(LocalDate DateCharged) {
-        EntityDatabase.BillChargeTable.addBllCharge(DateCharged);
+        EntityDatabase.BillChargeTable.addBillCharge(DateCharged);
     }
 
     //search by reservation, or bill charge ID or the date charged or paid
     public static List<BillChargeModel> searchByReservation(ReservationModel rsv) {
         List<BillChargeModel> matchingRsv = new ArrayList<>();
-        matchingRsv = EntityDatabase.BillChargeTable.searchByReservation(rsv.getReservationID());
+        matchingRsv = EntityDatabase.BillChargeTable.retrieveByReservation(rsv.getReservationID());
         return matchingRsv;
     }
 
     public static List<BillChargeModel> searchByBllChrgID(int bllchrgID) {
         List<BillChargeModel> matchingBllChrgID = new ArrayList<>();
-        matchingBllChrgID = EntityDatabase.BillChargeTable.searchByBllChrgID(bllchrgID);
+        //matchingBllChrgID = EntityDatabase.BillChargeTable.retrieveByID(bllchrgID);
         return matchingBllChrgID;
     }
 
     public static List<BillChargeModel> searchByDateCharged(LocalDate DateCharged) {
         List<BillChargeModel> matchingDateCharged = new ArrayList<>();
-        matchingDateCharged =EntityDatabase.BillChargeTable.searchByDateCharged(DateCharged);
+        matchingDateCharged =EntityDatabase.BillChargeTable.retrieveByDateCharged(DateCharged);
         return matchingDateCharged;
     }
 
@@ -61,7 +61,7 @@ public class BillChargeDriver implements DataDriver {
     }
     
     public static void flagIsPaid(int billID) {
-        BillChargeModel bill = EntityDatabase.BillChargeTable.getBillCharge(billID);    
+        BillChargeModel bill = EntityDatabase.BillChargeTable.retrieveByID(billID);    
         bill.setIsPaid(true);
     }
 
@@ -71,20 +71,20 @@ public class BillChargeDriver implements DataDriver {
     }
 
     public static List<BillChargeModel> rtrnAllPaidChrgs() {
-        return EntityDatabase.BillChargeTable.retrieveAllPaidchrgs();
+        return EntityDatabase.BillChargeTable.retrieveAllPaidCharges();
     }
 
     //Retrieve billing data
     public static List<BillChargeModel> rtrnAllBllChrgs() {
-        return EntityDatabase.BillChargeTable.retrieveAllBllchrgs();
+        return EntityDatabase.BillChargeTable.retrieveAllBillCharges();
     }
 
     public static List<BillChargeModel> rtrnAllUnpaidChrgs() {
-        return EntityDatabase.BillChargeTable.retrieveAllUnpaidchrgs();
+        return EntityDatabase.BillChargeTable.retrieveAllUnpaidCharges();
     }
     
     public static void modifyBillChargeLineDesc(int billID){
-        BillChargeModel bill = EntityDatabase.BillChargeTable.getBillCharge(billID);
+        BillChargeModel bill = EntityDatabase.BillChargeTable.retrieveByID(billID);
         String lineDesc = bill.getLineDescription();
         lineDesc += " REMOVED";
         bill.setLineDescription(lineDesc);            

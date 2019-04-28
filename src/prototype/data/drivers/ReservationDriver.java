@@ -18,13 +18,6 @@ import prototype.data.models.ReservationType;
  */
 public class ReservationDriver implements DataDriver {
     
-    // creates a new reservation for the first ReservationModel constructor
-    public static void createReservation(LocalDate dateArrive, LocalDate dateDepart, LocalDate datePaid, ReservationType rsvType,
-            RoomModel room, GuestModel guest, List<BillChargeModel> listBllchrg,
-            boolean isNoShow, boolean isPaid, boolean isConcluded){
-        EntityDatabase.ReservationTable.addReservation(dateArrive, dateDepart, datePaid, rsvType, room, guest, listBllchrg,
-                isNoShow, isPaid, isConcluded);
-    }
     // creates a new reservation for the second ReservationModel constructor
     public static void createReservation(LocalDate dateArrive, LocalDate dateDepart, LocalDate datePaid, ReservationType rsvType,
             boolean isNoShow, boolean isPaid, boolean isConcluded){
@@ -48,7 +41,7 @@ public class ReservationDriver implements DataDriver {
         rsv.setDateArrive(arrv);
     }
     public static void modifyDateArrive(int rsvID, LocalDate arrv){
-        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveReservation(rsvID);
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
         modifyDateArrive(rsv, arrv);
     }
 //  
@@ -56,7 +49,7 @@ public class ReservationDriver implements DataDriver {
         rsv.setDateDepart(dprt);
     }
     public static void modifyDateDepart(int rsvID, LocalDate dprt){
-        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveReservation(rsvID);
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
         modifyDateDepart(rsv, dprt);
     }
 //    
@@ -64,7 +57,7 @@ public class ReservationDriver implements DataDriver {
         rsv.setDatePaid(paid);
     }  
     public static void modifyDatePaid(int rsvID, LocalDate paid) {
-        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveReservation(rsvID);
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
         modifyDatePaid(rsv, paid);
     }
 //  
@@ -73,33 +66,33 @@ public class ReservationDriver implements DataDriver {
         rsv.setReservationType(type);
     }
     public static void modifyReservationType(int rsvID, ReservationType type){
-        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveReservation(rsvID);
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
         modifyReservationType(rsv, type);
     }
     
     // returns all reservations based on date attr
     public static List<ReservationModel> srchByDateArrv(LocalDate arrv){
-        return EntityDatabase.ReservationTable.retrieveReservationByDateArrive(arrv);
+        return EntityDatabase.ReservationTable.retrieveByDateArrive(arrv);
     }
     public static List<ReservationModel> srchByDateDprt(LocalDate dprt){
-        return EntityDatabase.ReservationTable.retrieveReservationByDateDepart(dprt);
+        return EntityDatabase.ReservationTable.retrieveByDateDepart(dprt);
     }
     public static List<ReservationModel> srchByDateInMddl(LocalDate inclsv){
-        return EntityDatabase.ReservationTable.retrieveReservationByDateInMiddle(inclsv);
+        return EntityDatabase.ReservationTable.retrieveByDateInMiddle(inclsv);
     }
     public static List<ReservationModel> srchByDate(LocalDate date){
-        return EntityDatabase.ReservationTable.retrieveReservationByDate(date);
+        return EntityDatabase.ReservationTable.retrieveByDate(date);
     }
     
     public static List<ReservationModel> searchByGuest(int guestID){
-        return EntityDatabase.ReservationTable.searchRsvByGuest(guestID);
+        return EntityDatabase.ReservationTable.retrieveByGuest(guestID);
     }
     public static List<ReservationModel> searchByGuest(GuestModel guest){
         return searchByGuest(guest.getGuestID());
     }
     
     public static ReservationModel searchByRoom(int RoomID) {
-        return EntityDatabase.ReservationTable.searchRsvByRoom(RoomID);
+        return EntityDatabase.ReservationTable.retrieveByRoom(RoomID);
     }
     public static ReservationModel searchByRoom(RoomModel room){
         return searchByRoom(room.getRoomID());
@@ -108,17 +101,17 @@ public class ReservationDriver implements DataDriver {
 //  TODO START HERE  
     //returns all reservations of a given type
     public static List<ReservationModel> searchByType(ReservationType rsvType){
-        return EntityDatabase.ReservationTable.searchReservationByType(rsvType);
+        return EntityDatabase.ReservationTable.retrieveByType(rsvType);
     }
 //    
 //    // returns all paid reservations
-//    public static ArrayList<ReservationModel> getAllPaid(){
-//        return EntityDatabase.getAllPaid();
+//    public static ArrayList<ReservationModel> retrieveAllPaid(){
+//        return EntityDatabase.retrieveAllPaid();
 //    }
 //    
 //    // returns all conclded reservations
-//    public static ArrayList<ReservationModel> getAllConcluded(){
-//        return EntityDatabase.getAllConcluded();
+//    public static ArrayList<ReservationModel> retrieveAllConcluded(){
+//        return EntityDatabase.retrieveAllConcluded();
 //    }
 //    
 //    // returns all noo show reservations

@@ -201,7 +201,7 @@ public class UserStoryPrototype {
         System.out.println("Testing Gen Rates for Year Method");
         EntityDatabase.DevUtilities.genRateTableForYear();
         System.out.println("\tRequesting All Rates");
-        List<RateModel> rtList = EntityDatabase.RateTable.rtrvAllRates();
+        List<RateModel> rtList = EntityDatabase.RateTable.retriveAllRates();
         rtList.forEach(rt -> System.out.println("\t\t" + rt));
         System.out.println("\tNumber of Rates:" + Integer.toString(rtList.size()));
     }

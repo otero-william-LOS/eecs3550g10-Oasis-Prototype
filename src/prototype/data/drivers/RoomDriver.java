@@ -32,39 +32,59 @@ public class RoomDriver implements DataDriver {
      * @return 
      */
     
-    // return all rooms
-    public static List<RoomModel> rtrnAllRooms(){
-        return EntityDatabase.RoomTable.rtrvAllRooms();
+    // return rooms
+    public static List<RoomModel> returnAllRooms(){
+        return EntityDatabase.RoomTable.retrieveAllRooms();
     }
-    // return available rooms
-    public static List<RoomModel> rtrnAvailableRooms(){
-        return EntityDatabase.RoomTable.rtrvAvailableRooms();
+    public static List<RoomModel> returnVacantRooms(){
+        return EntityDatabase.RoomTable.retrieveVacantRooms();
     }
-    // return occupied rooms
-    public static List<RoomModel> rtrnOccupiedRooms(){
-        return EntityDatabase.RoomTable.rtrvOccupiedRooms();
+    public static List<RoomModel> returnOccupiedRooms(){
+        return EntityDatabase.RoomTable.retrieveOccupiedRooms();
     }
     
-    // flag room occupied
-    public static void flagRoomAsOccupied(RoomModel rm){
-        rm.setIsOccupied(true);
+    // flag room occupied/vacant
+    public static void flagRoomAsOccupied(RoomModel room){
+        room.setIsOccupied(true);
     }
-    // flag room available
-    public static void flagRoomAsAvailable(RoomModel rm){
-        rm.setIsOccupied(false);
+    public static void flagRoomAsOccupied(int roomID){
+        RoomModel rm = EntityDatabase.RoomTable.retrieveByID(roomID);
+        flagRoomAsOccupied(rm);
+    }
+    public static void flagRoomAsVacant(RoomModel room){
+        room.setIsOccupied(false);
+    }
+    public static void flagRoomAsVacant(int roomID){
+        RoomModel rm = EntityDatabase.RoomTable.retrieveByID(roomID);
+        flagRoomAsVacant(rm);
     }
     
     // search by rsv
-    public static RoomModel srchRoomByRsv(ReservationModel rsv){
-        return EntityDatabase.RoomTable.rtrvByReservation(rsv);
+    public static RoomModel searchByReservation(int rsvID){
+        return EntityDatabase.RoomTable.retrieveByReservation(rsvID);
+    }
+    public static RoomModel searchByReservation(ReservationModel rsv){
+        return searchByReservation(rsv.getReservationID());
     }
     
-    // assignRsvToRoom
-    public static void asignRsvToRoom(RoomModel rm, ReservationModel rsv){
-        rm.setReservation(rsv);
+    // search by id
+    public static RoomModel searchByID(int roomID){
+        return EntityDatabase.RoomTable.retrieveByID(roomID);
     }
-    // deassignRsvFromRoom
-    public static void dsignRsvFromRoom(RoomModel rm){
+    
+    // (de-)attach Rsv attr
+    public static void attachReservation(RoomModel room, ReservationModel rsv){
+        room.setReservation(rsv);
+    }
+    public static void attachReservation(int roomID, ReservationModel rsv){
+        RoomModel rm = EntityDatabase.RoomTable.retrieveByID(roomID);
+        RoomDriver.attachReservation(rm, rsv);
+    }
+    public static void deattachReservation(RoomModel rm){
         rm.setReservation(null);
+    }
+    public static void deattachReservation(int roomID){
+        RoomModel room = EntityDatabase.RoomTable.retrieveByID(roomID);
+        RoomDriver.deattachReservation(room);
     }
 }
