@@ -16,41 +16,41 @@ import prototype.data.models.GuestModel;
  */
 public class GuestDriver implements DataDriver {
 
-    public static List<GuestModel> searchByGuest_ID(GuestModel Guest_ID) {
+    public static List<GuestModel> searchByGuest_ID(int Guest_ID) {
         List<GuestModel> matchGuest_ID = new ArrayList<>();
-        EntityDatabase.searchByGuest_ID(Guest_ID);
+        EntityDatabase.GuestTable.searchByGuest_ID(Guest_ID);
         return matchGuest_ID;
     }
 
-    public static List<GuestModel> returnByGuest_ID(GuestModel Guest_ID) {
-        return EntityDatabase.searchByGuest_ID(Guest_ID);
+    public static GuestModel returnByGuest_ID(int Guest_ID) {
+        return EntityDatabase.GuestTable.searchByGuest_ID(Guest_ID);
     }
 
     public static List<GuestModel> returnByEmail(String Email) {
-        return EntityDatabase.searchByName(Email);
+        return EntityDatabase.GuestTable.searchByName(Email);
     }
 
-    public static List<GuestModel> retrieveByGuest_ID(GuestModel Guest_ID) {
-        return EntityDatabase.searchByGuest_ID(Guest_ID);
+    public static GuestModel retrieveByGuest_ID(int Guest_ID) {
+        return EntityDatabase.GuestTable.searchByGuest_ID(Guest_ID);
     }
 
     public static List<GuestModel> searchByName(String Name) {
         List<GuestModel> matchName = new ArrayList<>();
-        EntityDatabase.searchByName(Name);
+        EntityDatabase.GuestTable.searchByName(Name);
         return matchName;
     }
 
-    public static List<GuestModel> returnByName(GuestModel Name) {
-        return EntityDatabase.searchByGuest_ID(Name);
-    }
-
-    public static List<GuestModel> retrieveByName(GuestModel Name) {
-        return EntityDatabase.searchByGuest_ID(Name);
-    }
-
-    public static List<GuestModel> retrieveByEmail(GuestModel Email) {
-        return EntityDatabase.searchByGuest_ID(Email);
-    }
+//    public static List<GuestModel> returnByName(String Name) {
+//        return EntityDatabase.GuestTable.searchByGuest_ID(Name);
+//    }
+//
+//    public static List<GuestModel> retrieveByName(String Name) {
+//        return EntityDatabase.GuestTable.searchByGuest_ID(Name);
+//    }
+//
+//    public static List<GuestModel> retrieveByEmail(String Email) {
+//        return EntityDatabase.GuestTable.searchByGuest_ID(Email);
+//    }
 
     public void requestAllGuest(String Name, String Email, String Guest_ID) {
 //      return EntityDatabase.guestList(Name, Email, Guest_ID);
@@ -61,7 +61,7 @@ public class GuestDriver implements DataDriver {
     }
 
     public void modifyGuest(String Name, String Email, boolean isConcluded) {
-        EntityDatabase.GuestTable.modifyGuest(Name, Email);
+        //EntityDatabase.GuestTable.modifyGuest(Name, Email);
     }
 
     public void createGuest(String Name, String Email, String Guest_ID, String CC_info, boolean isConcluded) {
@@ -76,7 +76,7 @@ public class GuestDriver implements DataDriver {
 //        EntityDatabase.returnGuestInfo(Name, Email, Guest_ID, isConcluded);
     }
     public static void flagIsConcluded(int primaryKey)  {
-        EntityDatabase.flagRsvIsConcluded(primaryKey);
+        //EntityDatabase.GuestTable.flagRsvIsConcluded(primaryKey);
     }
     
 }

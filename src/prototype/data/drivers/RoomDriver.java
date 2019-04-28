@@ -26,17 +26,6 @@ import prototype.data.persistence.EntityDatabase;
  */
 public class RoomDriver implements DataDriver {
     
-    // SDBX: expose EntityDatabase rsvTbl for DEV
-    public static List<ReservationModel> devRtrnAllRsvs(){return EntityDatabase.retrieveAllRsvs();}
-    
-    // SDBX: Dev Linkage Method; No RsvDriver to use
-    public static void devLinkRsvAndRoom(ReservationModel rsv, RoomModel rm){
-        // Dev Debug info
-        System.out.println("\tLinking " + rsv + " & " + rm);
-        rsv.setRoom(rm);
-        rm.setReservation(rsv);
-    }
-    
     /**
      * Core RoomDriver Methods
      * 
