@@ -131,6 +131,12 @@ public class ReservationDriver implements DataDriver {
         ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
         attachRoom(rsv, room);
     }
+    
+    public static void attachRoom(int rsvID, int roomID){
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        RoomModel room = EntityDatabase.RoomTable.retrieveByID(roomID);
+        attachRoom(rsv, room);
+    }
     public static void deattachRoom(ReservationModel rsv){
         rsv.setRoom(null);
     }
