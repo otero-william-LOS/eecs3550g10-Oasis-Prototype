@@ -18,16 +18,16 @@ public class RateModel extends DataModel {
         Date
         Acts as primary key for this specific base rate
     */
-    private Date m_RateDate;
+    private Date m_RateDate = new Date(Long.MIN_VALUE);
     //hidden; for now
     public Date getRateSqlDate() {return m_RateDate;}
     public void setRateSqlDate(Date rateDate) {this.m_RateDate = rateDate;}
     //  Additional RateDate Get/Set Using LocalDate Conversion
     public LocalDate getRateDate() {
-        return (m_RateDate != null) ? m_RateDate.toLocalDate() : null;
+        return (m_RateDate != null) ? m_RateDate.toLocalDate() : LocalDate.MIN;
     }
     public void setRateDate(LocalDate rateDate) {
-        this.m_RateDate = (rateDate != null) ? Date.valueOf(rateDate) : null;
+        this.m_RateDate = (rateDate != null) ? Date.valueOf(rateDate) : new Date(Long.MIN_VALUE);
     }
     
     //  BaseRate Attribute
@@ -36,7 +36,7 @@ public class RateModel extends DataModel {
         double
         Base charge for any room on a specific day
     */
-    private double m_BaseRate;
+    private double m_BaseRate = 0.0;
     public double getBaseRate() {return m_BaseRate;}
     public void setBaseRate(double baseRate) {this.m_BaseRate = baseRate;}
     
@@ -49,15 +49,15 @@ public class RateModel extends DataModel {
     
     public RateModel(LocalDate rateDate, double baseRate) {
         this((Date)null, baseRate);
-        this.m_RateDate = (rateDate != null) ? Date.valueOf(rateDate) : null;
+        this.m_RateDate = (rateDate != null) ? Date.valueOf(rateDate) : new Date(Long.MIN_VALUE);
     }
     
     public RateModel(LocalDate rateDate) {
-        this(rateDate, 0);
+        this(rateDate, 0.0);
     }
 
     public RateModel() {
-        this((Date)null, 0);
+        this(new Date(Long.MIN_VALUE), 0.0);
     }    
     
     // Overrides
@@ -90,4 +90,6 @@ public class RateModel extends DataModel {
         info += " ]";
         return  info;
     }
+    
+    public static final RateModel EMPTY_ENTITY = new RateModel();
 }

@@ -1,5 +1,6 @@
 package prototype.data.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public class GuestModel extends DataModel {
         int; (String in CSV)
         Provides unique id for guest infro
     */
-    private int m_GuestID;
+    private int m_GuestID = 0;
     public int getGuestID() {return m_GuestID;}
     public void setGuestID(int guestID) {this.m_GuestID = guestID;}
     
@@ -26,7 +27,7 @@ public class GuestModel extends DataModel {
         String
         Guest's Last Name
     */
-    private String m_Name;
+    private String m_Name = "";
     public String getName() {return m_Name;}
     public void setName(String name) {this.m_Name = name;}
     
@@ -36,7 +37,7 @@ public class GuestModel extends DataModel {
         String
         Provided credit card info for payment processing
     */
-    private String m_CCInfo;
+    private String m_CCInfo = "";
     public String getCCInfo() {return m_CCInfo;}
     public void setCCInfo(String ccInfo) {this.m_CCInfo = ccInfo;}
     
@@ -46,7 +47,7 @@ public class GuestModel extends DataModel {
         String
         Guest's email for communication
     */
-    private String m_Email;
+    private String m_Email = "";
     public String getEmail() {return m_Email;}
     public void setEmail(String email) {this.m_Email = email;}
     
@@ -56,7 +57,7 @@ public class GuestModel extends DataModel {
         DataModel
         one-to-(1+) rsv relation
     */
-    private List<ReservationModel> m_ListRsv;
+    private List<ReservationModel> m_ListRsv = new ArrayList<>();
     public List<ReservationModel> getListRsv() {return m_ListRsv;}
     public void setListRsv(List<ReservationModel> list) {this.m_ListRsv = list;}
     
@@ -71,15 +72,15 @@ public class GuestModel extends DataModel {
     }
     
     public GuestModel(int guestID, String name, String ccInfo, String email) {
-        this(guestID, name, ccInfo, email, null);
+        this(guestID, name, ccInfo, email, new ArrayList<>());
     }
     
     public GuestModel(int guestID, String name, String email) {
-        this(guestID, name, "", email, null);
+        this(guestID, name, "", email, new ArrayList<>());
     }
     
     public GuestModel() {
-        this(0, "", "", "", null);
+        this(0, "", "", "", new ArrayList<>());
     }
     
     // Overrides
@@ -117,4 +118,6 @@ public class GuestModel extends DataModel {
         info += " ]";
         return  info;
     }
+    
+    public static final GuestModel EMPTY_ENTITY = new GuestModel();
 }

@@ -18,7 +18,7 @@ public class BillChargeModel extends DataModel {
         int; (String in CSV)
         Unique id for this specific bill charge line item
     */
-    private int m_BllchrgID;
+    private int m_BllchrgID = 0;
     public int getBillChargeID() {return m_BllchrgID;}
     public void setBillChargeID(int bllchrgID) {this.m_BllchrgID = bllchrgID;}    
     
@@ -28,7 +28,7 @@ public class BillChargeModel extends DataModel {
         ReservationModel; (RsvID String in CSV)
         (0+)-to-one rsv relation
     */
-    private ReservationModel m_Rsv;
+    private ReservationModel m_Rsv = ReservationModel.EMPTY_ENTITY;
     public ReservationModel getReservation() {return m_Rsv;}
     public void setReservation(ReservationModel rsv) {this.m_Rsv = rsv;}
     
@@ -38,7 +38,7 @@ public class BillChargeModel extends DataModel {
         String
         Desc
     */
-    private String m_LineDesc;
+    private String m_LineDesc = "";
     public String getLineDescription() {return m_LineDesc;}
     public void setLineDescription(String lineDesc) {this.m_LineDesc = lineDesc;}
     
@@ -48,7 +48,7 @@ public class BillChargeModel extends DataModel {
         double; (string in CSV)
         Desc
     */
-    private double m_Amount;
+    private double m_Amount = 0.0;
     public double getAmount() {return m_Amount;}
     public void setAmount(double amount) {this.m_Amount = amount;}
     
@@ -58,16 +58,16 @@ public class BillChargeModel extends DataModel {
         Date
         Desc
     */
-    private Date m_DateCharged;
+    private Date m_DateCharged = new Date(Long.MIN_VALUE);
     //hidden; future dev
     protected Date getSqlDateCharged() {return m_DateCharged;}
     protected void setSqlDateCharged(Date dCharged) {this.m_DateCharged = dCharged;}
     //  Additional DateCharged Get/Set Using LocalDate Conversion
     public LocalDate getDateCharged() {
-        return (m_DateCharged != null) ?  m_DateCharged.toLocalDate() : null;
+        return (m_DateCharged != null) ?  m_DateCharged.toLocalDate() : LocalDate.MIN;
     }
     public void setDateCharged(LocalDate ldCharged) {
-        this.m_DateCharged = (ldCharged != null) ? Date.valueOf(ldCharged) : null;
+        this.m_DateCharged = (ldCharged != null) ? Date.valueOf(ldCharged) : new Date(Long.MIN_VALUE);
     }
     
     //  DatePaid Attribute
@@ -76,16 +76,16 @@ public class BillChargeModel extends DataModel {
         Date
         Desc
     */
-    private Date m_DatePaid;
+    private Date m_DatePaid = new Date(Long.MIN_VALUE);
     //  hidden; future expansion
     protected Date getSqlDatePaid() {return m_DatePaid;}
     protected void setSqlDatePaid(Date dPaid) {this.m_DatePaid = dPaid;}
     //  Additional DatePaid Get/Set Using LocalDate Conversion
     public LocalDate getDatePaid() {
-        return (m_DatePaid != null) ? m_DatePaid.toLocalDate() : null;
+        return (m_DatePaid != null) ? m_DatePaid.toLocalDate() : LocalDate.MIN;
     }
     public void setDatePaid(LocalDate ldPaid) {
-        this.m_DatePaid = (ldPaid != null) ? Date.valueOf(ldPaid) : null;
+        this.m_DatePaid = (ldPaid != null) ? Date.valueOf(ldPaid) : new Date(Long.MIN_VALUE);
     }
     
     //  IsPaid Attribute
@@ -94,7 +94,7 @@ public class BillChargeModel extends DataModel {
         boolean
         Desc
     */
-    private boolean m_IsPaid;
+    private boolean m_IsPaid = false;
     public boolean isPaid() {return m_IsPaid;}
     public void setIsPaid(boolean isPaid) {this.m_IsPaid = isPaid;}
         
@@ -111,20 +111,17 @@ public class BillChargeModel extends DataModel {
     
     public BillChargeModel(int bllchrgID, ReservationModel rsv, String lineDesc, double amount, LocalDate dateCharged, LocalDate datePaid, boolean isPaid) {
         this(bllchrgID, rsv, lineDesc, amount, (Date)null, null, isPaid);
-        this.m_DateCharged = (dateCharged != null) ? Date.valueOf(dateCharged) : null;
-        this.m_DatePaid = (datePaid != null) ? Date.valueOf(datePaid) : null;
+        this.m_DateCharged = (dateCharged != null) ? Date.valueOf(dateCharged) : new Date(Long.MIN_VALUE);
+        this.m_DatePaid = (datePaid != null) ? Date.valueOf(datePaid) : new Date(Long.MIN_VALUE);
     }
-    
     public BillChargeModel(int bllchrgID, ReservationModel rsv, String lineDesc, double amount, LocalDate dateCharged) {
-        this(bllchrgID, rsv, lineDesc, amount, dateCharged, null, false);
+        this(bllchrgID, rsv, lineDesc, amount, dateCharged, LocalDate.MIN, false);
     }
-    
     public BillChargeModel(int bllchrgID, String lineDesc, double amount, LocalDate dateCharged) {
-        this(bllchrgID, null, lineDesc, amount, dateCharged, null, false);
+        this(bllchrgID, ReservationModel.EMPTY_ENTITY, lineDesc, amount, dateCharged, LocalDate.MIN, false);
     }
-    
     public BillChargeModel() {
-        this(0, null, "", 0, (Date)null, null, false);
+        this(0, ReservationModel.EMPTY_ENTITY, "", 0, new Date(Long.MIN_VALUE), new Date(Long.MIN_VALUE), false);
     }
     
     // Overrides
@@ -165,4 +162,6 @@ public class BillChargeModel extends DataModel {
         info += " ]";
         return  info;
     }
+    
+    public static final BillChargeModel EMPTY_ENTITY = new BillChargeModel();
 }

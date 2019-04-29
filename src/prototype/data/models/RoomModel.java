@@ -12,7 +12,7 @@ public class RoomModel extends DataModel {
         Short (exactly 45 rooms); (String in CSV)
         Identifies room w/ unique id
     */
-    private short m_RoomID;
+    private short m_RoomID = 0;
     public short getRoomID() {return m_RoomID;}
     public void setRoomID(short roomID) {this.m_RoomID = roomID;}
     
@@ -24,7 +24,7 @@ public class RoomModel extends DataModel {
         Flag room as Vacant or Occupied
         Provides unique room's last known status
     */
-    private boolean m_IsOccupied;
+    private boolean m_IsOccupied = false;
     public boolean isOccupied() {return m_IsOccupied;}
     public void setIsOccupied(boolean isOccupied) {this.m_IsOccupied = isOccupied;}
     
@@ -35,7 +35,7 @@ public class RoomModel extends DataModel {
         ReservationModel
         one-to-(0 or 1)
     */
-    private ReservationModel m_Rsv;
+    private ReservationModel m_Rsv = ReservationModel.EMPTY_ENTITY;
     public ReservationModel getReservation() {return m_Rsv;}
     public void setReservation(ReservationModel rsv) {m_Rsv = rsv;}
     
@@ -47,10 +47,10 @@ public class RoomModel extends DataModel {
         this.m_Rsv = rsvID;
     }
     public RoomModel(short roomID, boolean isOcuppied) {
-        this(roomID, isOcuppied, null);
+        this(roomID, isOcuppied, ReservationModel.EMPTY_ENTITY);
     }
     public RoomModel() {
-        this((short)0, false, null);
+        this((short)0, false, ReservationModel.EMPTY_ENTITY);
     }
     
     // Overrides
@@ -82,4 +82,6 @@ public class RoomModel extends DataModel {
         info += " ]";
         return  info;
     }
+    
+    public static final RoomModel EMPTY_ENTITY = new RoomModel();
 }

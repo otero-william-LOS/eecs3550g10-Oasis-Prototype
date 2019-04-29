@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  *
@@ -19,7 +20,7 @@ public class ReservationModel extends DataModel {
         int; (String in CSV)
         Unique primary key for specific rsv
     */
-    private int m_RsvID;
+    private int m_RsvID = 0;
     public int getReservationID() {return m_RsvID;}
     public void setReservationID(int rsvID) {this.m_RsvID = rsvID;}
     
@@ -29,16 +30,16 @@ public class ReservationModel extends DataModel {
         Date
         Desc
     */
-    private Date m_DateArrive;
+    private Date m_DateArrive = new Date(Long.MIN_VALUE);
     // hidden; future dev
     protected Date getSqlDateArrive() {return m_DateArrive;}
     protected void setSqlDateArrive(Date dateArrive) {this.m_DateArrive = dateArrive;}
     //  Additional DateArrive Get/Set Using LocalDate Conversion
     public LocalDate getDateArrive() {
-        return (m_DateArrive != null) ? m_DateArrive.toLocalDate() : null;
+        return (m_DateArrive != null) ? m_DateArrive.toLocalDate() : LocalDate.MIN;
     }
     public void setDateArrive(LocalDate dateArrive) {
-        this.m_DateArrive = (dateArrive != null) ? Date.valueOf(dateArrive) : null;
+        this.m_DateArrive = (dateArrive != null) ? Date.valueOf(dateArrive) : new Date(Long.MIN_VALUE);
     }
     
     //  DateDepart Attribute
@@ -47,16 +48,16 @@ public class ReservationModel extends DataModel {
         Date
         Desc
     */
-    private Date m_DateDepart;
+    private Date m_DateDepart = new Date(Long.MIN_VALUE);
     //  hidden; future dev
     protected Date getSqlDateDepart() {return m_DateDepart;}
     protected void setSqlDateDepart(Date dateDepart) {this.m_DateDepart = dateDepart;}
     //  Additional DateDepart Get/Set Using LocalDate Conversion
     public LocalDate getDateDepart() {
-        return (m_DateDepart != null) ? m_DateDepart.toLocalDate() : null;
+        return (m_DateDepart != null) ? m_DateDepart.toLocalDate() : LocalDate.MIN;
     }
     public void setDateDepart(LocalDate dateDepart) {
-        this.m_DateDepart = (dateDepart != null) ? Date.valueOf(dateDepart) : null;
+        this.m_DateDepart = (dateDepart != null) ? Date.valueOf(dateDepart) : new Date(Long.MIN_VALUE);
     }
     
     //  DatePaid Attribute
@@ -65,16 +66,16 @@ public class ReservationModel extends DataModel {
         Date
         Records Date that specific Rsv was fully (pre-)payed
     */
-    private Date m_DatePaid;
+    private Date m_DatePaid= new Date(Long.MIN_VALUE);
     //hidden; future dev
     protected Date getSqlDatePaid() {return m_DatePaid;}
     protected void setSqlDatePaid(Date datePaid) {this.m_DatePaid = datePaid;}
     //  Additional DatePaid Get/Set Using LocalDate Conversion
     public LocalDate getDatePaid() {
-        return (m_DatePaid != null) ? m_DatePaid.toLocalDate() : null;
+        return (m_DatePaid != null) ? m_DatePaid.toLocalDate() : LocalDate.MIN;
     }
     public void setDatePaid(LocalDate datePaid) {
-        this.m_DatePaid = (datePaid != null) ? Date.valueOf(datePaid) : null;
+        this.m_DatePaid = (datePaid != null) ? Date.valueOf(datePaid) : new Date(Long.MIN_VALUE);
     }
     
     //  ReservationType Attribute
@@ -83,7 +84,7 @@ public class ReservationModel extends DataModel {
         Enum
         Assigns type of specific Rsv, and will determine rate charged
     */
-    private ReservationType m_RsvType;
+    private ReservationType m_RsvType = ReservationType.CONVENTIONAL;
     public ReservationType getReservationType() {return m_RsvType;}
     public void setReservationType(ReservationType rsvType) {this.m_RsvType = rsvType;}
     
@@ -94,7 +95,7 @@ public class ReservationModel extends DataModel {
         Specific Room assigned to this rsv on morning of arrival
         (0 or 1)-to-one
     */
-    private RoomModel m_Room;
+    private RoomModel m_Room = RoomModel.EMPTY_ENTITY;
     public RoomModel getRoom() {return m_Room;}
     public void setRoom(RoomModel room) {this.m_Room = room;}
     
@@ -105,7 +106,7 @@ public class ReservationModel extends DataModel {
         Unique guest who made this rsv
         (1+)-to-one
     */
-    private GuestModel m_Guest;
+    private GuestModel m_Guest = GuestModel.EMPTY_ENTITY;
     public GuestModel getGuest() {return m_Guest;}
     public void setGuest(GuestModel guest) {this.m_Guest = guest;}
     
@@ -115,7 +116,7 @@ public class ReservationModel extends DataModel {
         Collection<Bllchrg>
         one-to-(0+) list of bill charges
     */
-    private List<BillChargeModel> m_ListBllchrg;
+    private List<BillChargeModel> m_ListBllchrg = new ArrayList<>();
     public List<BillChargeModel> getListBillCharges() {return m_ListBllchrg;}
     public void setListBillCharges(List<BillChargeModel> list) {this.m_ListBllchrg = list;}
     
@@ -125,7 +126,7 @@ public class ReservationModel extends DataModel {
         boolean
         Desc
     */
-    private boolean m_IsNoShow;
+    private boolean m_IsNoShow = false;
     public boolean isNoShow() {return m_IsNoShow;}
     public void setIsNoShow(boolean isNoShow) {this.m_IsNoShow = isNoShow;}
     
@@ -135,7 +136,7 @@ public class ReservationModel extends DataModel {
         boolean
         Desc
     */
-    private boolean m_IsPaid;
+    private boolean m_IsPaid = false;
     public boolean isPaid() {return m_IsPaid;}
     public void setIsPaid(boolean isPaid) {this.m_IsPaid = isPaid;}
     
@@ -145,7 +146,7 @@ public class ReservationModel extends DataModel {
         boolean
         Desc
     */
-    private boolean m_IsConcluded;
+    private boolean m_IsConcluded = false;
     public boolean isConcluded() {return m_IsConcluded;}
     public void setIsConcluded(boolean isConcluded) {this.m_IsConcluded = isConcluded;}
         
@@ -170,26 +171,31 @@ public class ReservationModel extends DataModel {
             ReservationType rsvType, RoomModel room, GuestModel guest, List<BillChargeModel> listBllchrg, 
             boolean isNoShow, boolean isPaid, boolean isConcluded) {
         this(rsvID, (Date)null, null, null, rsvType, room, guest, listBllchrg, isNoShow, isPaid, isConcluded);
-        this.m_DateArrive = (dArrv != null) ? Date.valueOf(dArrv) : null;
-        this.m_DateDepart = (dDprt != null) ? Date.valueOf(dDprt) : null;
-        this.m_DatePaid = (dPaid != null) ? Date.valueOf(dPaid) : null;
+        this.m_DateArrive = (dArrv != null) ? Date.valueOf(dArrv) : new Date(Long.MIN_VALUE);
+        this.m_DateDepart = (dDprt != null) ? Date.valueOf(dDprt) : new Date(Long.MIN_VALUE);
+        this.m_DatePaid = (dPaid != null) ? Date.valueOf(dPaid) : new Date(Long.MIN_VALUE);
     }
 
     public ReservationModel(int rsvID, LocalDate dArrv, LocalDate dDprt, LocalDate dPaid, 
             ReservationType rsvType, boolean isNoShow, boolean isPaid, boolean isConcluded) {
-        this(rsvID, dArrv, dDprt, dPaid, rsvType, null, null, null, isNoShow, isPaid, isConcluded);
+        this(rsvID, dArrv, dDprt, dPaid, rsvType, RoomModel.EMPTY_ENTITY, GuestModel.EMPTY_ENTITY, 
+                new ArrayList<>(), isNoShow, isPaid, isConcluded);
     }
 
     public ReservationModel(int rsvID, LocalDate dArrv, LocalDate dDprt, ReservationType rsvType) {
-        this(rsvID, dArrv, dDprt, null, rsvType, null, null, null, false, false, false);
+        this(rsvID, dArrv, dDprt, LocalDate.MIN, rsvType, RoomModel.EMPTY_ENTITY, GuestModel.EMPTY_ENTITY, 
+                new ArrayList<>(), false, false, false);
     }
 
     public ReservationModel(int rsvID, LocalDate dArrv, LocalDate dDprt) {
-        this(rsvID, dArrv, dDprt, null, null, null, null, null, false, false, false);
+        this(rsvID, dArrv, dDprt, LocalDate.MIN, ReservationType.CONVENTIONAL, RoomModel.EMPTY_ENTITY, 
+                GuestModel.EMPTY_ENTITY, new ArrayList<>(), false, false, false);
     }
 
     public ReservationModel() {
-        this(0, (Date)null, null, null, null, null, null, null, false, false, false);
+        this(0, new Date(Long.MIN_VALUE), new Date(Long.MIN_VALUE), new Date(Long.MIN_VALUE), 
+                ReservationType.CONVENTIONAL, RoomModel.EMPTY_ENTITY, GuestModel.EMPTY_ENTITY, new ArrayList<>(), 
+                false, false, false);
     }
     
     @Override
@@ -240,4 +246,7 @@ public class ReservationModel extends DataModel {
         info += " ]";
         return  info;
     }
+    
+    // public empty entity
+    public static final ReservationModel EMPTY_ENTITY = new ReservationModel();
 }
