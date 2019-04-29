@@ -8,6 +8,7 @@ package prototype.data.drivers;
 import prototype.data.persistence.EntityDatabase;
 import prototype.data.models.GuestModel;
 import prototype.data.models.ReservationModel;
+import java.util.List;
 
 /**
  *
@@ -16,13 +17,13 @@ import prototype.data.models.ReservationModel;
 public class GuestDriver implements DataDriver {
 
     // create guest
-    public void createGuest(String name, String email, String guestID, String ccInfo) {
+    public static void createGuest(String name, String email, String ccInfo) {
         EntityDatabase.GuestTable.addGuest(name, email, ccInfo);
     }
-    public void createGuest(String name, String email, String guestID) {
+    public static void createGuest(String name, String email) {
         EntityDatabase.GuestTable.addGuest(name, email);
     }
-    public int createGuestReturnID(String name, String email) {
+    public static int createGuestReturnID(String name, String email) {
         return EntityDatabase.GuestTable.addGuestReturnID(name, email);
     }
     
@@ -59,8 +60,11 @@ public class GuestDriver implements DataDriver {
     
     // add Rsv to Guest's listRsv
     public static void attachReservation(GuestModel guest, ReservationModel rsv){
-        guest.getListRsv().add(rsv);
+        List<ReservationModel> reservations = guest.getListRsv();
+        reservations.add(rsv);
+        guest.setListRsv(reservations);
     }
+    
     public static void attachReservation(GuestModel guest, int rsvID){
         ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
         guest.getListRsv().add(rsv);
