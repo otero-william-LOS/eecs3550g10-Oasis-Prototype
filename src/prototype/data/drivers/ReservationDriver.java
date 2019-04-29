@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.util.List;
 import prototype.data.persistence.EntityDatabase;
 import prototype.data.models.ReservationType;
+import java.time.temporal.ChronoUnit;
+import static java.lang.Math.toIntExact;
 /**
  *
  * @author los
@@ -107,6 +109,18 @@ public class ReservationDriver implements DataDriver {
     }
     public static List<ReservationModel> returnAllConcluded(){
         return EntityDatabase.ReservationTable.retrieveAllConcluded();
+    }
+    
+    public static ReservationModel getReservationByID(int RsvID){
+        return EntityDatabase.ReservationTable.retrieveByID(RsvID);
+    }
+    
+    // returns length of stay
+    public static int getLengthOfStay(int rsvID){
+        ReservationModel reservation = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        LocalDate start = reservation.getDateArrive();
+        LocalDate end = reservation.getDateDepart();      
+        return toIntExact(ChronoUnit.DAYS.between(start, end));
     }
 
     // (de-)attach Entities
