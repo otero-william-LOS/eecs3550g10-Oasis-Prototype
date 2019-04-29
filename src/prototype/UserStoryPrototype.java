@@ -8,15 +8,23 @@ package prototype;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import prototype.data.persistence.EntityDatabase;
 import prototype.data.drivers.RateDriver;
 import prototype.data.drivers.RoomDriver;
+import prototype.data.drivers.GuestDriver;
+import prototype.data.models.GuestModel;
 import prototype.data.models.RoomModel;
+import prototype.data.models.ReservationModel;
 import prototype.data.drivers.ReservationDriver;
 import prototype.data.models.RateModel;
 import prototype.data.models.ReservationModel;
+import prototype.logic.schedulers.ReportGeneration;
+import java.io.IOException;
+import prototype.data.models.ReservationType;
+
 
 /**
  *
@@ -31,11 +39,11 @@ public class UserStoryPrototype {
         // TODO code application logic here
         
         //<editor-fold defaultstate="collapsed" desc="Room Driver Test Scripts">
-//        System.out.println("Testing Gen All Empty");
-//        EntityDatabase.genRoomTblAllAvailable();
-//        System.out.println("\tRequesting All Rooms");
-//        List<RoomModel> rmList = RoomDriver.rtrnAllRooms();
-//        rmList.forEach(rm -> System.out.println("\t\t" + rm));
+        System.out.println("Testing Gen All Empty");
+        EntityDatabase.DevUtilities.generateRoomTableAllAvailable();
+        System.out.println("\tRequesting All Rooms");
+        List<RoomModel> rmList = RoomDriver.returnAllRooms();
+        rmList.forEach(rm -> System.out.println("\t\t" + rm));
 //        
 //        rmList.clear();
 //        System.out.println();
@@ -114,59 +122,68 @@ public class UserStoryPrototype {
 //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="Reservation Driver Test Stuff">
-        //       Random rand = new Random();
-        //        
-        //         ArrayList<RsvModel> reservationTable = new ArrayList();
-        //         for(int i = 0; i < 40; i++){
-        //          ReservationModel reservation = new ReservationModel();
-        //          reservationTable.add(reservation);
-        //         }
-        //         
-        //         // create two day stays
-        //         for (int i = 0; i < 20; i++){
-        //            ReservationModel reservation = reservationTable.get(i);
-        //            int start = rand.nextInt(50) + 1;
-        //            Date startDate = new Date();
-        //            Date endDate = new Date();
-        //            Calendar c = Calendar.getInstance(); 
-        //            c.setTime(startDate); 
-        //            c.add(Calendar.DATE, start);
-        //            startDate = c.getTime();
-        //            
-        //            c.setTime(endDate); 
-        //            c.add(Calendar.DATE, start + 2);
-        //            endDate = c.getTime();
-        //            
-        //            reservation.setDateArrive(startDate);
-        //            reservation.setDateDepart(endDate);
-        //            
-        //            reservationTable.set(i, reservation);
-        //         }
-        //         
-        //         // create 5 day stays
-        //         for (int i = 20; i < 40; i++){
-        //            ReservationModel reservation = reservationTable.get(i);
-        //            int start = rand.nextInt(50) + 1;
-        //            Date startDate = new Date();
-        //            Date endDate = new Date();
-        //            Calendar c = Calendar.getInstance(); 
-        //            c.setTime(startDate); 
-        //            c.add(Calendar.DATE, start);
-        //            startDate = c.getTime();
-        //            
-        //            c.setTime(endDate); 
-        //            c.add(Calendar.DATE, start + 5);
-        //            endDate = c.getTime();
-        //            
-        //            reservation.setDateArrive(startDate);
-        //            reservation.setDateDepart(endDate);
-        //            
-        //            reservationTable.set(i, reservation);
-        //         }
-        //         
-        //         for (ReservationModel rsv : reservationTable) {
-        //            ReservationDriver.createRSVC(rsv.getDateArrive(), rsv.getDateDepart());
-        //        }
+//               Random rand = new Random();
+//                
+//                 ArrayList<ReservationModel> reservationTable = new ArrayList();
+//                 for(int i = 0; i < 40; i++){
+//                  ReservationModel reservation = new ReservationModel();
+//                  reservationTable.add(reservation);
+//                 }
+//                 
+//                 // create two day stays
+//                 for (int i = 0; i < 20; i++){
+//                    ReservationModel reservation = reservationTable.get(i);
+//                    int start = rand.nextInt(50) + 1;
+//                    LocalDate startDate = LocalDate.now();
+//                    LocalDate endDate = LocalDate.now().plusDays(2);
+
+                    
+//                    reservation.setDateArrive(startDate);
+//                    reservation.setDateDepart(endDate);
+//                    
+//                    reservationTable.set(i, reservation);
+//                 }
+                 
+                 // create 5 day stays
+//                 for (int i = 20; i < 40; i++){
+//                    ReservationModel reservation = reservationTable.get(i);
+//                    int start = rand.nextInt(50) + 1;
+//                    LocalDate startDate = LocalDate.now();
+//                    LocalDate endDate = LocalDate.now().plusDays(5);
+
+//                    
+//                    reservation.setDateArrive(startDate);
+//                    reservation.setDateDepart(endDate);
+//                    
+//                    reservationTable.set(i, reservation);
+//                 }
+//                 
+//                 String guestName = "";
+//                 final String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
+//                 final int N = lexicon.length();
+//
+//
+//                
+//                 
+//                for (ReservationModel rsv : reservationTable) {
+//                    Random r = new Random();
+//                    for (int i = 0; i < 10; i++) {
+//                        guestName += lexicon.charAt(r.nextInt(N));
+//                    }
+//                    int id = GuestDriver.createGuestReturnID(guestName, guestName);
+//                    int rsvId = ReservationDriver.createReservationReturnID(rsv.getDateArrive(), rsv.getDateDepart());
+//                    ReservationDriver.attachGuest(id, GuestDriver.searchByID(id));
+//                    ReservationDriver.modifyReservationType(rsvId, ReservationType.CONVENTIONAL);
+//                    
+//                    ReservationDriver.attachRoom(rsvId, 1);
+//                    RoomDriver.attachReservation(1, ReservationDriver.getReservationByID(rsvId));
+//                    GuestModel guestperson = GuestDriver.searchByID(id);
+//                    List<ReservationModel> newRSV = new ArrayList<>();
+//                    newRSV.add(ReservationDriver.getReservationByID(rsvId));
+//                    guestperson.setListRsv(newRSV);
+//                    guestName = "";
+//
+//                }
         //         
         //         Date lookFor = new Date();
         //         Calendar c = Calendar.getInstance(); 
@@ -196,6 +213,10 @@ public class UserStoryPrototype {
         //         lookFor = c.getTime();
         //         matchingRsvs.addAll(ReservationDriver.searchByDateArriveBtwn(lookFor));
         //</editor-fold>
+        
+       //<editor-fold defaultstate="collapsed" desc="Guest Shit">
+       
+       //<editor-fold defaultstate="collapsed" desc="Guest Shit">
 
         //new rate driver test scripts
         System.out.println("Testing Gen Rates for Year Method");
@@ -204,6 +225,36 @@ public class UserStoryPrototype {
         List<RateModel> rtList = EntityDatabase.RateTable.retriveAllRates();
         rtList.forEach(rt -> System.out.println("\t\t" + rt));
         System.out.println("\tNumber of Rates:" + Integer.toString(rtList.size()));
+        
+//        try {
+//            ReportGeneration.writeDailyArrivalsReport();
+//        }
+//        catch(IOException e) {
+//            e.printStackTrace();
+//        }
+//        
+//        try {
+//            ReportGeneration.writeOccupancyReport();
+//        }
+//        catch(IOException e) {
+//            e.printStackTrace();
+//        }
+//        
+//        try {
+//            ReportGeneration.writeDailyOccupancyReport();
+//        }
+//        catch(IOException e) {
+//            e.printStackTrace();
+//        }
+//        
+//        try {
+//            ReportGeneration.writeIncomeReport();
+//        }
+//        catch(IOException e) {
+//            e.printStackTrace();
+//        }
+        
+        
     }
     
 }
