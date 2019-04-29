@@ -20,6 +20,8 @@ import prototype.data.models.RateModel;
 import prototype.data.models.ReservationModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 import prototype.data.drivers.BillChargeDriver;
 import prototype.data.models.BillChargeModel;
 
@@ -112,8 +114,7 @@ public class ReportGeneration implements Scheduler {
         double income =0, incomeTotalDaily = 0, incomeTotal = 0;
         String lineContents = "";
         List<ReservationModel> reservations = new ArrayList<ReservationModel>();
-        
-
+      
         // get all the reservations for the nxt 30 days and write a line to the occupancy report
         // for each day containing all the specified information
         for(int i = 1; i < 31; i++){
@@ -127,8 +128,7 @@ public class ReportGeneration implements Scheduler {
                 BillChargeModel bill = bills.get(0);
 
                 income = (bill.getAmount()) / length; // get the amount charged for the reservation and divide it by number of 
-                incomeTotalDaily += income;
-                
+                incomeTotalDaily += income;               
             }
 
             // create the string that will be written to the report file
@@ -157,7 +157,7 @@ public class ReportGeneration implements Scheduler {
     
     //TODO: the report needs to be sorted by guest name still
     public static void writeDailyArrivalsReport() throws IOException {
-        File fout = new File("OccupancyReport.txt");
+        File fout = new File("DailyArrivalsReport.txt");
         FileOutputStream fos = new FileOutputStream(fout);
 
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
@@ -165,11 +165,12 @@ public class ReportGeneration implements Scheduler {
         String lineContents = "";
         List<ReservationModel> reservations = new ArrayList<ReservationModel>();
 
-
         reservations = ReservationDriver.srchByDateArrv(currentDay);
 
+        reservations.sort((x, y) -> x.getGuest().getName().compareTo(y.getGuest().getName()));
+        //Collections.sort(reservations, Collections.reverseOrder());
         for (ReservationModel reservation: reservations){
-            lineContents += "Guest Name: " + reservation.getGuest().getName() +
+            lineContents = "Guest Name: " + reservation.getGuest().getName() +
                     " || Reservation Type: " + reservation.getReservationType().toString() +
                     " || Room ID: " + reservation.getRoom().getRoomID() + 
                     " || Departure Date: " + reservation.getDateDepart().toString();
@@ -182,27 +183,23 @@ public class ReportGeneration implements Scheduler {
     
     //TODO: the report needs to be sorted by room number and maybe remove no shows?
     public static void writeDailyOccupancyReport() throws IOException {
-        File fout = new File("OccupancyReport.txt");
+        File fout = new File("DailyOccupancyReport.txt");
         FileOutputStream fos = new FileOutputStream(fout);
-
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
         LocalDate currentDay = LocalDate.now();
         String lineContents = "";
         List<ReservationModel> reservations = new ArrayList<ReservationModel>();
-
-
         reservations = ReservationDriver.srchByDate(currentDay);
-
+        reservations.sort((x, y) -> Short.toString(x.getRoom().getRoomID()).compareTo(Short.toString(y.getRoom().getRoomID())));
         for (ReservationModel reservation: reservations){
-            lineContents += "Room ID: " + reservation.getRoom().getRoomID();
+            lineContents = "Room ID: " + reservation.getRoom().getRoomID();
             if(reservation.getDateDepart() != currentDay){
                 lineContents += " || Guest Name: " + reservation.getGuest().getName() +
                         " || Departure Date: " + reservation.getDateDepart().toString();
             }
             else{
                 lineContents +=" || Guest Name: *" + reservation.getGuest().getName();
-            }                   
-                    
+            }                                       
             bw.write(lineContents);
             bw.newLine();
         }
