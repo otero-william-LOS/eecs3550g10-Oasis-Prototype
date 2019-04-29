@@ -73,5 +73,57 @@ public class ReservationScheduling implements Scheduler {
     public void runModuleUserStories() {
         //  TODO will be updated as new user stories are created.
     }
+    
+    
+     public static void testReservationCase1() {
+        // Make Reservation & Asssign Guest 
+        //Type1  addReservation(LocalDate dateArrive, 
+        //LocalDate dateDepart, ReservationType rsvType)
+
+        LocalDate today = LocalDate.now();
+/*
+        int testRsvID
+                = ReservationDriver.createReservationReturnID(today,
+                        today.plusDays(7));
+        ReservationDriver.modifyReservationType(
+                testRsvID, ReservationType.SIXTYADV);
+        
+        int tempGuestID = GuestDriver.createGuestReturnID("John Doe", "JohnDoe@gmail.com");
+        GuestDriver.modifyGuestCreditCardInfo(tempGuestID, "<No Information Provided>");
+        GuestModel tempGuest = GuestDriver.searchByID(tempGuestID);
+        ReservationDriver.attachGuest(testRsvID, tempGuest);
+        List<ReservationModel> tempRsv = ReservationDriver.searchByGuest(tempGuestID);
+        
+        
+        
+        System.out.println("----Set Sixty Days In Advance----");
+        System.out.println("1.RsvID = RsvID Search By Guest");
+        if (tempRsv.size() == 1){
+            System.out.println( (testRsvID==tempRsv.get(0).getReservationID()) + "");
+        }else System.out.println("False: ");
+
+        System.out.println("2.Date Check");
+        if (tempRsv.size() == 1){
+            System.out.println(((today.equals(tempRsv.get(0).getDateArrive()) ) 
+                    &&(today.plusDays(7).equals(
+                            tempRsv.get(0).getDateDepart())) ) + "");
+        }else System.out.println("False");
+        
+        System.out.println("3.RsvType Check ");
+        if (tempRsv.size() == 1){
+            System.out.println( (ReservationType.SIXTYADV==tempRsv.get(0).getReservationType()) + "");
+        }else System.out.println("False");
+
+        System.out.println("4. Guest Name Check ");
+        if (tempRsv.size() == 1){
+            System.out.println( (tempRsv.get(0).getGuest().getName().equals("John Doe")) + "");
+        }else System.out.println("False");
+        System.out.println("5. CC_Info Check");
+        if (tempRsv.size() == 1){
+            System.out.println( (tempRsv.get(0).getGuest().getCCInfo().equals("<No Information Provided>")) + "");
+        }else System.out.println("False");*/
+
+
+    }
 
 }
