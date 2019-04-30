@@ -70,7 +70,7 @@ public class RoomModel extends DataModel {
             return false;
         }        
         RoomModel other = (RoomModel) obj;        
-        return (this.m_RoomID != other.m_RoomID);
+        return (this.m_RoomID == other.m_RoomID);
     }
 
     @Override

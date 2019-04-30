@@ -214,7 +214,7 @@ public class ReservationModel extends DataModel {
             return false;
         }        
         ReservationModel other = (ReservationModel) obj;        
-        return (this.m_RsvID != other.m_RsvID);
+        return (this.m_RsvID == other.m_RsvID);
     }
     
     @Override

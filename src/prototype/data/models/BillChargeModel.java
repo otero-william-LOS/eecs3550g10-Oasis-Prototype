@@ -141,7 +141,7 @@ public class BillChargeModel extends DataModel {
             return false;
         }        
         BillChargeModel other = (BillChargeModel) obj;        
-        return (this.m_BllchrgID != other.m_BllchrgID);
+        return (this.m_BllchrgID == other.m_BllchrgID);
     }
     
     @Override

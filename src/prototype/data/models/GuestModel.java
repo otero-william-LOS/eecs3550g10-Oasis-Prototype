@@ -100,7 +100,7 @@ public class GuestModel extends DataModel {
             return false;
         }        
         GuestModel other = (GuestModel) obj;        
-        return (this.m_GuestID != other.m_GuestID);
+        return (this.m_GuestID == other.m_GuestID);
     }
     
     @Override

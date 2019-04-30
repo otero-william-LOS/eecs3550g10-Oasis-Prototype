@@ -77,7 +77,7 @@ public class RateModel extends DataModel {
             return false;
         }
         RateModel other = (RateModel) obj;
-        return (this.m_RateDate != other.m_RateDate);
+        return (this.m_RateDate.equals(other.m_RateDate));
     }
 
     @Override
