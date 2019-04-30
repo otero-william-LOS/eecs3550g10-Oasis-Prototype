@@ -6,11 +6,9 @@
 package prototype.data.drivers;
 
 import java.time.LocalDate;
-import java.sql.Date;
 import java.util.List;
 import prototype.data.persistence.EntityDatabase;
 import prototype.data.models.ReservationType;
-import prototype.data.models.DataModel;
 import prototype.data.models.RateModel;
 
 /**

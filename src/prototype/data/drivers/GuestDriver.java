@@ -26,6 +26,9 @@ public class GuestDriver implements DataDriver {
     public static int createGuestReturnID(String name, String email) {
         return EntityDatabase.GuestTable.addGuestReturnID(name, email);
     }
+    public static int createGuestReturnID(String name, String email, String ccInfo) {
+        return EntityDatabase.GuestTable.addGuestReturnID(name, email, ccInfo);
+    }
     
     // search attr
     public static GuestModel searchByID(int guestID) {
@@ -64,9 +67,13 @@ public class GuestDriver implements DataDriver {
         reservations.add(rsv);
         guest.setListRsv(reservations);
     }
-    
     public static void attachReservation(GuestModel guest, int rsvID){
         ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        guest.getListRsv().add(rsv);
+    }
+    public static void attachReservation(int guestID, int rsvID){
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        GuestModel guest = EntityDatabase.GuestTable.retrieveByID(guestID);
         guest.getListRsv().add(rsv);
     }
 }

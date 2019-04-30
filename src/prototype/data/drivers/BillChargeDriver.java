@@ -30,6 +30,12 @@ public class BillChargeDriver implements DataDriver {
     public static int createBillChargeReturnID(LocalDate dateCharged) {
         return EntityDatabase.BillChargeTable.addBillChargeReturnID(dateCharged);
     }
+    public static int createBillChargeReturnID(LocalDate dateCharged, double amount) {
+        return EntityDatabase.BillChargeTable.addBillChargeReturnID(dateCharged, amount);
+    }
+    public static int createBillChargeReturnID(LocalDate dateCharged, double amount, String lineDesc) {
+        return EntityDatabase.BillChargeTable.addBillChargeReturnID(dateCharged, amount, lineDesc);
+    }
 
     //search by reservation, or bill charge ID or the date charged or paid
     public static BillChargeModel searchByID(int bllchrgID) {
@@ -63,6 +69,11 @@ public class BillChargeDriver implements DataDriver {
     }
     public static void attachReservation(int bllchrgID, ReservationModel rsv) {
         BillChargeModel bllchrg = EntityDatabase.BillChargeTable.retrieveByID(bllchrgID);
+        BillChargeDriver.attachReservation(bllchrg, rsv);
+    }
+    public static void attachReservation(int bllchrgID, int rsvID) {
+        BillChargeModel bllchrg = EntityDatabase.BillChargeTable.retrieveByID(bllchrgID);
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
         BillChargeDriver.attachReservation(bllchrg, rsv);
     }
     

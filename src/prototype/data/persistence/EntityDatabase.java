@@ -34,13 +34,13 @@ public class EntityDatabase {
     
     //  nested class for rsv entity table
     public final static class ReservationTable {
-        public static void addReservation(LocalDate dateArrive, LocalDate dateDepart, LocalDate datePaid, ReservationType rsvType, boolean isNoShow, boolean isPaid, boolean isConcluded) {
-            ReservationModel reservation = new ReservationModel(TBL_RSV_ENTITY.size() + 1, dateArrive, dateDepart, datePaid, rsvType,
-                    isNoShow, isPaid, isConcluded);
-            TBL_RSV_ENTITY.add(reservation);
-        }
-        public static void addReservation(LocalDate dateArrive, LocalDate dateDepart, ReservationType rsvType) {
-            ReservationModel reservation = new ReservationModel(TBL_RSV_ENTITY.size() + 1, dateArrive, dateDepart, rsvType);
+        /* 
+        LOS:
+            Rsv's 3rd and 4th cnstr are meant for the db csv component;
+            plus seemed silly to create a brand new rsv, and need isNoShow isPaid isConcluded
+         */
+        public static void addReservation(LocalDate dArrive, LocalDate dDepart, ReservationType rsvType) {
+            ReservationModel reservation = new ReservationModel(TBL_RSV_ENTITY.size() + 1, dArrive, dDepart, rsvType);
             TBL_RSV_ENTITY.add(reservation);
         }
         public static void addReservation(LocalDate dateArrive, LocalDate dateDepart) {
@@ -53,13 +53,19 @@ public class EntityDatabase {
             TBL_RSV_ENTITY.add(reservation);
             return id;
         }
+        public static int addReservationReturnID(LocalDate dArrive, LocalDate dDepart, ReservationType rsvType) {
+            int id = TBL_RSV_ENTITY.size() + 1;
+            ReservationModel reservation = new ReservationModel(id, dArrive, dDepart, rsvType);
+            TBL_RSV_ENTITY.add(reservation);
+            return id;
+        }
 
+        public static ReservationModel retrieveByID(int rsvID) {
+            return TBL_RSV_ENTITY.stream().filter(rsv -> rsv.getReservationID() == rsvID).findFirst().orElse(ReservationModel.EMPTY_ENTITY);
+        }
         public static List<ReservationModel> retrieveAllReservations(){
             List<ReservationModel> rsvs = new ArrayList<>(TBL_RSV_ENTITY);
             return rsvs;
-        }
-        public static ReservationModel retrieveByID(int rsvID) {
-            return TBL_RSV_ENTITY.stream().filter(rsv -> rsv.getReservationID() == rsvID).findFirst().orElse(null);
         }
         public static List<ReservationModel> retrieveByDateArrive(LocalDate ldArrv) {
             return TBL_RSV_ENTITY.stream().filter(
@@ -107,7 +113,7 @@ public class EntityDatabase {
                     rsv -> rsv.getRoom()!= null
             ).filter(
                     rsv -> rsv.getRoom().getRoomID() == roomID
-            ).findFirst().orElse(null);
+            ).findFirst().orElse(ReservationModel.EMPTY_ENTITY);
         }
         public static List<ReservationModel> retrieveByType(ReservationType rsvType) {
             //return matchingRsvs
@@ -142,7 +148,7 @@ public class EntityDatabase {
             return rooms;
         }
         public static RoomModel retrieveByID(int roomID) {
-            return TBL_ROOM_ENTITY.stream().filter(rm -> rm.getRoomID() == roomID).findFirst().orElse(null);
+            return TBL_ROOM_ENTITY.stream().filter(rm -> rm.getRoomID() == roomID).findFirst().orElse(RoomModel.EMPTY_ENTITY);
         }
         public static List<RoomModel> retrieveOccupiedRooms() {
             List<RoomModel> rooms = new ArrayList<>(TBL_ROOM_ENTITY);
@@ -157,7 +163,7 @@ public class EntityDatabase {
         public static RoomModel retrieveByReservation(int rsvID) {
             return retrieveOccupiedRooms().stream().filter(
                     rm -> rm.getReservation().getReservationID() == rsvID
-            ).findFirst().orElse(null);
+            ).findFirst().orElse(RoomModel.EMPTY_ENTITY);
         }
     }
     //  nested class for rate entity table
@@ -167,9 +173,9 @@ public class EntityDatabase {
             TBL_RATE_ENTITY.add(new RateModel(rateDate, baseRate));
         }
         // add continuous range of rates w/ base rate
-        public static void addRateRange(LocalDate startInclusive, LocalDate endExclusive, double baseRate) {
-            LocalDate dt = startInclusive.plusDays(0);
-            while (dt.isBefore(endExclusive)) {
+        public static void addRateRange(LocalDate dStartIn, LocalDate dEndEx, double baseRate) {
+            LocalDate dt = dStartIn.plusDays(0);
+            while (dt.isBefore(dEndEx)) {
                 TBL_RATE_ENTITY.add(new RateModel(dt, baseRate));
                 dt = dt.plusDays(1);
             }
@@ -181,27 +187,32 @@ public class EntityDatabase {
             return rates;
         }
         public static RateModel retrieveRateByDate(LocalDate date) {
-            return TBL_RATE_ENTITY.stream().filter(rt -> rt.getRateDate().equals(date)).findFirst().orElse(null);
+            return TBL_RATE_ENTITY.stream().filter(rt -> rt.getRateDate().equals(date)).findFirst().orElse(RateModel.EMPTY_ENTITY);
         }
-        public static List<RateModel> retrieveByDateRange(LocalDate startInclusive, LocalDate endInclusive) {
+        public static List<RateModel> retrieveByDateRange(LocalDate dStartIn, LocalDate dEndIn) {
             List<RateModel> rates = new ArrayList<>(TBL_RATE_ENTITY);
-            rates.removeIf(rt -> rt.getRateDate().isBefore(startInclusive));
-            rates.removeIf(rt -> rt.getRateDate().isAfter(endInclusive));
+            rates.removeIf(rt -> rt.getRateDate().isBefore(dStartIn));
+            rates.removeIf(rt -> rt.getRateDate().isAfter(dEndIn));
             return rates;
         }
     }
     //  nested class for guest entity table
     public final static class GuestTable {
-        public static void addGuest(String Name, String Email, String CC_info) {
-            GuestModel new_guest = new GuestModel(TBL_GUEST_ENTITY.size() + 1, Name, Email, CC_info);
+        public static void addGuest(String name, String email, String ccInfo) {
+            GuestModel new_guest = new GuestModel(TBL_GUEST_ENTITY.size() + 1, name, email, ccInfo);
             TBL_GUEST_ENTITY.add(new_guest);
         }
-        public static void addGuest(String Name, String Email) {
-            GuestModel new_guest = new GuestModel(TBL_GUEST_ENTITY.size() + 1, Name, Email);
+        public static void addGuest(String name, String email) {
+            GuestModel new_guest = new GuestModel(TBL_GUEST_ENTITY.size() + 1, name, email);
             TBL_GUEST_ENTITY.add(new_guest);
         }
-        public static int addGuestReturnID(String Name, String Email) {
-            GuestModel new_guest = new GuestModel(TBL_GUEST_ENTITY.size() + 1, Name, Email);
+        public static int addGuestReturnID(String name, String email) {
+            GuestModel new_guest = new GuestModel(TBL_GUEST_ENTITY.size() + 1, name, email);
+            TBL_GUEST_ENTITY.add(new_guest);
+            return new_guest.getGuestID();
+        }
+        public static int addGuestReturnID(String name, String email, String ccInfo) {
+            GuestModel new_guest = new GuestModel(TBL_GUEST_ENTITY.size() + 1, name, email, ccInfo);
             TBL_GUEST_ENTITY.add(new_guest);
             return new_guest.getGuestID();
         }
@@ -213,22 +224,22 @@ public class EntityDatabase {
         public static GuestModel retrieveByID(int guestID) {
             return TBL_GUEST_ENTITY.stream().filter(
                     guest -> guest.getGuestID() == guestID
-            ).findFirst().orElse(null);
+            ).findFirst().orElse(GuestModel.EMPTY_ENTITY);
         }
         public static GuestModel retrieveByName(String guestName) {
             return TBL_GUEST_ENTITY.stream().filter(
                     guest -> guest.getName().equals(guestName)
-            ).findFirst().orElse(null);
+            ).findFirst().orElse(GuestModel.EMPTY_ENTITY);
         }
         public static GuestModel retrieveByEmail(String guestName) {
             return TBL_GUEST_ENTITY.stream().filter(
                     guest -> guest.getName().equals(guestName)
-            ).findFirst().orElse(null);
+            ).findFirst().orElse(GuestModel.EMPTY_ENTITY);
         }
         public static GuestModel retrieveByReservation(int rsvID) {
             //  There must be a guest attached to a reservation
             ReservationModel rsv = ReservationTable.retrieveByID(rsvID);
-            return (rsv != null) ? rsv.getGuest() : null; //return null if no rsv was found
+            return (rsv != null) ? rsv.getGuest() : GuestModel.EMPTY_ENTITY;
         }
     }
     //  nested class for bllchrg entity table
@@ -250,6 +261,16 @@ public class EntityDatabase {
             TBL_BLLCHRG_ENTITY.add(bllchrg);
             return bllchrg.getBillChargeID();
         }
+        public static int addBillChargeReturnID(LocalDate DateCharged, double amount) {
+            BillChargeModel bllchrg = new BillChargeModel(TBL_BLLCHRG_ENTITY.size() + 1, "", amount, DateCharged);
+            TBL_BLLCHRG_ENTITY.add(bllchrg);
+            return bllchrg.getBillChargeID();
+        }
+        public static int addBillChargeReturnID(LocalDate DateCharged, double amount, String lineDesc) {
+            BillChargeModel bllchrg = new BillChargeModel(TBL_BLLCHRG_ENTITY.size() + 1, lineDesc, amount, DateCharged);
+            TBL_BLLCHRG_ENTITY.add(bllchrg);
+            return bllchrg.getBillChargeID();
+        }
 
         public static List<BillChargeModel> retrieveByReservation(int rsvID) {
             List<BillChargeModel> matchingRsvID = new  ArrayList<>();
@@ -262,7 +283,7 @@ public class EntityDatabase {
             return matchingRsvID;
         }
         public static BillChargeModel retrieveByID(int bllchrgID) {
-            BillChargeModel matchingBllChrgID = null;
+            BillChargeModel matchingBllChrgID = BillChargeModel.EMPTY_ENTITY;
             for (BillChargeModel bllchrg : TBL_BLLCHRG_ENTITY) {
                 if (bllchrg.getBillChargeID() == bllchrgID) {
                     matchingBllChrgID = bllchrg;
@@ -285,7 +306,7 @@ public class EntityDatabase {
             List<BillChargeModel> matchingDateCharged = new  ArrayList<>();
             for (BillChargeModel bllchrg:TBL_BLLCHRG_ENTITY) {
                 LocalDate ld = bllchrg.getDateCharged();
-                if (ld != null 
+                if (ld != null && !ld.equals(LocalDate.MIN)
                         && (ld.equals(ldStartIn) || ld.isAfter(ldStartIn)) 
                         && (ld.equals(ldEndIn) || ld.isBefore(ldEndIn))) {
                     matchingDateCharged.add(bllchrg);
@@ -308,7 +329,7 @@ public class EntityDatabase {
             List<BillChargeModel> matchingDatePaid = new  ArrayList<>();
             for (BillChargeModel bllchrg:TBL_BLLCHRG_ENTITY) {
                 LocalDate ld = bllchrg.getDatePaid();
-                if (ld != null 
+                if (ld != null && !ld.equals(LocalDate.MIN)
                         && (ld.equals(ldStartIn) || ld.isAfter(ldStartIn)) 
                         && (ld.equals(ldEndIn) || ld.isBefore(ldEndIn))) {
                     matchingDatePaid.add(bllchrg);
@@ -366,11 +387,11 @@ public class EntityDatabase {
                 }
             }
         }
-        public static void generateRoomTableAllOccupied() {
-            genRoomTableBase(true, false, 0);
-        }
         public static void generateRoomTableAllAvailable() {
             genRoomTableBase(false, false, 0);
+        }
+        public static void generateRoomTableAllOccupied() {
+            genRoomTableBase(true, false, 0);
         }
         public static void generateRoomTablePartialOccupied(int nOccupied) {
             genRoomTableBase(false, true, nOccupied);

@@ -80,8 +80,13 @@ public class RoomDriver implements DataDriver {
         RoomModel rm = EntityDatabase.RoomTable.retrieveByID(roomID);
         RoomDriver.attachReservation(rm, rsv);
     }
+    public static void attachReservation(int roomID, int rsvID){
+        RoomModel rm = EntityDatabase.RoomTable.retrieveByID(roomID);
+        ReservationModel rsv = EntityDatabase.ReservationTable.retrieveByID(rsvID);
+        RoomDriver.attachReservation(rm, rsv);
+    }
     public static void deattachReservation(RoomModel rm){
-        rm.setReservation(null);
+        rm.setReservation(ReservationModel.EMPTY_ENTITY);
     }
     public static void deattachReservation(int roomID){
         RoomModel room = EntityDatabase.RoomTable.retrieveByID(roomID);

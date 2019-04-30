@@ -64,7 +64,7 @@ public class ReportGeneration implements Scheduler {
     // get all the reservations for the nxt 30 days and write a line to the occupancy report
     // for each day containing all the specified information
     for(int i = 1; i < 31; i++){
-        reservations = ReservationDriver.srchByDate(currentDay.plusDays(i));
+        reservations = ReservationDriver.searchByDate(currentDay.plusDays(i));
         lineContents += currentDay.plusDays(i) + " || ";
 
         for (ReservationModel reservation: reservations){
@@ -118,12 +118,12 @@ public class ReportGeneration implements Scheduler {
         // get all the reservations for the nxt 30 days and write a line to the occupancy report
         // for each day containing all the specified information
         for(int i = 1; i < 31; i++){
-            reservations = ReservationDriver.srchByDate(currentDay.plusDays(i));
+            reservations = ReservationDriver.searchByDate(currentDay.plusDays(i));
             lineContents += currentDay.plusDays(i) + " || ";
 
             for (ReservationModel reservation: reservations){
                 
-                length = ReservationDriver.getLengthOfStay(reservation.getReservationID());
+                length = ReservationDriver.getDayLength(reservation.getReservationID());
                 List<BillChargeModel> bills = new ArrayList<BillChargeModel>();
                 BillChargeModel bill = bills.get(0);
 
@@ -165,7 +165,7 @@ public class ReportGeneration implements Scheduler {
         String lineContents = "";
         List<ReservationModel> reservations = new ArrayList<ReservationModel>();
 
-        reservations = ReservationDriver.srchByDateArrv(currentDay);
+        reservations = ReservationDriver.searchByDateArrive(currentDay);
 
         reservations.sort((x, y) -> x.getGuest().getName().compareTo(y.getGuest().getName()));
         //Collections.sort(reservations, Collections.reverseOrder());
@@ -189,7 +189,7 @@ public class ReportGeneration implements Scheduler {
         LocalDate currentDay = LocalDate.now();
         String lineContents = "";
         List<ReservationModel> reservations = new ArrayList<ReservationModel>();
-        reservations = ReservationDriver.srchByDate(currentDay);
+        reservations = ReservationDriver.searchByDate(currentDay);
         reservations.sort((x, y) -> Short.toString(x.getRoom().getRoomID()).compareTo(Short.toString(y.getRoom().getRoomID())));
         for (ReservationModel reservation: reservations){
             lineContents = "Room ID: " + reservation.getRoom().getRoomID();
