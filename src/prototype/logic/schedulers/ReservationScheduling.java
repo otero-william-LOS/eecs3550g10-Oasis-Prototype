@@ -2,10 +2,15 @@
 package prototype.logic.schedulers;
 
 import java.time.LocalDate;
+import static java.time.temporal.ChronoUnit.DAYS;
 import prototype.data.drivers.ReservationDriver;
 import prototype.data.models.ReservationModel;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import prototype.data.drivers.GuestDriver;
+import prototype.data.models.GuestModel;
+import prototype.data.models.ReservationType;
 
 
 public class ReservationScheduling implements Scheduler {    
@@ -76,55 +81,106 @@ public class ReservationScheduling implements Scheduler {
     }
     
     
-     public static void testReservationCase1() {
-        // Make Reservation & Asssign Guest 
-        //Type1  addReservation(LocalDate dateArrive, 
-        //LocalDate dateDepart, ReservationType rsvType)
+  private static List<ReservationType> getAvaliableRsvTypes(LocalDate start) {
+        List<ReservationType> rsvTypeList = new ArrayList<>();
 
+        rsvTypeList.add(ReservationType.CONVENTIONAL);
+        if (start.isAfter(LocalDate.now().plusDays(89))) {
+            rsvTypeList.add(ReservationType.PREPAID);
+        }
+        if (start.isAfter(LocalDate.now().plusDays(59))) {
+            rsvTypeList.add(ReservationType.SIXTYADV);
+        }
+        if (start.isBefore(LocalDate.now().plusDays(31))) {
+            rsvTypeList.add(ReservationType.INCENTIVE);
+        }
+        return rsvTypeList;
+    }
+
+    private static boolean typeAvliableCheck(ReservationType rsvType, LocalDate start) {
+        List<ReservationType> avaliableRsvTypes = new ArrayList<>();
+        boolean containsType = false;
+
+        avaliableRsvTypes = getAvaliableRsvTypes(start);
+        for (int i = 0; i < avaliableRsvTypes.size(); i++) {
+            if (avaliableRsvTypes.get(i) == rsvType) {
+                containsType = true;
+            }
+
+        }
+        if (!containsType || rsvType == ReservationType.CONVENTIONAL) {
+           // System.out.println("Type Check: Pass");
+        } else {
+           // System.out.println("Type Check: Fail");
+        }
+
+        return containsType;
+
+    }
+
+    public static void createReservationTest(ReservationType rsvType) {
+        // 4 Cases 
+        // 90 days adv, 60 days adv, incentive <= 30 adv, conventional any time
         LocalDate today = LocalDate.now();
-/*
-        int testRsvID
-                = ReservationDriver.createReservationReturnID(today,
-                        today.plusDays(7));
+        List<ReservationType> avaliableRsvTypes = new ArrayList<>();
+        int typeModifier = 0;
+        switch (rsvType){
+            case PREPAID:
+                typeModifier = 90;
+                break;
+            case INCENTIVE:
+                typeModifier = 30;
+                break;
+            case CONVENTIONAL:
+                typeModifier = 0;
+                break;
+            case SIXTYADV:
+                typeModifier = 60;
+                break;
+                
+        }
+
+
+        if (typeAvliableCheck(rsvType, today.plusDays(typeModifier))) {
+            //Check For at least one occupany for duration of stay 
+            int occupancyCount = 0;
+            
+            LocalDate start = today.plusDays(typeModifier);
+            LocalDate end = today.plusDays(typeModifier + 7);
+            for (int i = 0; start.plusDays(i).isBefore(end.plusDays(1)); i++) {
+                List<ReservationModel>  listOccupancy
+                        = ReservationDriver.searchByDate(start.plusDays(i));
+                
+                if (listOccupancy.size() < 45) occupancyCount++;
+            }
+
+            long diff = DAYS.between(start, end)+1;
+     
+            if(diff == occupancyCount){
+                System.out.println("Is Avliable!");
+                //Can Create Reservation
+                
+        int testRsvID = ReservationDriver.createReservationReturnID(start,
+                        end);
         ReservationDriver.modifyReservationType(
-                testRsvID, ReservationType.SIXTYADV);
+                testRsvID, ReservationType.PREPAID);
         
-        int tempGuestID = GuestDriver.createGuestReturnID("John Doe", "JohnDoe@gmail.com");
+        
+              //  PaymentProcessing.
+                   //     generateAccmBill(ReservationDriver.searchByID(testRsvID));
+            }
+
+        }
+        
+    }
+    
+    public static void proccessReservationPaymentTest(int testRsvID) {
+         int tempGuestID = GuestDriver.createGuestReturnID("John Doe", "JohnDoe@gmail.com");
         GuestDriver.modifyGuestCreditCardInfo(tempGuestID, "<No Information Provided>");
         GuestModel tempGuest = GuestDriver.searchByID(tempGuestID);
-        ReservationDriver.attachGuest(testRsvID, tempGuest);
-        List<ReservationModel> tempRsv = ReservationDriver.searchByGuest(tempGuestID);
+        ReservationDriver.attachGuest(testRsvID, tempGuestID);
         
-        
-        
-        System.out.println("----Set Sixty Days In Advance----");
-        System.out.println("1.RsvID = RsvID Search By Guest");
-        if (tempRsv.size() == 1){
-            System.out.println( (testRsvID==tempRsv.get(0).getReservationID()) + "");
-        }else System.out.println("False: ");
-
-        System.out.println("2.Date Check");
-        if (tempRsv.size() == 1){
-            System.out.println(((today.equals(tempRsv.get(0).getDateArrive()) ) 
-                    &&(today.plusDays(7).equals(
-                            tempRsv.get(0).getDateDepart())) ) + "");
-        }else System.out.println("False");
-        
-        System.out.println("3.RsvType Check ");
-        if (tempRsv.size() == 1){
-            System.out.println( (ReservationType.SIXTYADV==tempRsv.get(0).getReservationType()) + "");
-        }else System.out.println("False");
-
-        System.out.println("4. Guest Name Check ");
-        if (tempRsv.size() == 1){
-            System.out.println( (tempRsv.get(0).getGuest().getName().equals("John Doe")) + "");
-        }else System.out.println("False");
-        System.out.println("5. CC_Info Check");
-        if (tempRsv.size() == 1){
-            System.out.println( (tempRsv.get(0).getGuest().getCCInfo().equals("<No Information Provided>")) + "");
-        }else System.out.println("False");*/
-
-
+        //PaymentProccessing.testProccessMethod(testRsvID);
     }
 
 }
