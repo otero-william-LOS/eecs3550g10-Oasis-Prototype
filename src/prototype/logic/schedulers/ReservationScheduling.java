@@ -181,5 +181,32 @@ public class ReservationScheduling implements Scheduler {
         
         //PaymentProccessing.testProccessMethod(testRsvID);
     }
+    
+     public static void multipleRsvGuestCheck(){
+        LocalDate today = LocalDate.now();
+        int testRsvID
+                = ReservationDriver.createReservationReturnID(today,
+                        today.plusDays(7));
+        int testRsvID_2
+                = ReservationDriver.createReservationReturnID(today,
+                        today.plusDays(7));
+        ReservationDriver.modifyReservationType(
+                testRsvID, ReservationType.SIXTYADV);
+        
+        int tempGuestID = GuestDriver.createGuestReturnID("John Doe", "JohnDoe@gmail.com");
+        GuestDriver.modifyGuestCreditCardInfo(tempGuestID, "<No Information Provided>");
+        ReservationDriver.attachGuest(testRsvID, tempGuestID);
+        ReservationDriver.attachGuest(testRsvID_2, tempGuestID);
+        GuestDriver.attachReservation(tempGuestID, testRsvID);
+        GuestDriver.attachReservation(tempGuestID, testRsvID_2);
+        
+        List<ReservationModel> rsvList = 
+                ReservationDriver.searchByGuest(tempGuestID);
+        
+        if (rsvList.size() == 2){
+            System.out.println(testRsvID + " = " + rsvList.get(0).getReservationID());
+            System.out.println(testRsvID_2 + " = " + rsvList.get(1).getReservationID());
+        }
+    }
 
 }
