@@ -258,5 +258,55 @@ public class ReservationScheduling implements Scheduler {
             System.out.println(testRsvID_2 + " = " + rsvList.get(1).getReservationID());
         }
     }
+    
+    
+      public static GuestModel retrieveByName (String guestName) {
+       GuestModel searchResult = GuestDriver.searchByName(guestName);
+       System.out.println("No guest under this name.");
+
+        if (searchResult == GuestModel.EMPTY_ENTITY);
+       return null;
+    }
+
+     public static GuestModel retrieveByEmail (String guestEmail) {
+        GuestModel searchResult = GuestDriver.searchByEmail(guestEmail);
+        System.out.println("No guest with this email address.");
+
+         if (searchResult == GuestModel.EMPTY_ENTITY);
+        return null;
+    }
+
+     // Create Guest with Two Fields (Name, Email)
+    public static GuestModel addGuest(String name, String email) {
+        GuestModel searchResult = GuestDriver.addGuest(name, email);
+        System.out.println("Created Guest: ");
+
+         if (searchResult == GuestModel.EMPTY_ENTITY);
+        return null; 
+    }
+
+
+     public static ReservationModel attachGuest(ReservationModel rsv, GuestModel guest) {
+        ReservationModel searchResult = ReservationDriver.attachGuest(guest);
+        System.out.println("Attached Guest To Reservation: ");
+
+         if (searchResult == ReservationModel.EMPTY_ENTITY);
+        return null;   
+    }
+
+      public static ReservationModel attachGuest(int rsvID, GuestModel guest) {
+        ReservationModel searchResult = ReservationDriver.attachGuest(rsvID, guest);
+        System.out.println("Attached Guest To Reservation ID: ");
+
+         if (searchResult == ReservationModel.EMPTY_ENTITY);
+        return null;   
+    }
+     public static ReservationModel attachGuest(int rsvID, int guestID) {
+         ReservationModel searchResult = ReservationDriver.attchGuest(rsvID, guestID);
+
+          if (searchResult == ReservationModel.EMPTY_ENTITY);
+        return null;
+     }
+
 
 }
