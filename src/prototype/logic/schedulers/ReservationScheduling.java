@@ -259,8 +259,7 @@ public class ReservationScheduling implements Scheduler {
         }
     }
     
-    
-      public static GuestModel retrieveByName (String guestName) {
+     public static GuestModel retrieveByName (String guestName) {
        GuestModel searchResult = GuestDriver.searchByName(guestName);
        System.out.println("No guest under this name.");
 
@@ -277,35 +276,41 @@ public class ReservationScheduling implements Scheduler {
     }
 
      // Create Guest with Two Fields (Name, Email)
-    public static GuestModel addGuest(String name, String email) {
-        GuestModel searchResult = GuestDriver.addGuest(name, email);
+    public static void addGuest(String name, String email) {
+        GuestDriver.createGuest(name, email);
         System.out.println("Created Guest: ");
 
-         if (searchResult == GuestModel.EMPTY_ENTITY);
-        return null; 
+         if (GuestDriver.searchByName(name) == GuestModel.EMPTY_ENTITY){
+             System.out.println("Error Not Found");
+         } else System.out.println("Guest: " + name + "Found");
     }
 
 
-     public static ReservationModel attachGuest(ReservationModel rsv, GuestModel guest) {
-        ReservationModel searchResult = ReservationDriver.attachGuest(guest);
+     public static void attachGuest(ReservationModel rsv, GuestModel guest) {
+        ReservationDriver.attachGuest(rsv, guest);
         System.out.println("Attached Guest To Reservation: ");
 
-         if (searchResult == ReservationModel.EMPTY_ENTITY);
-        return null;   
+         if (GuestDriver.searchByReservation(rsv) == GuestModel.EMPTY_ENTITY){
+             System.out.println("Error Guest Not Attached");
+         } else System.out.println("Guest Attached"); 
     }
 
-      public static ReservationModel attachGuest(int rsvID, GuestModel guest) {
-        ReservationModel searchResult = ReservationDriver.attachGuest(rsvID, guest);
+      public static void attachGuest(int rsvID, GuestModel guest) {
+         ReservationDriver.attachGuest(rsvID, guest);
         System.out.println("Attached Guest To Reservation ID: ");
 
-         if (searchResult == ReservationModel.EMPTY_ENTITY);
-        return null;   
+         if (GuestDriver.searchByReservation(rsvID) == GuestModel.EMPTY_ENTITY){
+             System.out.println("Error Guest Not Attached");
+         } else System.out.println("Guest Attached");
+         
     }
-     public static ReservationModel attachGuest(int rsvID, int guestID) {
-         ReservationModel searchResult = ReservationDriver.attchGuest(rsvID, guestID);
+     public static void attachGuest(int rsvID, int guestID) {
+         ReservationDriver.attachGuest(rsvID, guestID);
 
-          if (searchResult == ReservationModel.EMPTY_ENTITY);
-        return null;
+          if (GuestDriver.searchByReservation(rsvID) == GuestModel.EMPTY_ENTITY){
+             System.out.println("Error Guest Not Attached");
+         } else System.out.println("Guest Attached");
+
      }
 
 
