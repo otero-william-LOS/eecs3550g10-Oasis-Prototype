@@ -47,11 +47,14 @@ public class PaymentProcessing implements Scheduler {
         final String penaltyApplied = "No show penalty applied on: ";
         final String modApplied = " rsv modification penalty applied on: ";
         boolean run = false;
-        boolean isPopulated = !(descLine + (departDate.toString()))
+        boolean isPopulated = false;
+        
+        if (!isSizeNull)
+        isPopulated = !(descLine + (departDate.toString()))
                 .equals(reservation.getListBillCharges()
                         .get(reservation.getListBillCharges().size() - 1)
                         .getLineDescription());
-
+        
         //if statement to handle duplicates
         if (reservation.getListBillCharges().isEmpty()) {
             run = true;
