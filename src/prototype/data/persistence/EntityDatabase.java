@@ -31,6 +31,12 @@ public class EntityDatabase {
     private static final List<BillChargeModel> TBL_BLLCHRG_ENTITY = new ArrayList<>();
     private static final List<GuestModel> TBL_GUEST_ENTITY = new ArrayList<>();
     
+    public static final void exportEntityTables(){
+        DatabaseCsvFileIO.exportEntityTables(TBL_RSV_ENTITY, TBL_ROOM_ENTITY, TBL_RATE_ENTITY, TBL_GUEST_ENTITY, TBL_BLLCHRG_ENTITY);
+    }
+    public static final void importEntityTables(){
+        DatabaseCsvFileIO.importCsvFileTables(TBL_RSV_ENTITY, TBL_ROOM_ENTITY, TBL_RATE_ENTITY, TBL_GUEST_ENTITY, TBL_BLLCHRG_ENTITY);
+    }
     
     //  nested class for rsv entity table
     public final static class ReservationTable {
