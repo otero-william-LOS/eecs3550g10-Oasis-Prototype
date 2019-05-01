@@ -1,186 +1,54 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package prototype.logic.schedulers;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.time.LocalDate;
-import prototype.data.drivers.RateDriver;
-import prototype.data.models.RateModel;
-import prototype.data.models.ReservationModel;
-import java.time.LocalDate;
-import prototype.data.persistence.EntityDatabase;
-import prototype.data.drivers.RateDriver;
-import prototype.data.drivers.RoomDriver;
-import prototype.data.models.RoomModel;
+import static java.time.temporal.ChronoUnit.DAYS;
 import prototype.data.drivers.ReservationDriver;
+import prototype.data.models.ReservationModel;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import prototype.data.drivers.BillChargeDriver;
-import prototype.data.models.BillChargeModel;
+import prototype.data.drivers.GuestDriver;
+import prototype.data.models.GuestModel;
 import prototype.data.models.ReservationType;
 
-/**
- *
- * @author jon
- */
-public class PaymentProcessing implements Scheduler {
+public class ReservationScheduling implements Scheduler {
 
-    /* The accomodation bill report needs to have the date the bill was printed, 
-        guest name, room number, arrival date, departure date, 
-        number of nights, total charge. For prepaid and 60-day reservations, 
-        the billreflect the date on which it was paid in advance with amount */
-    public static double generateAccmBill(ReservationModel reservation) {
-        LocalDate processDate = reservation.getDateArrive();
-        LocalDate departDate = reservation.getDateDepart();
-        LocalDate currentToday = LocalDate.now();
-        double totalCharge = 0;
-        final String descLine = "Date Charged: ";
-        final String penaltyApplied = "No show penalty applied on: ";
-        final String modApplied = " rsv modification penalty applied on: ";
-        boolean run = false;
-        boolean isPopulated = false;
-        
-        if (!isSizeNull)
-        isPopulated = !(descLine + (departDate.toString()))
-                .equals(reservation.getListBillCharges()
-                        .get(reservation.getListBillCharges().size() - 1)
-                        .getLineDescription());
-        
-        //if statement to handle duplicates
-        if (reservation.getListBillCharges().isEmpty()) {
-            run = true;
-        }
-        if (run != true && !isPopulated) {
-            run = true;
-        }
-        //do we need a if statement if Arrival Date got changes as well?
-        if (run) {
-            for (int i = 0; processDate.plusDays(i).isBefore(departDate.plusDays(1)); i++) {
-                RateModel currentRate = RateDriver.searchByDate(reservation.getDateArrive());
-                double dayCharge = RateDriver.returnReservationTypeRate(currentRate, reservation.getReservationType());
-                totalCharge += dayCharge;
-                String tempString = descLine + processDate.toString();
-                int currentBillID = BillChargeDriver.createBillChargeReturnID(currentToday, dayCharge, tempString);
-                //BillChargeModel currentBillCharge =BillChargeDriver.searchByID(currentBillID);
-                BillChargeDriver.attachReservation(currentBillID, reservation.getReservationID());
-                ReservationDriver.attachBillCharge(reservation.getReservationID(), currentBillID);
-            }
+    // receive a date and dte depart
+    // send these to payment processing, 
+    public static String createReservation(Date dateArrive, Date dateDepart) {
 
-        } else if (isPopulated) {
-            int lastOf = 1;
-            for (int c = 0; c < reservation.getListBillCharges().size(); c++) {
-                if ((descLine + processDate.toString()).equals(reservation.getListBillCharges().get(c).getLineDescription())) {
-                lastOf = c;
-            } 
-                else if ((modApplied + processDate.toString()).equals(reservation.getListBillCharges().get(c).getLineDescription())) {
-            
-                lastOf = c;
-                }
-                else if ((penaltyApplied + processDate.toString()).equals(reservation.getListBillCharges().get(c).getLineDescription())) {
-                lastOf = c;
-                }
-            }
-            for (int i = lastOf; i < reservation.getListBillCharges().size(); i++) {
-                totalCharge += reservation.getListBillCharges().get(i).getAmount();
-            }
-        }
-        return totalCharge;
-
+        // received dates. create reservation using basic contstructor
+        // there will need to be logic to determine if the hotel will be full
+        // over any of the requested reservation days
+        // if the reservation cannot be made will return a value to main 
+        // stating so, for now assume unlimited reservations can be made
+//        int rsvID = ReservationDriver.createRSVCSched(dateArrive, dateDepart);
+        // I have generated the new Reservation and the ID
+        // send all nescessary info to payment procssing
+        // I figure payment processing should assing the datePaid and 
+        // listbillcharges to the reservation
+        // if you can think of any reason the reservation would not be able
+        // to be created please provide a method to return some value here
+        // so i can deal with it appropriatley
+        // imaginary payment processing call below
+        // paymentProcessing.receiveRsvInfo(rsvID, dateArrive, dateDepart)
+        // this should return a message saying wether or not the reservation
+        // was created and info about its successful creation
+        String returnstring = "fuck yeah";
+        return returnstring;
     }
 
-    public static void processAccmBill(ReservationModel reservation){
-        // check if 1st bill day arrived day varies. Then void all the unmatched
-        // days until you reach DateArrive that match
-       
-        
-        // Call GenerateAccmBill to apply the total charge
-
+    public static void modifyReservation(ReservationModel reservation) {
+        // probably wont receive RsvModels but rather ID's not too sure yet
     }
 
-    public static void printAccmBill(ReservationModel reservation) throws IOException {
-        /*This is a systmem.out print, wasns't sure how we are suppose to do it
-        double charge = 0.0;
-        
-        for (int i=0; i <reservation.getListBillCharges().size() ; i++) {
-         System.out.println("the following are bill charges for the reservation");
-         System.out.println(reservation.getListBillCharges().get(i).toString());
-         charge += reservation.getListBillCharges().get(i).getAmount();}
-            System.out.println("The charge is" +charge);
-         */
-        File accmbill = new File("AccomondationBill.txt");
-        FileOutputStream accmbillreport = new FileOutputStream(accmbill);
-        BufferedWriter accmbuf = new BufferedWriter(new OutputStreamWriter(accmbillreport));
-        LocalDate currentDay = LocalDate.now();
-        List<ReservationModel> reservations = new ArrayList<ReservationModel>();
-        String accmBillInfo = "";
+    public static ArrayList<ReservationModel> getReservations() {
+        // this will be used to retreive more than one reservation based on some
+        // criteria. any modifications will be done in a seperate method simillar
+        // to modifyReservation()
 
-        for (ReservationModel accmBillReservation : reservations) {
-            accmBillInfo += " Accomndation Bill for Guest: "
-                    + reservation.getGuest().getName()
-                    + " with Reservation Type: "
-                    + reservation.getReservationType().toString()
-                    + " reserved room number: "
-                    + reservation.getRoom().getRoomID()
-                    + " Arrival Date:"
-                    + reservation.getDateArrive().toString()
-                    + " and  Departure Date: "
-                    + reservation.getDateDepart().toString()
-                    + " Total Charge is: "
-                    + reservation.getListBillCharges()
-                    + "Printed on: " + currentDay;
-            accmbuf.write(accmBillInfo);
-            accmbuf.newLine();
-        }
-        accmbuf.close();
-    }
-
-    public static void applyPenaltyCharge(ReservationModel reservation) {
-        /* Charge the no show penalty if customer does not show on the first day
-        Each morning the employee must generate penalty charges */
-        //pick the first day of the list
-        LocalDate processDate = reservation.getDateArrive();
-        final String penaltyApplied = "No show penalty applied on: ";
-        final String modApplied = " rsv modification penalty applied on: ";
-        RateModel currentRate = RateDriver.searchByDate(reservation.getDateArrive());
-        double dayCharge = 0;
-        String tempString = penaltyApplied + processDate.toString();
-        int currentBillID = 0;
-
-        if (reservation.isNoShow()) {
-
-            dayCharge = RateDriver.returnNoShowRate(currentRate);
-            currentBillID = BillChargeDriver.createBillChargeReturnID(LocalDate.now(), dayCharge, tempString);
-            //BillChargeModel currentBillCharge =BillChargeDriver.searchByID(currentBillID);
-            BillChargeDriver.attachReservation(currentBillID, reservation.getReservationID());
-            ReservationDriver.attachBillCharge(reservation.getReservationID(), currentBillID);
-            /*
-        Refund for arrival day +1 to depart day. 
-        Send a message to state reinbursement
-             */
-
-            reservation.setIsConcluded(true);
-            reservation.setIsPaid(true);
-            reservation.setRoom(RoomModel.EMPTY_ENTITY);
-        } //else if modified
-        else {
-            for (int i = 0; processDate.plusDays(i).isBefore(reservation.getDateDepart().plusDays(1)); i++) {
-
-                dayCharge = RateDriver.returnReservationModifyRate(currentRate);
-                currentBillID = BillChargeDriver.createBillChargeReturnID(LocalDate.now(), dayCharge, tempString);
-                BillChargeDriver.attachReservation(currentBillID, reservation.getReservationID());
-                ReservationDriver.attachBillCharge(reservation.getReservationID(), currentBillID);
-
-            }
-        }
+        ArrayList<ReservationModel> reservations = new ArrayList();
+        return reservations;
     }
 
     @Override
@@ -201,6 +69,139 @@ public class PaymentProcessing implements Scheduler {
     @Override
     public void runModuleUserStories() {
         //  TODO will be updated as new user stories are created.
+    }
+
+    private static List<ReservationType> getAvaliableRsvTypes(LocalDate start) {
+        List<ReservationType> rsvTypeList = new ArrayList<>();
+
+        rsvTypeList.add(ReservationType.CONVENTIONAL);
+        if (start.isAfter(LocalDate.now().plusDays(89))) {
+            rsvTypeList.add(ReservationType.PREPAID);
+        }
+        if (start.isAfter(LocalDate.now().plusDays(59))) {
+            rsvTypeList.add(ReservationType.SIXTYADV);
+        }
+        if (start.isBefore(LocalDate.now().plusDays(31))) {
+            rsvTypeList.add(ReservationType.INCENTIVE);
+        }
+        return rsvTypeList;
+    }
+
+    private static boolean typeAvliableCheck(ReservationType rsvType, LocalDate start) {
+        List<ReservationType> avaliableRsvTypes = new ArrayList<>();
+        boolean containsType = false;
+
+        avaliableRsvTypes = getAvaliableRsvTypes(start);
+        for (int i = 0; i < avaliableRsvTypes.size(); i++) {
+            if (avaliableRsvTypes.get(i) == rsvType) {
+                containsType = true;
+            }
+
+        }
+        if (!containsType || rsvType == ReservationType.CONVENTIONAL) {
+           // System.out.println("Type Check: Pass");
+        } else {
+           // System.out.println("Type Check: Fail");
+        }
+
+        return containsType;
+
+    }
+
+    public static int createReservationTest(ReservationType rsvType) {
+        int returnID = 0;
+        LocalDate today = LocalDate.now();
+        List<ReservationType> avaliableRsvTypes = new ArrayList<>();
+        int typeModifier = 0;
+        switch (rsvType){
+            case PREPAID:
+                typeModifier = 90;
+                break;
+            case INCENTIVE:
+                typeModifier = 30;
+                break;
+            case CONVENTIONAL:
+                typeModifier = 0;
+                break;
+            case SIXTYADV:
+                typeModifier = 60;
+                break;
+                
+        }
+
+
+        if (typeAvliableCheck(rsvType, today.plusDays(typeModifier))) {
+            //Check For at least one occupany for duration of stay 
+            int occupancyCount = 0;
+            
+            LocalDate start = today.plusDays(typeModifier);
+            LocalDate end = today.plusDays(typeModifier + 7);
+            for (int i = 0; start.plusDays(i).isBefore(end.plusDays(1)); i++) {
+                List<ReservationModel>  listOccupancy
+                        = ReservationDriver.searchByDate(start.plusDays(i));
+                
+                if (listOccupancy.size() < 45) occupancyCount++;
+            }
+
+            long diff = DAYS.between(start, end)+1;
+     
+            if(diff == occupancyCount){
+                System.out.println("Is Avaliable!");
+                //Can Create Reservation
+                
+        int testRsvID = ReservationDriver.createReservationReturnID(start,
+                        end);
+        ReservationDriver.modifyReservationType(
+                testRsvID, ReservationType.PREPAID);
+        returnID = testRsvID;
+        
+                PaymentProcessing.
+                        generateAccmBill(ReservationDriver.searchByID(testRsvID));
+               
+                for(int k = 0; k < ReservationDriver.searchByID(testRsvID).getListBillCharges().size(); k++){
+                    System.out.println(ReservationDriver.searchByID(testRsvID).getListBillCharges().get(k).toString());
+                }
+            }
+
+        }
+        return returnID;
+    }
+    
+    public static void proccessReservationPaymentTest(int testRsvID) {
+         int tempGuestID = GuestDriver.createGuestReturnID("John Doe", "JohnDoe@gmail.com");
+        GuestDriver.modifyGuestCreditCardInfo(tempGuestID, "<No Information Provided>");
+        GuestModel tempGuest = GuestDriver.searchByID(tempGuestID);
+        ReservationDriver.attachGuest(testRsvID, tempGuestID);
+        
+        //PaymentProccessing.testProccessMethod(testRsvID);
+    }
+    
+    
+    public static void multipleRsvGuestCheck(){
+        LocalDate today = LocalDate.now();
+        int testRsvID
+                = ReservationDriver.createReservationReturnID(today,
+                        today.plusDays(7));
+        int testRsvID_2
+                = ReservationDriver.createReservationReturnID(today,
+                        today.plusDays(7));
+        ReservationDriver.modifyReservationType(
+                testRsvID, ReservationType.SIXTYADV);
+        
+        int tempGuestID = GuestDriver.createGuestReturnID("John Doe", "JohnDoe@gmail.com");
+        GuestDriver.modifyGuestCreditCardInfo(tempGuestID, "<No Information Provided>");
+        ReservationDriver.attachGuest(testRsvID, tempGuestID);
+        ReservationDriver.attachGuest(testRsvID_2, tempGuestID);
+        GuestDriver.attachReservation(tempGuestID, testRsvID);
+        GuestDriver.attachReservation(tempGuestID, testRsvID_2);
+        
+        List<ReservationModel> rsvList = 
+                ReservationDriver.searchByGuest(tempGuestID);
+        
+        if (rsvList.size() == 2){
+            System.out.println(testRsvID + " = " + rsvList.get(0).getReservationID());
+            System.out.println(testRsvID_2 + " = " + rsvList.get(1).getReservationID());
+        }
     }
 
 }
