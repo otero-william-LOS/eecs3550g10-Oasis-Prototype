@@ -118,9 +118,8 @@ public class ReservationScheduling implements Scheduler {
 
     }
 
-    public static void createReservationTest(ReservationType rsvType) {
-        // 4 Cases 
-        // 90 days adv, 60 days adv, incentive <= 30 adv, conventional any time
+       public static int createReservationTest(ReservationType rsvType) {
+        int returnID = 0;
         LocalDate today = LocalDate.now();
         List<ReservationType> avaliableRsvTypes = new ArrayList<>();
         int typeModifier = 0;
@@ -164,14 +163,14 @@ public class ReservationScheduling implements Scheduler {
                         end);
         ReservationDriver.modifyReservationType(
                 testRsvID, ReservationType.PREPAID);
-        
+        returnID = testRsvID;
         
               //  PaymentProcessing.
                    //     generateAccmBill(ReservationDriver.searchByID(testRsvID));
             }
 
         }
-        
+        return returnID;
     }
     
     public static void proccessReservationPaymentTest(int testRsvID) {
