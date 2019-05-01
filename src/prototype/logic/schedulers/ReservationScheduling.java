@@ -164,7 +164,7 @@ public class ReservationScheduling implements Scheduler {
 
     }
 
-       public static int createReservationTest(ReservationType rsvType) {
+           public static int createReservationTest(ReservationType rsvType) {
         int returnID = 0;
         LocalDate today = LocalDate.now();
         List<ReservationType> avaliableRsvTypes = new ArrayList<>();
@@ -202,7 +202,7 @@ public class ReservationScheduling implements Scheduler {
             long diff = DAYS.between(start, end)+1;
      
             if(diff == occupancyCount){
-                System.out.println("Is Avliable!");
+                System.out.println("Is Avaliable!");
                 //Can Create Reservation
                 
         int testRsvID = ReservationDriver.createReservationReturnID(start,
@@ -211,8 +211,12 @@ public class ReservationScheduling implements Scheduler {
                 testRsvID, ReservationType.PREPAID);
         returnID = testRsvID;
         
-              //  PaymentProcessing.
-                   //     generateAccmBill(ReservationDriver.searchByID(testRsvID));
+                PaymentProcessing.
+                        generateAccmBill(ReservationDriver.searchByID(testRsvID));
+               
+                for(int k = 0; k < ReservationDriver.searchByID(testRsvID).getListBillCharges().size(); k++){
+                    System.out.println(ReservationDriver.searchByID(testRsvID).getListBillCharges().get(k).toString());
+                }
             }
 
         }
