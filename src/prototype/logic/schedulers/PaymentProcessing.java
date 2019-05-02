@@ -105,14 +105,14 @@ public class PaymentProcessing implements Scheduler {
         boolean paymentAccepted = false;
         
         if (!paymentAccepted) {
-            System.out.println("Process payment successful, payment accepted on day"
+            System.out.println("Process payment successful, payment accepted on day: "
                     + currentDay);
             totalCharge = reservation.getListBillCharges()
                     .get(reservation.getListBillCharges().size()-1).getAmount();
             reservation.setDatePaid(currentDay);
             reservation.setIsPaid(true);
         } else {
-            System.out.println("there was an error processing the CC entered");
+            System.out.println("There was an error processing the CC entered.");
             reservation.setIsPaid(false);
         }
         return totalCharge;
