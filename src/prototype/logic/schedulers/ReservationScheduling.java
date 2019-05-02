@@ -341,7 +341,7 @@ public class ReservationScheduling implements Scheduler {
             long diff = DAYS.between(start, end) + 1;
 
             if (diff == occupancyCount) {
-                System.out.println("Is Avaliable!");
+                System.out.println("Is Avalaible!");
                 //Can Create Reservation
 
                 int testRsvID = ReservationDriver.createReservationReturnID(start,
