@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import prototype.data.models.ReservationType;
 import prototype.logic.schedulers.RateScheduling;
+import prototype.logic.schedulers.RoomOrganizer;
 
 
 /**
@@ -266,9 +267,13 @@ public class UserStoryPrototype {
         returnVal = scheduler.setRateRange(LocalDate.now(), LocalDate.now().plusDays(5), 6969);
         returnVal = scheduler.setRateRange(LocalDate.now().plusDays(400), LocalDate.now().plusDays(405), 6969);
         returnVal = scheduler.setRateRange(LocalDate.now().plusDays(1), LocalDate.now(), 6969);
-        int i;
+       
         
+        EntityDatabase.DevUtilities.genRmOrgnzrPresentationData();
+        RoomOrganizer roomies = new RoomOrganizer();
+        roomies.initDailyAutoTask();
         
+         int i = 0;
     }
     
 }
