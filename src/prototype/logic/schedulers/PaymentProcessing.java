@@ -28,6 +28,7 @@ import prototype.data.drivers.BillChargeDriver;
 import prototype.data.models.BillChargeModel;
 import prototype.data.models.ReservationType;
 import static java.time.temporal.ChronoUnit.DAYS;
+
 /**
  *
  * @author jon
@@ -59,16 +60,17 @@ public class PaymentProcessing implements Scheduler {
         ReservationDriver.attachBillCharge(reservation.getReservationID(), currentBillID);
 
     }
-    
-    public static double generateBillTotal(ReservationModel reservation){
+
+    public static double generateBillTotal(ReservationModel reservation) {
         double totalCharge = 0;
         for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
             totalCharge += reservation.getListBillCharges().get(i).getAmount();
-            }
+        }
         return totalCharge;
     }
-      public static double processAccmBill(ReservationModel reservation) {
-        
+
+    public static double processAccmBill(ReservationModel reservation) {
+
 //        Return ccInfo, and accom.bill
 //*	User enters payment accepted
 //*	Enter date paid and flag is paid, bllchrgs and rsv
@@ -78,26 +80,69 @@ public class PaymentProcessing implements Scheduler {
         double totalCharge = 0;
         boolean paymentAccepted = false;
         //System.out.println("The CC info entered: " +currentCC);
-       
+
         if (!paymentAccepted) {
             System.out.println("Process payment successful, payment accepted on day"
-            +currentDay);
-           for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
-            totalCharge += reservation.getListBillCharges().get(i).getAmount();
+                    + currentDay);
+            for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
+                totalCharge += reservation.getListBillCharges().get(i).getAmount();
             }
-           reservation.setDatePaid(currentDay);
-           reservation.setIsPaid(true);
-        }
-        else {
-            System.out.println ("there was an error processing the CC entered");
+            reservation.setDatePaid(currentDay);
+            reservation.setIsPaid(true);
+        } else {
+            System.out.println("there was an error processing the CC entered");
             reservation.setIsPaid(false);
         }
         return totalCharge;
-        
-    }
-    
 
-     public static void printAccmBill(ReservationModel reservation) {
+    }
+
+    public static double processAccmBillNoShow(ReservationModel reservation) {
+        generateAccmBill(reservation);
+        String currentCC = reservation.getGuest().getCCInfo();
+        LocalDate currentDay = LocalDate.now();
+        double totalCharge = 0;
+        boolean paymentAccepted = false;
+        
+        if (!paymentAccepted) {
+            System.out.println("Process payment successful, payment accepted on day"
+                    + currentDay);
+            totalCharge = reservation.getListBillCharges()
+                    .get(reservation.getListBillCharges().size()-1).getAmount();
+            reservation.setDatePaid(currentDay);
+            reservation.setIsPaid(true);
+        } else {
+            System.out.println("there was an error processing the CC entered");
+            reservation.setIsPaid(false);
+        }
+        return totalCharge;
+
+    }
+
+    
+      public static double processAccmBillCancel(ReservationModel reservation) {
+        generateAccmBill(reservation);
+        String currentCC = reservation.getGuest().getCCInfo();
+        LocalDate currentDay = LocalDate.now();
+        double totalCharge = 0;
+        boolean paymentAccepted = false;
+        
+        if (!paymentAccepted) {
+            System.out.println("Process payment successful, payment accepted on day"
+                    + currentDay);
+            totalCharge = reservation.getListBillCharges()
+                    .get(reservation.getListBillCharges().size()-1).getAmount();
+            reservation.setDatePaid(currentDay);
+            reservation.setIsPaid(true);
+        } else {
+            System.out.println("there was an error processing the CC entered");
+            reservation.setIsPaid(false);
+        }
+        return totalCharge;
+
+    }
+      
+    public static void printAccmBill(ReservationModel reservation) {
         /*This is a systmem.out print, wasns't sure how we are suppose to do it
         double charge = 0.0;
         
@@ -127,33 +172,31 @@ public class PaymentProcessing implements Scheduler {
             String accmBillInfo = "";
             double totalCharge = 0;
 
-            for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
-                totalCharge += reservation.getListBillCharges().get(i).getAmount();
-            }
+            totalCharge = generateBillTotal(reservation);
 
-            long diff =0;
-            diff = (reservation.getDateArrive().equals( reservation.getDateDepart())) ? 0:
-                    DAYS.between(reservation.getDateArrive(), reservation.getDateDepart())+1;
+            long diff = 0;
+            diff = (reservation.getDateArrive().equals(reservation.getDateDepart())) ? 0
+                    : DAYS.between(reservation.getDateArrive(), reservation.getDateDepart()) + 1;
             accmBillInfo += "-----Accomndation Bill for Guest------ " + System.getProperty("line.separator")
-                    + "Current Day:       | " 
+                    + "Current Day:       | "
                     + currentDay + System.getProperty("line.separator")
-                    + "Guest Name:        | " 
+                    + "Guest Name:        | "
                     + reservation.getGuest().getName() + System.getProperty("line.separator")
-                    + "Reservation Type:  | " 
-                    + reservation.getReservationType().toString()+ System.getProperty("line.separator")
-                    + "Room Number:       | " 
-                    + reservation.getRoom().getRoomID()+ System.getProperty("line.separator")
-                    + "Arrival Date:      | "  
-                    + reservation.getDateArrive().toString()+ System.getProperty("line.separator")
-                    + "Departure Date:    | " 
-                    + reservation.getDateDepart().toString()+ System.getProperty("line.separator")
-                    + "Nights Stayed:     | " 
+                    + "Reservation Type:  | "
+                    + reservation.getReservationType().toString() + System.getProperty("line.separator")
+                    + "Room Number:       | "
+                    + reservation.getRoom().getRoomID() + System.getProperty("line.separator")
+                    + "Arrival Date:      | "
+                    + reservation.getDateArrive().toString() + System.getProperty("line.separator")
+                    + "Departure Date:    | "
+                    + reservation.getDateDepart().toString() + System.getProperty("line.separator")
+                    + "Nights Stayed:     | "
                     + diff + System.getProperty("line.separator")
-                    + "Total Charge is:   | " 
+                    + "Total Charge is:   | "
                     + totalCharge + System.getProperty("line.separator")
-                    + "Date Paid:         | " 
+                    + "Date Paid:         | "
                     + reservation.getDatePaid() + System.getProperty("line.separator");
-                  
+
             accmbuf.write(accmBillInfo);
             accmbuf.newLine();
 
@@ -163,8 +206,8 @@ public class PaymentProcessing implements Scheduler {
         }
 
     }
-    
-  public static void applyCancelationCharge(ReservationModel reservation) {
+
+    public static void applyCancelationCharge(ReservationModel reservation) {
         final String penaltyApplied = "Cancelation penalty applied on: ";
         RateModel currentRate = RateDriver.searchByDate(reservation.getDateArrive());
         double dayCharge = 0;
@@ -205,7 +248,7 @@ public class PaymentProcessing implements Scheduler {
         if (reservation.isNoShow()) {
             if (reservation.getReservationType() == ReservationType.CONVENTIONAL
                     || reservation.getReservationType() == ReservationType.INCENTIVE) {
-                
+
                 totalCharge = generateBillTotal(reservation);
                 currentBillID = BillChargeDriver.createBillChargeReturnID(LocalDate.now(), (-1 * totalCharge), tempString);
                 BillChargeDriver.attachReservation(currentBillID, reservation.getReservationID());
