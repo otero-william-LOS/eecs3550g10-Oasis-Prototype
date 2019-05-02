@@ -43,10 +43,11 @@ public class RateScheduling implements Scheduler {
         
         if(day.isBefore(LocalDate.now())){
             returnString = "Cant modify rates before today";
+            return returnString;
         }
         
         // check to see if the rate for this day was already set
-        if(currentRate.getRateDate() != LocalDate.MIN){
+        if(!(currentRate.getRateDate().equals(LocalDate.MIN))){
             // rate already exists so modify its values
             RateDriver.modifyBaseRate(currentRate, rate);
             returnString = "The base rate for " + day.toString() + " was modified to " + rate;
@@ -68,13 +69,19 @@ public class RateScheduling implements Scheduler {
         
         if(startDate.isBefore(LocalDate.now())){
             returnString = "Cant modify rates before today";
+            return returnString;
+        }
+        
+        if(endDate.isBefore(startDate)){
+            returnString = "Cant have an end date before start date";
+            return returnString;
         }
         
         // iterate trhough the date range, modifying or creating dates as needed
-        while(currentDay != endDate.plusDays(1)){
+        while(!currentDay.equals(endDate.plusDays(1))){
             currentRate = RateDriver.searchByDate(currentDay);
             // check to see if the rate for this day was already set
-            if(currentRate.getRateDate() == LocalDate.MIN){
+            if(!(currentRate.getRateDate().equals(LocalDate.MIN))){
                 // rate already exists so modify its values
                 RateDriver.modifyBaseRate(currentRate, rate);
             }
