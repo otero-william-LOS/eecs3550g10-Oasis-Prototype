@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import prototype.logic.schedulers.RoomOrganizer;
 
 /**
  *
@@ -459,6 +460,42 @@ public class EntityDatabase {
                 double vRate = rate + variance[rndmIndex];
                 LocalDate dt = startYear.withMonth(11).plusDays(i);
                 RateTable.addRate(dt, vRate);
+            }
+        }
+        
+        // FMT: Gen Data for RmOrgnzr Demonstration
+        public static void genRmOrgnzrPresentationData() {
+            TBL_RSV_ENTITY.clear();
+            TBL_ROOM_ENTITY.clear();
+            
+            // gen all rooms
+            generateRoomTableAllAvailable();
+            
+            // create 5-day rsv ending today
+            for (int i = 0; i < 10; i++){
+               LocalDate endDate = LocalDate.now();
+               LocalDate startDate = endDate.minusDays(5);
+
+               ReservationTable.addReservation(startDate, endDate);
+            }
+            
+            // create 5-day rsv inmddl today
+            for (int i = 0; i < 10; i++){
+               LocalDate startDate = LocalDate.now().minusDays(2);
+               LocalDate endDate = LocalDate.now().plusDays(2);
+
+               ReservationTable.addReservation(startDate, endDate);
+            }
+
+            // assign initial rooms
+            RoomOrganizer.taskArrvlRoomAsgnmnt(ReservationTable.retrieveAllReservations());
+            
+            // create 5-day rsv starting today
+            for (int i = 0; i < 10; i++){
+               LocalDate startDate = LocalDate.now();
+               LocalDate endDate = startDate.plusDays(5);
+               
+               ReservationTable.addReservation(startDate, endDate);
             }
         }
     }
