@@ -81,6 +81,17 @@ public class ReservationScheduling implements Scheduler {
         //  TODO will be updated as new user stories are created.
     }
     
+  public static List<ReservationModel>  getNoShowList(){
+        List<ReservationModel> list = 
+                ReservationDriver.searchByDate(LocalDate.now().minusDays(1));
+        List<ReservationModel> nowShowList = new ArrayList<>();
+        
+        for (ReservationModel rsv: list){
+            if (rsv.isNoShow()) nowShowList.add(rsv);
+        }
+        
+        return nowShowList;
+    }
     
   private static List<ReservationType> getAvaliableRsvTypes(LocalDate start) {
         List<ReservationType> rsvTypeList = new ArrayList<>();
