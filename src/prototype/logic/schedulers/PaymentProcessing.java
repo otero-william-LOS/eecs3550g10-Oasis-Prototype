@@ -89,46 +89,72 @@ public class PaymentProcessing implements Scheduler {
     }
     
 
-    public static double printAccmBill(ReservationModel reservation) throws IOException {
-        // added a try catch gave an error so I added it seperately for this method.
+     public static void printAccmBill(ReservationModel reservation) {
+        /*This is a systmem.out print, wasns't sure how we are suppose to do it
+        double charge = 0.0;
         
-        //String fileDevision = System.getProperty("file.separator");
-        //String filePath = fileDevision+"Documents"+fileDevision+"AccomondationBill.txt";
-        //File accmbill = new File(filePath);
+        for (int i=0; i <reservation.getListBillCharges().size() ; i++) {
+         System.out.println("the following are bill charges for the reservation");
+         System.out.println(reservation.getListBillCharges().get(i).toString());
+         charge += reservation.getListBillCharges().get(i).getAmount();}
+            System.out.println("The charge is" +charge);
+         */
         File accmbill = new File("AccomondationBill.txt");
-        if(accmbill.createNewFile()){
-            System.out.println("AccomondationBill.txt created.");
-        }else System.out.println("AccomondationBill.txt already exists.");
-                
-        FileOutputStream accmbillreport = new FileOutputStream(accmbill);
-        BufferedWriter accmbuf = new BufferedWriter(new OutputStreamWriter(accmbillreport));
-        LocalDate currentDay = LocalDate.now();
-        String accmBillInfo = "";
-        double totalCharge=0;
-        
-        for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
-            totalCharge += reservation.getListBillCharges().get(i).getAmount();}
-           
-            accmBillInfo += " Accomndation Bill for Guest: "
-                    + reservation.getGuest().getName()
-                    + " with Reservation Type: "
-                    + reservation.getReservationType().toString()
-                    + " reserved room number: "
-                    + reservation.getRoom().getRoomID()
-                    + " Arrival Date:"
-                    + reservation.getDateArrive().toString()
-                    + " and  Departure Date: "
-                    + reservation.getDateDepart().toString()
-                    + " Total Charge is: "
-                    + totalCharge 
-                    + "Printed on: " + currentDay;
+        FileOutputStream accmbillreport;
+        // added a try catch gave an error so I added it seperately for this method.
+
+        try {
+            //String fileDevision = System.getProperty("file.separator");
+            //String filePath = fileDevision+"Documents"+fileDevision+"AccomondationBill.txt";
+            //File accmbill = new File(filePath);
+            if (accmbill.createNewFile()) {
+                System.out.println("AccomondationBill.txt created.");
+            } else {
+                System.out.println("AccomondationBill.txt already exists.");
+            }
+
+            accmbillreport = new FileOutputStream(accmbill);
+            BufferedWriter accmbuf = new BufferedWriter(new OutputStreamWriter(accmbillreport));
+            LocalDate currentDay = LocalDate.now();
+            String accmBillInfo = "";
+            double totalCharge = 0;
+
+            for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
+                totalCharge += reservation.getListBillCharges().get(i).getAmount();
+            }
+
+            long diff =0;
+            diff = (reservation.getDateArrive().equals( reservation.getDateDepart())) ? 0:
+                    DAYS.between(reservation.getDateArrive(), reservation.getDateDepart())+1;
+            accmBillInfo += "-----Accomndation Bill for Guest------ " + System.getProperty("line.separator")
+                    + "Current Day:       | " 
+                    + currentDay + System.getProperty("line.separator")
+                    + "Guest Name:        | " 
+                    + reservation.getGuest().getName() + System.getProperty("line.separator")
+                    + "Reservation Type:  | " 
+                    + reservation.getReservationType().toString()+ System.getProperty("line.separator")
+                    + "Room Number:       | " 
+                    + reservation.getRoom().getRoomID()+ System.getProperty("line.separator")
+                    + "Arrival Date:      | "  
+                    + reservation.getDateArrive().toString()+ System.getProperty("line.separator")
+                    + "Departure Date:    | " 
+                    + reservation.getDateDepart().toString()+ System.getProperty("line.separator")
+                    + "Nights Stayed:     | " 
+                    + diff + System.getProperty("line.separator")
+                    + "Total Charge is:   | " 
+                    + totalCharge + System.getProperty("line.separator")
+                    + "Date Paid:         | " 
+                    + reservation.getDatePaid() + System.getProperty("line.separator");
+                  
             accmbuf.write(accmBillInfo);
             accmbuf.newLine();
-          
-        accmbuf.close();
-        return totalCharge;
+
+            accmbuf.close();
+        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
+        }
+
     }
-    
     
   public static void applyCancelationCharge(ReservationModel reservation) {
         final String penaltyApplied = "Cancelation penalty applied on: ";
