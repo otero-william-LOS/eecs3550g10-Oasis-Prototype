@@ -1,4 +1,3 @@
-
 package prototype.logic.schedulers;
 
 import java.time.LocalDate;
@@ -40,8 +39,6 @@ public class ReservationScheduling implements Scheduler {
         // this should return a message saying wether or not the reservation
         // was created and info about its successful creation
         int returnID = 0;
-        List<ReservationType> avaliableRsvTypes = new ArrayList<>();
-
         int occupancyCount = 0;
 
         for (int i = 0; dateArrive.plusDays(i).isBefore(dateDepart.plusDays(1)); i++) {
@@ -92,7 +89,7 @@ public class ReservationScheduling implements Scheduler {
 
         if (typeAvliableCheck(rsvType, dateArrive, dateDepart)) {
             ReservationDriver.modifyReservationType(rsvID, rsvType);
-            changeMade = true;
+            changeMade = false;
         }
 
         return changeMade;
@@ -127,6 +124,30 @@ public class ReservationScheduling implements Scheduler {
         ReservationDriver.searchByID(rsvID).setIsPaid(ins);
     }
 
+    public static void modifyGuestNameByRsvID(int rsvID, String name) {
+        GuestDriver.searchByReservation(rsvID).setName(name);
+    }
+    public static void modifyGuestEmailByRsvID(int rsvID, String email) {
+        GuestDriver.searchByReservation(rsvID).setEmail(email);
+    }
+    
+    public static void modifyGuestCCInfoByRsvID(int rsvID, String ccinfo) {
+        GuestDriver.searchByReservation(rsvID).setCCInfo(ccinfo);
+    }
+    
+  
+
+    public static void modifyGuestNameByGuestID(int guestID, String name) {
+        GuestDriver.searchByID(guestID).setName(name);
+    }
+    public static void modifyGuestEmailByGuestID(int guestID, String email) {
+        GuestDriver.searchByID(guestID).setEmail(email);
+    }
+    
+    public static void modifyGuestCCInfoByGuestID(int guestID, String ccinfo) {
+        GuestDriver.searchByID(guestID).setCCInfo(ccinfo);
+    }
+    
     public static ArrayList<ReservationModel> getReservations() {
         // this will be used to retreive more than one reservation based on some
         // criteria. any modifications will be done in a seperate method simillar
