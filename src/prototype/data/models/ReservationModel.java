@@ -36,10 +36,10 @@ public class ReservationModel extends DataModel {
     protected void setSqlDateArrive(Date dateArrive) {this.m_DateArrive = dateArrive;}
     //  Additional DateArrive Get/Set Using LocalDate Conversion
     public LocalDate getDateArrive() {
-        return (m_DateArrive != null) ? m_DateArrive.toLocalDate() : LocalDate.MIN;
+        return (m_DateArrive != null && !m_DateArrive.equals(new Date(Long.MIN_VALUE))) ? m_DateArrive.toLocalDate() : LocalDate.MIN;
     }
     public void setDateArrive(LocalDate dateArrive) {
-        this.m_DateArrive = (dateArrive != null) ? Date.valueOf(dateArrive) : new Date(Long.MIN_VALUE);
+        this.m_DateArrive = (dateArrive != null && !dateArrive.equals(LocalDate.MIN)) ? Date.valueOf(dateArrive) : new Date(Long.MIN_VALUE);
     }
     
     //  DateDepart Attribute
@@ -54,10 +54,10 @@ public class ReservationModel extends DataModel {
     protected void setSqlDateDepart(Date dateDepart) {this.m_DateDepart = dateDepart;}
     //  Additional DateDepart Get/Set Using LocalDate Conversion
     public LocalDate getDateDepart() {
-        return (m_DateDepart != null) ? m_DateDepart.toLocalDate() : LocalDate.MIN;
+        return (m_DateDepart != null && !m_DateDepart.equals(new Date(Long.MIN_VALUE))) ? m_DateDepart.toLocalDate() : LocalDate.MIN;
     }
     public void setDateDepart(LocalDate dateDepart) {
-        this.m_DateDepart = (dateDepart != null) ? Date.valueOf(dateDepart) : new Date(Long.MIN_VALUE);
+        this.m_DateDepart = (dateDepart != null && !dateDepart.equals(LocalDate.MIN)) ? Date.valueOf(dateDepart) : new Date(Long.MIN_VALUE);
     }
     
     //  DatePaid Attribute
@@ -72,10 +72,10 @@ public class ReservationModel extends DataModel {
     protected void setSqlDatePaid(Date datePaid) {this.m_DatePaid = datePaid;}
     //  Additional DatePaid Get/Set Using LocalDate Conversion
     public LocalDate getDatePaid() {
-        return (m_DatePaid != null) ? m_DatePaid.toLocalDate() : LocalDate.MIN;
+        return (m_DatePaid != null && !m_DatePaid.equals(Long.MIN_VALUE)) ? m_DatePaid.toLocalDate() : LocalDate.MIN;
     }
     public void setDatePaid(LocalDate datePaid) {
-        this.m_DatePaid = (datePaid != null) ? Date.valueOf(datePaid) : new Date(Long.MIN_VALUE);
+        this.m_DatePaid = (datePaid != null && !datePaid.equals(LocalDate.MIN)) ? Date.valueOf(datePaid) : new Date(Long.MIN_VALUE);
     }
     
     //  ReservationType Attribute

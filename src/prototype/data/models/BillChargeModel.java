@@ -64,10 +64,10 @@ public class BillChargeModel extends DataModel {
     protected void setSqlDateCharged(Date dCharged) {this.m_DateCharged = dCharged;}
     //  Additional DateCharged Get/Set Using LocalDate Conversion
     public LocalDate getDateCharged() {
-        return (m_DateCharged != null) ?  m_DateCharged.toLocalDate() : LocalDate.MIN;
+        return (m_DateCharged != null && !m_DateCharged.equals(new Date(Long.MIN_VALUE))) ?  m_DateCharged.toLocalDate() : LocalDate.MIN;
     }
     public void setDateCharged(LocalDate ldCharged) {
-        this.m_DateCharged = (ldCharged != null) ? Date.valueOf(ldCharged) : new Date(Long.MIN_VALUE);
+        this.m_DateCharged = (ldCharged != null && !ldCharged.equals(LocalDate.MIN)) ? Date.valueOf(ldCharged) : new Date(Long.MIN_VALUE);
     }
     
     //  DatePaid Attribute
@@ -82,10 +82,10 @@ public class BillChargeModel extends DataModel {
     protected void setSqlDatePaid(Date dPaid) {this.m_DatePaid = dPaid;}
     //  Additional DatePaid Get/Set Using LocalDate Conversion
     public LocalDate getDatePaid() {
-        return (m_DatePaid != null) ? m_DatePaid.toLocalDate() : LocalDate.MIN;
+        return (m_DatePaid != null && !m_DatePaid.equals(new Date(Long.MIN_VALUE))) ? m_DatePaid.toLocalDate() : LocalDate.MIN;
     }
     public void setDatePaid(LocalDate ldPaid) {
-        this.m_DatePaid = (ldPaid != null) ? Date.valueOf(ldPaid) : new Date(Long.MIN_VALUE);
+        this.m_DatePaid = (ldPaid != null && !ldPaid.equals(LocalDate.MIN)) ? Date.valueOf(ldPaid) : new Date(Long.MIN_VALUE);
     }
     
     //  IsPaid Attribute

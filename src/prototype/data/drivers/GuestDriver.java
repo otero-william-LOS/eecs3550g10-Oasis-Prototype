@@ -37,7 +37,7 @@ public class GuestDriver implements DataDriver {
     }
     public static GuestModel searchByName(String name) {
         //return matchName;
-        return EntityDatabase.GuestTable.retrieveByEmail(name);
+        return EntityDatabase.GuestTable.retrieveByName(name);
     }
     public static GuestModel searchByEmail(String email) {
         return EntityDatabase.GuestTable.retrieveByEmail(email);

@@ -24,10 +24,10 @@ public class RateModel extends DataModel {
     public void setRateSqlDate(Date rateDate) {this.m_RateDate = rateDate;}
     //  Additional RateDate Get/Set Using LocalDate Conversion
     public LocalDate getRateDate() {
-        return (m_RateDate != null) ? m_RateDate.toLocalDate() : LocalDate.MIN;
+        return (m_RateDate != null && !m_RateDate.equals(new Date(Long.MIN_VALUE))) ? m_RateDate.toLocalDate() : LocalDate.MIN;
     }
     public void setRateDate(LocalDate rateDate) {
-        this.m_RateDate = (rateDate != null) ? Date.valueOf(rateDate) : new Date(Long.MIN_VALUE);
+        this.m_RateDate = (rateDate != null && !rateDate.equals(LocalDate.MIN)) ? Date.valueOf(rateDate) : new Date(Long.MIN_VALUE);
     }
     
     //  BaseRate Attribute
