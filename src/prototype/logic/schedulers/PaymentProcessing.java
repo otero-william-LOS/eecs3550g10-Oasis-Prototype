@@ -90,18 +90,23 @@ public class PaymentProcessing implements Scheduler {
     
 
     public static double printAccmBill(ReservationModel reservation) throws IOException {
-       
+        // added a try catch gave an error so I added it seperately for this method.
+        
+        //String fileDevision = System.getProperty("file.separator");
+        //String filePath = fileDevision+"Documents"+fileDevision+"AccomondationBill.txt";
+        //File accmbill = new File(filePath);
         File accmbill = new File("AccomondationBill.txt");
+        if(accmbill.createNewFile()){
+            System.out.println("AccomondationBill.txt created.");
+        }else System.out.println("AccomondationBill.txt already exists.");
+                
         FileOutputStream accmbillreport = new FileOutputStream(accmbill);
         BufferedWriter accmbuf = new BufferedWriter(new OutputStreamWriter(accmbillreport));
         LocalDate currentDay = LocalDate.now();
-        List<ReservationModel> reservations = new ArrayList<ReservationModel>();
         String accmBillInfo = "";
         double totalCharge=0;
         
-        
-        for (ReservationModel accmBillReservation : reservations) {
-            for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
+        for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
             totalCharge += reservation.getListBillCharges().get(i).getAmount();}
            
             accmBillInfo += " Accomndation Bill for Guest: "
@@ -119,11 +124,10 @@ public class PaymentProcessing implements Scheduler {
                     + "Printed on: " + currentDay;
             accmbuf.write(accmBillInfo);
             accmbuf.newLine();
-          }
+          
         accmbuf.close();
         return totalCharge;
     }
-
     
     
   public static void applyCancelationCharge(ReservationModel reservation) {
