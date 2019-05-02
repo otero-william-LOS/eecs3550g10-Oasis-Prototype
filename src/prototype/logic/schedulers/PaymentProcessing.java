@@ -106,6 +106,26 @@ public class PaymentProcessing implements Scheduler {
         accmbuf.close();
     }
 
+   ublic static void applyCancelationCharge(ReservationModel reservation){
+        final String penaltyApplied = "Cancelation penalty applied on: ";
+        RateModel currentRate = RateDriver.searchByDate(reservation.getDateArrive());
+        double dayCharge = 0;
+        String tempString = penaltyApplied + LocalDate.now().toString();
+        int currentBillID = 0;
+        
+        
+         dayCharge = RateDriver.returnNoShowRate(currentRate);
+            currentBillID = BillChargeDriver.createBillChargeReturnID(LocalDate.now(), dayCharge, tempString);
+            //BillChargeModel currentBillCharge =BillChargeDriver.searchByID(currentBillID);
+            BillChargeDriver.attachReservation(currentBillID, reservation.getReservationID());
+            ReservationDriver.attachBillCharge(reservation.getReservationID(), currentBillID);
+           
+            reservation.setIsConcluded(true);
+            
+            //*****Call Payment Processing****
+            reservation.setIsPaid(true);
+            reservation.setRoom(RoomModel.EMPTY_ENTITY);
+    }
     public static void applyPenaltyCharge(ReservationModel reservation) {
         /* Charge the no show penalty if customer does not show on the first day
         Each morning the employee must generate penalty charges */
@@ -123,17 +143,22 @@ public class PaymentProcessing implements Scheduler {
 
         if (reservation.isNoShow()) {
 
+            for (BillChargeModel bill : reservation.getListBillCharges()) {
+                totalCharge += bill.getAmount();
+            }
+            currentBillID = BillChargeDriver.createBillChargeReturnID(LocalDate.now(), (-1 *totalCharge), tempString);
+             BillChargeDriver.attachReservation(currentBillID, reservation.getReservationID());
+            ReservationDriver.attachBillCharge(reservation.getReservationID(), currentBillID);
+            
             dayCharge = RateDriver.returnNoShowRate(currentRate);
             currentBillID = BillChargeDriver.createBillChargeReturnID(LocalDate.now(), dayCharge, tempString);
             //BillChargeModel currentBillCharge =BillChargeDriver.searchByID(currentBillID);
             BillChargeDriver.attachReservation(currentBillID, reservation.getReservationID());
             ReservationDriver.attachBillCharge(reservation.getReservationID(), currentBillID);
-            /*
-        Refund for arrival day +1 to depart day. 
-        Send a message to state reinbursement
-             */
-
+           
             reservation.setIsConcluded(true);
+            
+            //*****Call Payment Processing****
             reservation.setIsPaid(true);
             reservation.setRoom(RoomModel.EMPTY_ENTITY);
         } //else if modified
