@@ -59,6 +59,14 @@ public class PaymentProcessing implements Scheduler {
         ReservationDriver.attachBillCharge(reservation.getReservationID(), currentBillID);
 
     }
+    
+    public static double generateBillTotal(ReservationModel reservation){
+        double totalCharge = 0;
+        for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
+            totalCharge += reservation.getListBillCharges().get(i).getAmount();
+            }
+        return totalCharge;
+    }
       public static double processAccmBill(ReservationModel reservation) {
         
 //        Return ccInfo, and accom.bill
@@ -69,7 +77,7 @@ public class PaymentProcessing implements Scheduler {
         LocalDate currentDay = LocalDate.now();
         double totalCharge = 0;
         boolean paymentAccepted = false;
-        System.out.println("The CC info entered: " +currentCC);
+        //System.out.println("The CC info entered: " +currentCC);
        
         if (!paymentAccepted) {
             System.out.println("Process payment successful, payment accepted on day"
@@ -197,9 +205,8 @@ public class PaymentProcessing implements Scheduler {
         if (reservation.isNoShow()) {
             if (reservation.getReservationType() == ReservationType.CONVENTIONAL
                     || reservation.getReservationType() == ReservationType.INCENTIVE) {
-                for (BillChargeModel bill : reservation.getListBillCharges()) {
-                    totalCharge += bill.getAmount();
-                }
+                
+                totalCharge = generateBillTotal(reservation);
                 currentBillID = BillChargeDriver.createBillChargeReturnID(LocalDate.now(), (-1 * totalCharge), tempString);
                 BillChargeDriver.attachReservation(currentBillID, reservation.getReservationID());
                 ReservationDriver.attachBillCharge(reservation.getReservationID(), currentBillID);
