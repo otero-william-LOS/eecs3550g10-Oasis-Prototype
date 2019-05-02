@@ -78,7 +78,7 @@ public class RateScheduling implements Scheduler {
         }
         
         // iterate trhough the date range, modifying or creating dates as needed
-        while(currentDay != endDate.plusDays(1)){
+        while(!currentDay.equals(endDate.plusDays(1))){
             currentRate = RateDriver.searchByDate(currentDay);
             // check to see if the rate for this day was already set
             if(!(currentRate.getRateDate().equals(LocalDate.MIN))){
