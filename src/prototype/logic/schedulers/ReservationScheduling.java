@@ -93,7 +93,26 @@ public class ReservationScheduling implements Scheduler {
         return nowShowList;
     }
     
-  private static List<ReservationType> getAvaliableRsvTypes(LocalDate start) {
+  private static boolean incentiveTypeCheck(LocalDate start, LocalDate end) {
+        boolean isAv = false;
+        List<ReservationModel> rsvList = new ArrayList<>();
+
+        long diff = DAYS.between(LocalDate.now(), start) + 1;
+        int roomCount = 0;
+        double avg = 0;
+        if (diff >= 30) {
+            for (int i = 0; start.plusDays(i).isBefore(end.plusDays(1)); i++) {
+                roomCount += ReservationDriver.searchByDate(start.plusDays(i)).size();
+            }
+            
+            avg = roomCount/(45*diff);
+            if (avg < .6) isAv = true;
+        }
+
+        return isAv;
+    }
+
+    private static List<ReservationType> getAvaliableRsvTypes(LocalDate start, LocalDate end) {
         List<ReservationType> rsvTypeList = new ArrayList<>();
 
         rsvTypeList.add(ReservationType.CONVENTIONAL);
@@ -104,7 +123,8 @@ public class ReservationScheduling implements Scheduler {
             rsvTypeList.add(ReservationType.SIXTYADV);
         }
         if (start.isBefore(LocalDate.now().plusDays(31))) {
-            rsvTypeList.add(ReservationType.INCENTIVE);
+            if (incentiveTypeCheck(start, end)) 
+                rsvTypeList.add(ReservationType.INCENTIVE);
         }
         return rsvTypeList;
     }
