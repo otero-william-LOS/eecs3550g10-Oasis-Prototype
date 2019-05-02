@@ -129,11 +129,11 @@ public class ReservationScheduling implements Scheduler {
         return rsvTypeList;
     }
 
-    private static boolean typeAvliableCheck(ReservationType rsvType, LocalDate start) {
+    private static boolean typeAvliableCheck(ReservationType rsvType, LocalDate start, LocalDate end) {
         List<ReservationType> avaliableRsvTypes = new ArrayList<>();
         boolean containsType = false;
 
-        avaliableRsvTypes = getAvaliableRsvTypes(start);
+        avaliableRsvTypes = getAvaliableRsvTypes(start, end);
         for (int i = 0; i < avaliableRsvTypes.size(); i++) {
             if (avaliableRsvTypes.get(i) == rsvType) {
                 containsType = true;
@@ -172,7 +172,7 @@ public class ReservationScheduling implements Scheduler {
         }
 
 
-        if (typeAvliableCheck(rsvType, today.plusDays(typeModifier))) {
+        if (typeAvliableCheck(rsvType, today.plusDays(typeModifier),  today.plusDays(typeModifier))) {
             //Check For at least one occupany for duration of stay 
             int occupancyCount = 0;
             
