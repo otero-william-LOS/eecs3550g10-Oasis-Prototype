@@ -127,31 +127,33 @@ public class UserStoryPrototype {
                Random rand = new Random();
                 
                  ArrayList<ReservationModel> reservationTable = new ArrayList();
-                 for(int i = 0; i < 40; i++){
+                 for(int i = 0; i < 300; i++){
                   ReservationModel reservation = new ReservationModel();
                   reservationTable.add(reservation);
                  }
                 
                  // create two day stays
-                 for (int i = 0; i < 20; i++){
+                 for (int i = 0; i < 150; i++){
                     ReservationModel reservation = reservationTable.get(i);
                     int start = rand.nextInt(50) + 1;
                     LocalDate startDate = LocalDate.now();
-                    LocalDate endDate = LocalDate.now().plusDays(2);
-                  reservation.setDateArrive(startDate);
+                    startDate = startDate.plusDays(start);
+                    LocalDate endDate = startDate.plusDays(2);
+                    reservation.setDateArrive(startDate);
                     reservation.setDateDepart(endDate);
                     
                     reservationTable.set(i, reservation);
                  }
               // create 5 day stays
-                 for (int i = 20; i < 40; i++){
+                 for (int i = 151; i < 300; i++){
                     ReservationModel reservation = reservationTable.get(i);
                     int start = rand.nextInt(50) + 1;
                     LocalDate startDate = LocalDate.now();
-                    LocalDate endDate = LocalDate.now().plusDays(5);
+                    startDate = startDate.plusDays(start);
+                    LocalDate endDate = startDate.plusDays(5);
                    
                     reservation.setDateArrive(startDate);
-                   reservation.setDateDepart(endDate);
+                    reservation.setDateDepart(endDate);
                     
                     reservationTable.set(i, reservation);
                  }
@@ -258,7 +260,6 @@ public class UserStoryPrototype {
         catch(IOException e) {
             e.printStackTrace();
         }
-
         
         RateScheduling scheduler = new RateScheduling();
         String returnVal = scheduler.setRate(LocalDate.now(), 6969);
@@ -267,13 +268,12 @@ public class UserStoryPrototype {
         returnVal = scheduler.setRateRange(LocalDate.now(), LocalDate.now().plusDays(5), 6969);
         returnVal = scheduler.setRateRange(LocalDate.now().plusDays(400), LocalDate.now().plusDays(405), 6969);
         returnVal = scheduler.setRateRange(LocalDate.now().plusDays(1), LocalDate.now(), 6969);
-       
-        
+            
         EntityDatabase.DevUtilities.genRmOrgnzrPresentationData();
         RoomOrganizer roomies = new RoomOrganizer();
         roomies.initDailyAutoTask();
         
-         int i = 0;
+        int i = 0;
     }
     
 }
