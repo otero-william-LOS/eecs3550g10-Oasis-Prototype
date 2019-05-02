@@ -27,7 +27,7 @@ import java.util.Set;
 import prototype.data.drivers.BillChargeDriver;
 import prototype.data.models.BillChargeModel;
 import prototype.data.models.ReservationType;
-
+import static java.time.temporal.ChronoUnit.DAYS;
 /**
  *
  * @author jon
