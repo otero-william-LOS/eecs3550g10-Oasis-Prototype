@@ -341,7 +341,7 @@ public class ReservationScheduling implements Scheduler {
             long diff = DAYS.between(start, end) + 1;
 
             if (diff == occupancyCount) {
-                System.out.println("Is Avalaible!");
+                System.out.println("Is Available!");
                 //Can Create Reservation
 
                 int testRsvID = ReservationDriver.createReservationReturnID(start,
@@ -414,7 +414,7 @@ public class ReservationScheduling implements Scheduler {
         GuestModel searchResult = GuestDriver.searchByEmail(guestEmail);
 
         if (searchResult == GuestModel.EMPTY_ENTITY) {
-            System.out.println("No guest with this email address.");
+            System.out.println("No guest associated with this email address.");
         }
 
     }
