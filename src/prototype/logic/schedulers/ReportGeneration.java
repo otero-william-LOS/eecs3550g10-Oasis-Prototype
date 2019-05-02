@@ -112,7 +112,9 @@ public class ReportGeneration implements Scheduler {
         LocalDate currentDay = LocalDate.now();
         int length = 0;
         double income =0, incomeTotalDaily = 0, incomeTotal = 0;
-        String lineContents = "";
+        String lineContents = "Expected Room Income Report";
+        bw.write(lineContents);
+        bw.newLine();
         List<ReservationModel> reservations = new ArrayList<ReservationModel>();
       
         // get all the reservations for the nxt 30 days and write a line to the occupancy report
@@ -122,24 +124,17 @@ public class ReportGeneration implements Scheduler {
             lineContents += currentDay.plusDays(i) + " || ";
 
             for (ReservationModel reservation: reservations){
-                
-                length = ReservationDriver.getDayLength(reservation.getReservationID());
-                List<BillChargeModel> bills = new ArrayList<BillChargeModel>();
-                BillChargeModel bill = bills.get(0);
-
-                income = (bill.getAmount()) / length; // get the amount charged for the reservation and divide it by number of 
-                incomeTotalDaily += income;               
+                income++;
             }
-
+            
+            income = income * RateDriver.searchByDate(currentDay).getBaseRate();
+            incomeTotal = incomeTotal + income;
+            
             // create the string that will be written to the report file
-            lineContents += "Income for the day: " + incomeTotalDaily;
-
+            lineContents = "Income for the day: " + income;
+            
             bw.write(lineContents);
             bw.newLine();
-
-            // add to total and clear rooms and lineContents for next iteration of for loop
-            incomeTotal += incomeTotalDaily;
-            lineContents = "";
         }
 
         // line 31 
@@ -149,7 +144,7 @@ public class ReportGeneration implements Scheduler {
         
         // line 32
         incomeTotal = incomeTotal / 30;
-        lineContents = "Average income for the next 30 days: " + incomeTotal;
+        lineContents = "Average income for the next 30 days: " + (incomeTotal / 30);
         bw.write(lineContents);
         bw.newLine();
         bw.close();
