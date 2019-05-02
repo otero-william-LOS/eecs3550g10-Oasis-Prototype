@@ -106,7 +106,7 @@ public class PaymentProcessing implements Scheduler {
         accmbuf.close();
     }
 
-   ublic static void applyCancelationCharge(ReservationModel reservation){
+   public static void applyCancelationCharge(ReservationModel reservation){
         final String penaltyApplied = "Cancelation penalty applied on: ";
         RateModel currentRate = RateDriver.searchByDate(reservation.getDateArrive());
         double dayCharge = 0;
