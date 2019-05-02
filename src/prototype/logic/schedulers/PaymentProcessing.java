@@ -59,33 +59,51 @@ public class PaymentProcessing implements Scheduler {
         ReservationDriver.attachBillCharge(reservation.getReservationID(), currentBillID);
 
     }
-
-    // generateAccmBill(ReservationModel reservation){
-    public static void processAccmBill(ReservationModel reservation) {
-        // check if 1st bill day arrived day varies. Then void all the unmatched
-        // days until you reach DateArrive that match
-
-        // Call GenerateAccmBill to apply the total charge
-    }
-
-    public static void printAccmBill(ReservationModel reservation) throws IOException {
-        /*This is a systmem.out print, wasns't sure how we are suppose to do it
-        double charge = 0.0;
+      public static double processAccmBill(ReservationModel reservation) {
         
-        for (int i=0; i <reservation.getListBillCharges().size() ; i++) {
-         System.out.println("the following are bill charges for the reservation");
-         System.out.println(reservation.getListBillCharges().get(i).toString());
-         charge += reservation.getListBillCharges().get(i).getAmount();}
-            System.out.println("The charge is" +charge);
-         */
+//        Return ccInfo, and accom.bill
+//*	User enters payment accepted
+//*	Enter date paid and flag is paid, bllchrgs and rsv
+        generateAccmBill(reservation);
+        String currentCC = reservation.getGuest().getCCInfo();
+        LocalDate currentDay = LocalDate.now();
+        double totalCharge = 0;
+        boolean paymentAccepted = false;
+        System.out.println("The CC info entered: " +currentCC);
+       
+        if (!paymentAccepted) {
+            System.out.println("Process payment successful, payment accepted on day"
+            +currentDay);
+           for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
+            totalCharge += reservation.getListBillCharges().get(i).getAmount();
+            }
+           reservation.setDatePaid(currentDay);
+           reservation.setIsPaid(true);
+        }
+        else {
+            System.out.println ("there was an error processing the CC entered");
+            reservation.setIsPaid(false);
+        }
+        return totalCharge;
+        
+    }
+    
+
+    public static double printAccmBill(ReservationModel reservation) throws IOException {
+       
         File accmbill = new File("AccomondationBill.txt");
         FileOutputStream accmbillreport = new FileOutputStream(accmbill);
         BufferedWriter accmbuf = new BufferedWriter(new OutputStreamWriter(accmbillreport));
         LocalDate currentDay = LocalDate.now();
         List<ReservationModel> reservations = new ArrayList<ReservationModel>();
         String accmBillInfo = "";
-
+        double totalCharge=0;
+        
+        
         for (ReservationModel accmBillReservation : reservations) {
+            for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
+            totalCharge += reservation.getListBillCharges().get(i).getAmount();}
+           
             accmBillInfo += " Accomndation Bill for Guest: "
                     + reservation.getGuest().getName()
                     + " with Reservation Type: "
@@ -97,15 +115,17 @@ public class PaymentProcessing implements Scheduler {
                     + " and  Departure Date: "
                     + reservation.getDateDepart().toString()
                     + " Total Charge is: "
-                    + reservation.
-                            getListBillCharges()
+                    + totalCharge 
                     + "Printed on: " + currentDay;
             accmbuf.write(accmBillInfo);
             accmbuf.newLine();
-        }
+          }
         accmbuf.close();
+        return totalCharge;
     }
 
+    
+    
    public static void applyCancelationCharge(ReservationModel reservation){
         final String penaltyApplied = "Cancelation penalty applied on: ";
         RateModel currentRate = RateDriver.searchByDate(reservation.getDateArrive());
