@@ -92,7 +92,7 @@ public class ReservationScheduling implements Scheduler {
 
         if (typeAvliableCheck(rsvType, dateArrive, dateDepart)) {
             ReservationDriver.modifyReservationType(rsvID, rsvType);
-            changeMade = false;
+            changeMade = true;
         }
 
         return changeMade;
