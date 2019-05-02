@@ -16,7 +16,7 @@ import prototype.data.models.RoomModel;
 public class ReservationScheduling implements Scheduler {
 
     //<editor-fold defaultstate="collapsed" desc="Create New Reservation">
-    public static int createReservation(LocalDate dateArrive, LocalDate dateDepart, ReservationType rsvType) {
+    public static int createReservation(LocalDate dateArrive, LocalDate dateDepart) {
 
         // received dates. create reservation using basic contstructor
         // there will need to be logic to determine if the hotel will be full
@@ -49,11 +49,11 @@ public class ReservationScheduling implements Scheduler {
         long diff = DAYS.between(dateArrive, dateDepart) + 1;
 
         if (diff == occupancyCount) {
-            if (reservationTypeAvliableCheck(rsvType, dateArrive, dateDepart)) {
+            if (getRsvType(dateArrive, dateDepart).equals(ReservationType.PREPAID)) {
                 int testRsvID = ReservationDriver.createReservationReturnID(dateArrive,
                         dateDepart);
                 ReservationDriver.modifyReservationType(
-                        testRsvID, rsvType);
+                        testRsvID, getRsvType(dateArrive, dateDepart));
                 returnID = testRsvID;
 
                 PaymentProcessing.
@@ -110,17 +110,17 @@ public class ReservationScheduling implements Scheduler {
         ReservationDriver.modifyDatePaid(rsvID, datePaid);
     }
 
-    public static boolean modifyReservationType(int rsvID, ReservationType rsvType) {
+    public static boolean modifyReservationType(int rsvID) {
         boolean changeMade = false;
-        LocalDate dateArrive
+        LocalDate arriveDate
                 = ReservationDriver.searchByID(rsvID).getDateArrive();
-        LocalDate dateDepart
+        LocalDate departDate
                 = ReservationDriver.searchByID(rsvID).getDateDepart();
 
-        if (reservationTypeAvliableCheck(rsvType, dateArrive, dateDepart)) {
-            ReservationDriver.modifyReservationType(rsvID, rsvType);
-            changeMade = false;
-        }
+      
+            ReservationDriver.modifyReservationType(rsvID, getRsvType(arriveDate,departDate));
+
+        
 
         return changeMade;
     }
@@ -194,12 +194,35 @@ public class ReservationScheduling implements Scheduler {
     }
 
     public static void cancelReservation(int rsvID) {
+        //three cases
+        //Incentive -> Conventional: cancel more than 3 days in advance (no charge)
+        // Incentive -> Conventional: cancel less than 3 days in advance (charge)
+        // SixtyDayIn Advance: cancel when is Paid is false (no Charge)
+        
+        //steps 
+        //Apply charge if needed
+        //mark room as vacant
+        // set is concluded 
         ReservationModel rsv = ReservationDriver.searchByID(rsvID);
         LocalDate dateArrive = rsv.getDateArrive();
-        
         long diff = DAYS.between(LocalDate.now(), dateArrive) + 1;
-        
-       // if(diff <= 3)
+        if ((rsv.getReservationType().equals(ReservationType.INCENTIVE) && 
+                (rsv.getReservationType().equals(ReservationType.CONVENTIONAL)))){
+            if(diff <= 3){
+                PaymentProcessing.processAccmBillCancel(rsv);
+                ReservationDriver.deattachRoom(rsv);
+                rsv.setIsConcluded(true);
+            }
+            
+        }
+        else if (rsv.getReservationType().equals(ReservationType.SIXTYADV)){
+            if (!rsv.isPaid()){
+                ReservationDriver.deattachRoom(rsv);
+                //May need to negate the charge 
+                rsv.setIsConcluded(true);
+            }
+        } else; // Do nothing
+
     }
     
     public static List<ReservationModel> getNoShowList() {
@@ -258,44 +281,24 @@ public class ReservationScheduling implements Scheduler {
         return isAv;
     }
 
-    private static List<ReservationType> getListAvaliableRsvTypes(LocalDate start, LocalDate end) {
-        List<ReservationType> rsvTypeList = new ArrayList<>();
+    private static ReservationType getRsvType(LocalDate start, LocalDate end) {
+        ReservationType rsvType = ReservationType.CONVENTIONAL;
 
-        rsvTypeList.add(ReservationType.CONVENTIONAL);
         if (start.isAfter(LocalDate.now().plusDays(89))) {
-            rsvTypeList.add(ReservationType.PREPAID);
+            rsvType = (ReservationType.PREPAID);
         }
-        if (start.isAfter(LocalDate.now().plusDays(59))) {
-            rsvTypeList.add(ReservationType.SIXTYADV);
+        else if (start.isAfter(LocalDate.now().plusDays(59))) {
+            rsvType = (ReservationType.SIXTYADV);
         }
-        if (start.isBefore(LocalDate.now().plusDays(31))) {
+        else if (start.isBefore(LocalDate.now().plusDays(31))) {
             if (incentiveTypeCheck(start, end)) {
-                rsvTypeList.add(ReservationType.INCENTIVE);
+                if (incentiveTypeCheck(start, end)) rsvType = (ReservationType.INCENTIVE);
             }
         }
-        return rsvTypeList;
+        return rsvType;
     }
 
-    private static boolean reservationTypeAvliableCheck(ReservationType rsvType, LocalDate start, LocalDate end) {
-        List<ReservationType> avaliableRsvTypes = new ArrayList<>();
-        boolean containsType = false;
-
-        avaliableRsvTypes = getListAvaliableRsvTypes(start, end);
-        for (int i = 0; i < avaliableRsvTypes.size(); i++) {
-            if (avaliableRsvTypes.get(i) == rsvType) {
-                containsType = true;
-            }
-
-        }
-        if (!containsType || rsvType == ReservationType.CONVENTIONAL) {
-            // System.out.println("Type Check: Pass");
-        } else {
-            // System.out.println("Type Check: Fail");
-        }
-
-        return containsType;
-
-    }
+ 
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Test Scripts">
     
@@ -320,7 +323,7 @@ public class ReservationScheduling implements Scheduler {
 
         }
 
-        if (reservationTypeAvliableCheck(rsvType, today.plusDays(typeModifier), today.plusDays(typeModifier))) {
+        if (true) {
             //Check For at least one occupany for duration of stay 
             int occupancyCount = 0;
 
@@ -462,6 +465,11 @@ public class ReservationScheduling implements Scheduler {
 
     }
     //</editor-fold>
+    
+    
+    public static void generateDummyDataSet1(){
+        // under 60% occupancy for seven day period
+        // 40 reservations In Advance   
+    }
 
 }
-
