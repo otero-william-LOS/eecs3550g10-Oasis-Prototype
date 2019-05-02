@@ -70,7 +70,6 @@ public class ReportGeneration implements Scheduler {
     // for each day containing all the specified information
     for(int i = 1; i < 31; i++){
         reservations = ReservationDriver.searchByDate(currentDay.plusDays(i));
-        lineContents = currentDay.plusDays(i) + " || ";
 
         for (ReservationModel reservation: reservations){
             if(reservation.getReservationType().toString() == "prepaid")
@@ -86,11 +85,11 @@ public class ReportGeneration implements Scheduler {
         }
 
         // create the string that will be written to the report file
-        lineContents = "Number of prepaid reservations: " + prepaid + 
-                " || Number of sixty-day reservations: " + sixtyday +
-                " || Number of conventional reservations: " + conventional +
-                " || Number of incentive reservations: " + incentive + 
-                " || Number of rooms reserved: " + rooms;
+        lineContents = "Date: " + currentDay.plusDays(i).toString() + " || Prepaid reservations: " + prepaid + 
+                " || Sixty-day reservations: " + sixtyday +
+                " || Conventional reservations: " + conventional +
+                " || Incentive reservations: " + incentive + 
+                " || Rooms reserved: " + rooms;
 
         bw.write(lineContents);
         bw.newLine();
