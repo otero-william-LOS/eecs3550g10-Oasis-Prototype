@@ -58,14 +58,19 @@ public class ReportGeneration implements Scheduler {
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
     LocalDate currentDay = LocalDate.now();
     int prepaid =0, sixtyday =0, conventional =0, incentive =0, rooms = 0, total =0;
-    String lineContents = "";
+    
+    // title line
+    String lineContents = "Occupancy Report";
+    bw.write(lineContents);
+    bw.newLine();
+        
     List<ReservationModel> reservations = new ArrayList<ReservationModel>();
 
     // get all the reservations for the nxt 30 days and write a line to the occupancy report
     // for each day containing all the specified information
     for(int i = 1; i < 31; i++){
         reservations = ReservationDriver.searchByDate(currentDay.plusDays(i));
-        lineContents += currentDay.plusDays(i) + " || ";
+        lineContents = currentDay.plusDays(i) + " || ";
 
         for (ReservationModel reservation: reservations){
             if(reservation.getReservationType().toString() == "prepaid")
@@ -81,7 +86,7 @@ public class ReportGeneration implements Scheduler {
         }
 
         // create the string that will be written to the report file
-        lineContents += "Number of prepaid reservations: " + prepaid + 
+        lineContents = "Number of prepaid reservations: " + prepaid + 
                 " || Number of sixty-day reservations: " + sixtyday +
                 " || Number of conventional reservations: " + conventional +
                 " || Number of incentive reservations: " + incentive + 
@@ -93,7 +98,6 @@ public class ReportGeneration implements Scheduler {
         // add to total and clear rooms and lineContents for next iteration of for loop
         total += rooms;
         rooms = 0;
-        lineContents = "";
     }
     
     // get the average occupancy for the next 30 days and write it to file then save file
@@ -112,6 +116,8 @@ public class ReportGeneration implements Scheduler {
         LocalDate currentDay = LocalDate.now();
         int length = 0;
         double income =0, incomeTotalDaily = 0, incomeTotal = 0;
+        
+        // title line
         String lineContents = "Expected Room Income Report";
         bw.write(lineContents);
         bw.newLine();
@@ -121,7 +127,7 @@ public class ReportGeneration implements Scheduler {
         // for each day containing all the specified information
         for(int i = 1; i < 31; i++){
             reservations = ReservationDriver.searchByDate(currentDay.plusDays(i));
-            lineContents += currentDay.plusDays(i) + " || ";
+            lineContents = "Date: " + currentDay.plusDays(i) + " || ";
 
             for (ReservationModel reservation: reservations){
                 income++;
@@ -131,10 +137,12 @@ public class ReportGeneration implements Scheduler {
             incomeTotal = incomeTotal + income;
             
             // create the string that will be written to the report file
-            lineContents = "Income for the day: " + income;
+            lineContents += "Income for the day: " + income;
             
             bw.write(lineContents);
             bw.newLine();
+            
+            income = 0;
         }
 
         // line 31 
@@ -157,7 +165,12 @@ public class ReportGeneration implements Scheduler {
 
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
         LocalDate currentDay = LocalDate.now();
-        String lineContents = "";
+        
+        // title line
+        String lineContents = "Daily Arrivals Report";
+        bw.write(lineContents);
+        bw.newLine();
+        
         List<ReservationModel> reservations = new ArrayList<ReservationModel>();
 
         reservations = ReservationDriver.searchByDateArrive(currentDay);
@@ -182,7 +195,12 @@ public class ReportGeneration implements Scheduler {
         FileOutputStream fos = new FileOutputStream(fout);
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
         LocalDate currentDay = LocalDate.now();
-        String lineContents = "";
+        
+        // title line
+        String lineContents = "Daily Occupancy Report";
+        bw.write(lineContents);
+        bw.newLine();
+        
         List<ReservationModel> reservations = new ArrayList<ReservationModel>();
         reservations = ReservationDriver.searchByDate(currentDay);
         reservations.sort((x, y) -> Short.toString(x.getRoom().getRoomID()).compareTo(Short.toString(y.getRoom().getRoomID())));
@@ -200,6 +218,41 @@ public class ReportGeneration implements Scheduler {
         }
 
         bw.close();
+    }
+    
+    public static void writeIncentiveReport() throws IOException {
+        double dailyLoss = 0, totalLoss = 0;
+        LocalDate currentDay = LocalDate.now();
+        String lineContents = "";
+        
+        File fout = new File("IncentiveReport.txt");
+        FileOutputStream fos = new FileOutputStream(fout);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+        
+        // title line
+        lineContents = "Incentive Report";
+        bw.write(lineContents);
+        bw.newLine();
+        
+        for(int i = 1; i < 31; i++){
+            List<RoomModel> rooms = RoomDriver.returnVacantRooms();
+            RateModel rate = RateDriver.searchByDate(currentDay);
+                      
+            dailyLoss = rooms.size() * rate.getBaseRate();
+            totalLoss = totalLoss + dailyLoss;
+            lineContents = "Date: " + currentDay.toString() + " || Total Discount: " + dailyLoss;
+            bw.write(lineContents);
+            bw.newLine();
+        }
+        
+        lineContents = "Total discount for the next 30 days: " + totalLoss;
+        bw.write(lineContents);
+        bw.newLine();
+            
+        lineContents = "Average discount for the next 30 days: " + (totalLoss / 30);
+        bw.write(lineContents);
+        bw.close();
+          
     }
     
 }
