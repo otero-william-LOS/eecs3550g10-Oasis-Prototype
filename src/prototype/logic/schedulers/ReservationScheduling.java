@@ -486,12 +486,20 @@ public class ReservationScheduling implements Scheduler {
             int rsvID = createReservation(today,
                     today.plusDays(getRand(1, 7)));
             if (rsvID != 0) {
-                ReservationDriver.attachRoom(rsvID, i + 1);
-                RoomDriver.flagRoomAsOccupied(i + 1);
-                RoomDriver.attachReservation(i + 1, rsvID);
+                RoomModel room = RoomModel.EMPTY_ENTITY ;
                 int guestID = makeDummyGuest();
 
                 attachReservationToGuest(rsvID, guestID);
+                               if ((today.equals(LocalDate.now()) || today.isBefore(LocalDate.now()))  && !RoomDriver.returnVacantRooms().isEmpty() ){
+                    room = RoomDriver.returnVacantRooms().get(0);
+                    RoomDriver.flagRoomAsOccupied( room);
+
+                ReservationDriver.attachRoom(rsvID, 
+                        i);    
+                
+                RoomDriver.attachReservation( i, rsvID);
+                } 
+                
                 proccessNewReservation(rsvID);
 
                 ReservationScheduling.modifyReservationIsPaid(rsvID, false);
@@ -519,7 +527,7 @@ public class ReservationScheduling implements Scheduler {
                     dayModifier = 42;
                     break;
                 default: 
-                    dayModifier = 28;
+                    dayModifier = 15;
                     break;
             }
 
@@ -566,7 +574,7 @@ public class ReservationScheduling implements Scheduler {
         //System.out.println(RoomDriver.returnOccupiedRooms().size() + " WH");
 
             makeDummyFutureReservations(40, LocalDate.now());
-            //ReportGeneration.writeDailyOccupancyReport();
+            ReportGeneration.writeDailyOccupancyReport();
         
 
     }
@@ -626,7 +634,6 @@ public class ReservationScheduling implements Scheduler {
         //System.out.println(RoomDriver.returnOccupiedRooms().size() + " WH");
 
             makeDummyFutureReservations(40, LocalDate.now());
-            ReportGeneration.writeDailyOccupancyReport();
         
 
     }
