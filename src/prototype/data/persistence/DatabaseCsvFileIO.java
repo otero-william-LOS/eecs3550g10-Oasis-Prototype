@@ -682,7 +682,7 @@ public class DatabaseCsvFileIO {
             }
             public final static String getCsvHeader(){
                 StringBuilder csvHeader = new StringBuilder();
-                csvHeader.append("GuestID,Name,CCInfo,Email");
+                csvHeader.append("GuestID,Name,Email,CCInfo");
                 return csvHeader.toString();
             }
     
