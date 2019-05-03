@@ -43,6 +43,10 @@ public class GuestDriver implements DataDriver {
         return EntityDatabase.GuestTable.retrieveByEmail(email);
     }
     
+    public static List<GuestModel> returnAllGuests(){
+        return EntityDatabase.GuestTable.retrieveAllGuests();
+    }
+    
     // search by rsv ref/id
     public static GuestModel searchByReservation(int rsvID) {
         return EntityDatabase.GuestTable.retrieveByReservation(rsvID);
