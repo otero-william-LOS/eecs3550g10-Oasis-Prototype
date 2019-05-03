@@ -78,7 +78,7 @@ public class ConsolePrototype {
 
         while (command == 0) {
             try {
-                command = Double.parseDouble(scanner.next());
+                command = Double.parseDouble(scanner.nextLine());
 
             } catch (Exception e) {
                 System.out.println("\t\tFailed Conversion!: " + e);
@@ -395,21 +395,25 @@ public class ConsolePrototype {
                 case 1:
                     System.out.println("New Arrival Date: ");
                     ReservationScheduling.modifyReservationArriveDate(rsv.getReservationID(), getDateInput());
+                    PaymentProcessing.applyPenaltyCharge(rsv);
                     System.out.println("Complete!");
                     command = 7;
                     break;
                 case 2:
                     System.out.println("New Depart Date: ");
                     ReservationScheduling.modifyReservationDepartDate(rsv.getReservationID(), getDateInput());
+                     PaymentProcessing.applyPenaltyCharge(rsv);
                     System.out.println("Complete!");
                     command = 7;
                     break;
                 case 3:
                     System.out.println("New Arrival Date: ");
                     ReservationScheduling.modifyReservationArriveDate(rsv.getReservationID(), getDateInput());
+                    
 
                     System.out.println("New DepartDate: ");
                     ReservationScheduling.modifyReservationDepartDate(rsv.getReservationID(), getDateInput());
+                     PaymentProcessing.applyPenaltyCharge(rsv);
                     System.out.println("Complete!");
                     command = 7;
                     break;
