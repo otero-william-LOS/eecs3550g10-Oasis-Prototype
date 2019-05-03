@@ -566,7 +566,7 @@ public class ReservationScheduling implements Scheduler {
         //System.out.println(RoomDriver.returnOccupiedRooms().size() + " WH");
 
             makeDummyFutureReservations(40, LocalDate.now());
-            ReportGeneration.writeDailyOccupancyReport();
+            //ReportGeneration.writeDailyOccupancyReport();
         
 
     }
