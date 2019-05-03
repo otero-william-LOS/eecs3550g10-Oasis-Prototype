@@ -31,7 +31,6 @@ import prototype.logic.schedulers.RateScheduling;
 import prototype.logic.schedulers.ReservationScheduling;
 import prototype.logic.schedulers.RoomOrganizer;
 
-
 /**
  *
  * @author wotero
@@ -42,7 +41,7 @@ public class UserStoryPrototype {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-     /*   // TODO code application logic here
+        /*   // TODO code application logic here
         
         //<editor-fold defaultstate="collapsed" desc="Room Driver Test Scripts">
         System.out.println("Testing Gen All Empty");
@@ -262,50 +261,52 @@ public class UserStoryPrototype {
         int x = 5;
         
         
-        */
-        /*ReservationScheduling.generateDummyDataSet1();
+         */
+ /*ReservationScheduling.generateDummyDataSet1();
        /* ReportGeneration.writeDailyArrivalsReport();
             ReportGeneration.writeOccupancyReport();
             ReportGeneration.writeDailyOccupancyReport();
             ReportGeneration.writeIncomeReport();
             ReportGeneration.writeIncentiveReport();*/
-        
-        
+
         //Populate Dummy Data (Havent checked if Los got his CSV Component to work yet)
         //ReservationScheduling.generateDummyDataSet1();
-        try {
-            EntityDatabase.importEntityTables();
-          }
-          catch(Exception e) {
+        //try {
+        EntityDatabase.importEntityTables();
+        // }
+        // catch(Exception e) {
+        if (EntityDatabase.RateTable.retriveAllRates().isEmpty()) {
             System.out.println("The database files were not initialized,/n "
-                    + "which test case scenario would you like to use?\n" +
-                    "Type 1 for scenario 1 which will initialze the hotel with reservations for\n"
+                    + "which test case scenario would you like to use?\n"
+                    + "Type 1 for scenario 1 which will initialze the hotel with reservations for\n"
                     + "the next week at less than 60% occupancy every day. With the rates set for the next year"
                     + "\n Type 2 for scenario 2 that initializes the hotel for the next week at above 60% occupancy.\n "
                     + "With rates set for the next year"
                     + "\n type 3 for scenario 3 that initializes the hotel for the next week at 100% capacity.\n"
                     + "With rates set for the next year");
+            
+            System.out.println("\nInput:");
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();
             boolean dontExit = true;
-            while(dontExit = true){
-            if(input.equals("1")){
-                dontExit = false;
-                ReservationScheduling.generateDummyDataSet1();
-            }else if(input.equals("2")){
-                dontExit = false;
-                ReservationScheduling.generateDummyDataSet2();
-            }else if(input.equals("3")){
-                dontExit = false;
-                ReservationScheduling.generateDummyDataSet3();
+            while (dontExit = true) {
+                if (input.equals("1")) {
+                    dontExit = false;
+                    ReservationScheduling.generateDummyDataSet1();
+                } else if (input.equals("2")) {
+                    dontExit = false;
+                    ReservationScheduling.generateDummyDataSet2();
+                } else if (input.equals("3")) {
+                    dontExit = false;
+                    ReservationScheduling.generateDummyDataSet3();
+                }
+
+                //  }
+                ConsolePrototype.startSystem();
+                EntityDatabase.exportEntityTables();
             }
-                
-          }
-        
-        ConsolePrototype.startSystem();
-        EntityDatabase.exportEntityTables();
-        
+
+        }
+
     }
-    
-}
 }
