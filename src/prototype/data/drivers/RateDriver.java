@@ -86,7 +86,7 @@ public class RateDriver implements DataDriver {
                 typeRate = MLTPLR_INCNTV;
                 break;
             default:
-                System.out.println("Something fucked up, if here");
+                System.out.println("ERROR");
                 //throw new AssertionError(type.name());
         }
         return rate.getBaseRate() * typeRate;
