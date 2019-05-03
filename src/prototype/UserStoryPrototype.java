@@ -24,6 +24,7 @@ import prototype.data.models.ReservationModel;
 import prototype.logic.schedulers.ReportGeneration;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Scanner;
 import prototype.data.models.BillChargeModel;
 import prototype.data.models.ReservationType;
 import prototype.logic.schedulers.RateScheduling;
@@ -271,9 +272,40 @@ public class UserStoryPrototype {
         
         
         //Populate Dummy Data (Havent checked if Los got his CSV Component to work yet)
-   ReservationScheduling.generateDummyDataSet1();
+        //ReservationScheduling.generateDummyDataSet1();
+        try {
+            EntityDatabase.importEntityTables();
+          }
+          catch(Exception e) {
+            System.out.println("The database files were not initialized,/n "
+                    + "which test case scenario would you like to use?\n" +
+                    "Type 1 for scenario 1 which will initialze the hotel with reservations for\n"
+                    + "the next week at less than 60% occupancy every day. With the rates set for the next year"
+                    + "\n Type 2 for scenario 2 that initializes the hotel for the next week at above 60% occupancy.\n "
+                    + "With rates set for the next year"
+                    + "\n type 3 for scenario 3 that initializes the hotel for the next week at 100% capacity.\n"
+                    + "With rates set for the next year");
+            Scanner scanner = new Scanner(System.in);
+            String input = scanner.nextLine();
+            boolean dontExit = true;
+            while(dontExit = true){
+            if(input.equals("1")){
+                dontExit = false;
+                ReservationScheduling.generateDummyDataSet1();
+            }else if(input.equals("2")){
+                dontExit = false;
+                ReservationScheduling.generateDummyDataSet2();
+            }else if(input.equals("3")){
+                dontExit = false;
+                ReservationScheduling.generateDummyDataSet3();
+            }
+                
+          }
+        
         ConsolePrototype.startSystem();
+        EntityDatabase.exportEntityTables();
         
     }
     
+}
 }
