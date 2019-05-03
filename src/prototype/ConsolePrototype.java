@@ -77,7 +77,7 @@ public class ConsolePrototype {
 
         while (command == 0) {
             try {
-                command = Double.parseDouble(scanner.next());
+                command = Double.parseDouble(scanner.nextLine());
 
             } catch (Exception e) {
                 System.out.println("\t\tFailed Conversion!: " + e);
