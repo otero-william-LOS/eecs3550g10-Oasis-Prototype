@@ -65,7 +65,6 @@ public class ReservationScheduling implements Scheduler {
         }
 
         return returnID;
-
     }
 
     public static void modifyReservationArriveDate(int rsvID, LocalDate arriveDate) {
