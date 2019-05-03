@@ -14,6 +14,7 @@ import prototype.data.persistence.EntityDatabase;
 import prototype.data.drivers.RateDriver;
 import prototype.data.drivers.RoomDriver;
 import prototype.data.drivers.GuestDriver;
+import prototype.data.drivers.BillChargeDriver;
 import prototype.data.models.GuestModel;
 import prototype.data.models.RoomModel;
 import prototype.data.models.ReservationModel;
@@ -23,6 +24,7 @@ import prototype.data.models.ReservationModel;
 import prototype.logic.schedulers.ReportGeneration;
 import java.io.IOException;
 import java.time.LocalDate;
+import prototype.data.models.BillChargeModel;
 import prototype.data.models.ReservationType;
 import prototype.logic.schedulers.RateScheduling;
 import prototype.logic.schedulers.RoomOrganizer;
@@ -130,12 +132,13 @@ public class UserStoryPrototype {
                  for(int i = 0; i < 300; i++){
                   ReservationModel reservation = new ReservationModel();
                   reservationTable.add(reservation);
+                  
                  }
                 
                  // create two day stays
                  for (int i = 0; i < 150; i++){
                     ReservationModel reservation = reservationTable.get(i);
-                    int start = rand.nextInt(50) + 1;
+                    int start = rand.nextInt(50);
                     LocalDate startDate = LocalDate.now();
                     startDate = startDate.plusDays(start);
                     LocalDate endDate = startDate.plusDays(2);
@@ -147,7 +150,7 @@ public class UserStoryPrototype {
               // create 5 day stays
                  for (int i = 151; i < 300; i++){
                     ReservationModel reservation = reservationTable.get(i);
-                    int start = rand.nextInt(50) + 1;
+                    int start = rand.nextInt(50);
                     LocalDate startDate = LocalDate.now();
                     startDate = startDate.plusDays(start);
                     LocalDate endDate = startDate.plusDays(5);
@@ -182,6 +185,7 @@ public class UserStoryPrototype {
                     newRSV.add(ReservationDriver.searchByID(rsvId));
                     guestperson.setListRsv(newRSV);
                     guestName = "";
+                    
 
                 }
         //         
@@ -273,7 +277,14 @@ public class UserStoryPrototype {
         RoomOrganizer roomies = new RoomOrganizer();
         roomies.initDailyAutoTask();
         
-        int i = 0;
+
+        List<BillChargeModel> charges = BillChargeDriver.returnAllBillCharges();
+        List<RoomModel> rooms = RoomDriver.returnAllRooms();
+        List<GuestModel> guestBitches = GuestDriver.returnAllGuests();
+        List<RateModel> rateTbl = RateDriver.returnAllRates();
+        List<ReservationModel> rsvTable =  ReservationDriver.returnAllReservations();
+        EntityDatabase.exportEntityTables();
+        int x = 5;
     }
     
 }
