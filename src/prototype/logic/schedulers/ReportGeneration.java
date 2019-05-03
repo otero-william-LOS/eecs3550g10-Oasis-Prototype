@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import prototype.data.drivers.BillChargeDriver;
 import prototype.data.models.BillChargeModel;
+import prototype.data.models.ReservationType;
 
 /**
  *
@@ -54,15 +55,22 @@ public class ReportGeneration implements Scheduler {
         //  TODO will be updated as new user stories are created.
     }
 
+    public static void makeMyFolder(String path) {
+        File directory = new File(path);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+    }
+
     public static void writeOccupancyReport() {
-        File fout = new File("OccupancyReport.txt");
+        makeMyFolder("Reports");
+        File fout = new File("Reports\\OccupancyReport.txt");
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(fout);
 
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
             LocalDate currentDay = LocalDate.now();
-            int prepaid = 0, sixtyday = 0, conventional = 0, incentive = 0, rooms = 0, total = 0;
 
             // title line
             String lineContents = "Occupancy Report";
@@ -70,20 +78,21 @@ public class ReportGeneration implements Scheduler {
             bw.newLine();
 
             List<ReservationModel> reservations = new ArrayList<ReservationModel>();
-
+            int total = 0;
             // get all the reservations for the nxt 30 days and write a line to the occupancy report
             // for each day containing all the specified information
             for (int i = 1; i < 31; i++) {
+                int prepaid = 0, sixtyday = 0, conventional = 0, incentive = 0, rooms = 0;
                 reservations = ReservationDriver.searchByDate(currentDay.plusDays(i));
 
                 for (ReservationModel reservation : reservations) {
-                    if (reservation.getReservationType().toString() == "prepaid") {
+                    if (reservation.getReservationType().equals(ReservationType.PREPAID)) {
                         prepaid++;
-                    } else if (reservation.getReservationType().toString() == "sixtyDay") {
+                    } else if (reservation.getReservationType().equals(ReservationType.SIXTYADV)) {
                         sixtyday++;
-                    } else if (reservation.getReservationType().toString() == "conventional") {
+                    } else if (reservation.getReservationType().equals(ReservationType.CONVENTIONAL)) {
                         conventional++;
-                    } else if (reservation.getReservationType().toString() == "incentive") {
+                    } else if (reservation.getReservationType().equals(ReservationType.INCENTIVE)) {
                         incentive++;
                     }
 
@@ -119,7 +128,8 @@ public class ReportGeneration implements Scheduler {
     }
 
     public static void writeIncomeReport() {
-        File fout = new File("IncomeReport.txt");
+        makeMyFolder("Reports");
+        File fout = new File("Reports\\IncomeReport.txt");
 
         try {
             FileOutputStream fos = new FileOutputStream(fout);
@@ -176,7 +186,8 @@ public class ReportGeneration implements Scheduler {
 
     //TODO: the report needs to be sorted by guest name still
     public static void writeDailyArrivalsReport() {
-        File fout = new File("DailyArrivalsReport.txt");
+        makeMyFolder("Reports");
+        File fout = new File("Reports\\DailyArrivalsReport.txt");
 
         try {
             FileOutputStream fos = new FileOutputStream(fout);
@@ -212,7 +223,8 @@ public class ReportGeneration implements Scheduler {
 
     //TODO: the report needs to be sorted by room number and maybe remove no shows?
     public static void writeDailyOccupancyReport() {
-        File fout = new File("DailyOccupancyReport.txt");
+        makeMyFolder("Reports");
+        File fout = new File("Reports\\DailyOccupancyReport.txt");
 
         try {
             FileOutputStream fos = new FileOutputStream(fout);
@@ -225,7 +237,13 @@ public class ReportGeneration implements Scheduler {
             bw.newLine();
 
             List<ReservationModel> reservations = new ArrayList<ReservationModel>();
-            reservations = ReservationDriver.searchByDate(currentDay);
+            for (ReservationModel rsv : ReservationDriver.returnAllReservations()) {
+                if (rsv.getDateArrive().minusDays(1).isBefore(currentDay)
+                        && rsv.getDateDepart().plusDays(1).isAfter(currentDay)) {
+                    reservations.add(rsv);
+                }
+            }
+            // reservations = ReservationDriver.searchByDate(currentDay);
             reservations.sort((x, y) -> Short.toString(x.getRoom().getRoomID()).compareTo(Short.toString(y.getRoom().getRoomID())));
             for (ReservationModel reservation : reservations) {
                 lineContents = "Room ID: " + reservation.getRoom().getRoomID();
@@ -250,7 +268,8 @@ public class ReportGeneration implements Scheduler {
         LocalDate currentDay = LocalDate.now();
         String lineContents = "";
 
-        File fout = new File("IncentiveReport.txt");
+        makeMyFolder("Reports");
+        File fout = new File("Reports\\IncentiveReport.txt");
 
         try {
             FileOutputStream fos = new FileOutputStream(fout);
@@ -261,7 +280,7 @@ public class ReportGeneration implements Scheduler {
             bw.write(lineContents);
             bw.newLine();
 
-            for (int i = 1; i < 31; i++) {
+            for (int i = 0; i < 30; i++) {
                 List<ReservationModel> reservations = ReservationDriver.searchByDate(currentDay.plusDays(i));
                 RateModel rate = RateDriver.searchByDate(currentDay.plusDays(i));
 
