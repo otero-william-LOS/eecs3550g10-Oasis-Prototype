@@ -230,40 +230,13 @@ public class UserStoryPrototype {
         rtList.forEach(rt -> System.out.println("\t\t" + rt));
         System.out.println("\tNumber of Rates:" + Integer.toString(rtList.size()));
         
-        try {
+     
             ReportGeneration.writeDailyArrivalsReport();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        
-        try {
             ReportGeneration.writeOccupancyReport();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        
-        try {
             ReportGeneration.writeDailyOccupancyReport();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        
-        try {
             ReportGeneration.writeIncomeReport();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        
-        try {
             ReportGeneration.writeIncentiveReport();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
+     
         
         RateScheduling scheduler = new RateScheduling();
         String returnVal = scheduler.setRate(LocalDate.now(), 6969);
