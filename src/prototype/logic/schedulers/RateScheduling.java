@@ -37,7 +37,7 @@ public class RateScheduling implements Scheduler {
         //  TODO will be updated as new user stories are created.
     }
     
-    public String setRate(LocalDate day, double rate){
+    public static String setRate(LocalDate day, double rate){
         String returnString = ""; // return this shit to the output boxi  think will be there i nthe gui
         RateModel currentRate = RateDriver.searchByDate(day);
         
@@ -61,7 +61,7 @@ public class RateScheduling implements Scheduler {
         return returnString;
     }
     
-    public String setRateRange(LocalDate startDate, LocalDate endDate, double rate){
+    public static String setRateRange(LocalDate startDate, LocalDate endDate, double rate){
     
         String returnString = ""; // return this shit to the output boxi  think will be there i nthe gui
         LocalDate currentDay = startDate;
