@@ -716,7 +716,7 @@ public class ConsolePrototype {
                     + "6. Reports\n"
                     + "7. Manage Functions\n"
                     + "8. Shutdown");
-            System.out.print(": ");
+            System.out.println("Selection: ");
             command = getCommand();
 
             switch (command) {
