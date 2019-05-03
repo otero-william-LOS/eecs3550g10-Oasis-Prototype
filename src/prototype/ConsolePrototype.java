@@ -17,6 +17,7 @@ import prototype.data.drivers.ReservationDriver;
 import prototype.data.models.GuestModel;
 import prototype.data.models.ReservationModel;
 import prototype.data.models.ReservationType;
+import prototype.data.persistence.EntityDatabase;
 import prototype.logic.schedulers.PaymentProcessing;
 import prototype.logic.schedulers.RateScheduling;
 import prototype.logic.schedulers.ReportGeneration;
@@ -497,35 +498,47 @@ public class ConsolePrototype {
         if (rsvID != 0) {
             System.out.println("Reservation Type: "
                     + ReservationScheduling.searchByID(rsvID).getReservationType().toString());
-            System.out.println("Guest Name: ");
-            name = getString();
+            
+            double cost = PaymentProcessing.generateBillTotal(ReservationScheduling.searchByID(rsvID));
+            
+            System.out.println("That reservation is available for: " + cost + " dollars, would you like to confirm it?\n Type yes to confirm or type anything to cancel.");
+            String confirmation = getString().toLowerCase();
+            if( confirmation.equals("yes")){
+                System.out.println("Guest Name: ");
+                name = getString();
 
-            System.out.println();
-            System.out.println("Guest Email: ");
-            email = getString();
+                System.out.println();
+                System.out.println("Guest Email: ");
+                email = getString();
 
-            System.out.println();
-            System.out.println("Guest CC_Info: ");
-            if (ReservationScheduling.searchByID(rsvID).getReservationType().
-                    equals(ReservationType.SIXTYADV)) {
-                //Doesn't Preform Null check (Sixty Day adv dont have to put in info
-                ccInfo = scanner.next();
-            } else {
-                ccInfo = getString();
+                System.out.println();
+                System.out.println("Guest CC_Info: ");
+                if (ReservationScheduling.searchByID(rsvID).getReservationType().
+                        equals(ReservationType.SIXTYADV)) {
+                    //Doesn't Preform Null check (Sixty Day adv dont have to put in info
+                    ccInfo = scanner.next();
+                } else {
+                    ccInfo = getString();
+                }
+                System.out.println();
+                System.out.println("Attaching Guest To Reservation...");
+                guestID = ReservationScheduling.createGuest(name, email, ccInfo);
+                ReservationScheduling.attachReservationToGuest(rsvID, guestID);
+                System.out.println("Processing~!");
+                ReservationScheduling.proccessNewReservation(rsvID);
+                System.out.println("Complete!\nReservation Confirmed!\nReservation Id: " + rsvID);
+                System.out.println();
+            }else{
+                System.out.println("We are sorry we were not able to accomodate you and hope to see you soon");
+                List<ReservationModel> reservations = EntityDatabase.ReservationTable.retrieveAllReservations();
+                reservations.remove(rsvID - 1);
             }
-            System.out.println();
-            System.out.println("Attaching Guest To Reservation...");
-            guestID = ReservationScheduling.createGuest(name, email, ccInfo);
-            ReservationScheduling.attachReservationToGuest(rsvID, guestID);
-            System.out.println("Processing~!");
-            ReservationScheduling.proccessNewReservation(rsvID);
-            System.out.println("Complete!\nReservation Confirmed!\nReservation Id: " + rsvID);
-            System.out.println();
 
         } else {
             System.out.println("No vaccancies for that interval!");
         }
     }
+    
 
     private static void rateProcess() {
         System.out.println("-------Rates------ ");
