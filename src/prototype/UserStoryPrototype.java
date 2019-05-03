@@ -268,7 +268,10 @@ public class UserStoryPrototype {
             ReportGeneration.writeDailyOccupancyReport();
             ReportGeneration.writeIncomeReport();
             ReportGeneration.writeIncentiveReport();*/
-   
+        
+        
+        //Populate Dummy Data (Havent checked if Los got his CSV Component to work yet)
+   ReservationScheduling.generateDummyDataSet1();
         ConsolePrototype.startSystem();
         
     }
