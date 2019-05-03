@@ -58,7 +58,7 @@ public class ConsolePrototype {
 
         while (command == 0) {
             try {
-                command = Integer.parseInt(scanner.next());
+                command = Integer.parseInt(scanner.nextLine());
 
             } catch (Exception e) {
                 System.out.println("\t\tFailed Conversion!: " + e);
@@ -268,7 +268,7 @@ public class ConsolePrototype {
                     + "4.Search By ArriveDate\n"
                     + "5.Search By DepartDate\n"
                     + "6.Main Screen\n");
-            System.out.print(": ");
+            System.out.print("Selection: ");
             command = getCommand();
 
             GuestModel guest = GuestModel.EMPTY_ENTITY;
@@ -290,12 +290,13 @@ public class ConsolePrototype {
                         command = 6;
                     }
                     break;
-                case 3:
-                    System.out.print("\t Enter Guest Email: ");
+         
+                case 2:
+                    System.out.print("Enter Guest Name: ");
                     inputString = getString();
 
                     guest = GuestModel.EMPTY_ENTITY;
-                    guest = GuestDriver.searchByEmail(inputString);
+                    guest = GuestDriver.searchByName(inputString);
                     rsvList = ReservationScheduling.searchByGuest(command);
 
                     if (guest == GuestModel.EMPTY_ENTITY) {
@@ -308,12 +309,12 @@ public class ConsolePrototype {
                     }
 
                     break;
-                case 2:
-                    System.out.print("\t Enter Guest Name: ");
+                     case 3:
+                    System.out.print("\t Enter Guest Email: ");
                     inputString = getString();
 
                     guest = GuestModel.EMPTY_ENTITY;
-                    guest = GuestDriver.searchByName(inputString);
+                    guest = GuestDriver.searchByEmail(inputString);
                     rsvList = ReservationScheduling.searchByGuest(command);
 
                     if (guest == GuestModel.EMPTY_ENTITY) {
@@ -443,6 +444,7 @@ public class ConsolePrototype {
             System.out.println("-----CheckOut------\nDepartureList");
             for (ReservationModel rsv : rsvList) {
                 System.out.println(count + ": " + rsv.toString());
+                count++;
             }
 
             System.out.print("Selection: ");
@@ -595,8 +597,9 @@ public class ConsolePrototype {
             System.out.println("3. Print Daily Occupancy Report");
             System.out.println("4. Print Incentive Report");
             System.out.println("5. Print Occupancy Report");
-            System.out.println("6. Print Accomidation Bill");
-            System.out.println("7. Main Screen");
+            System.out.println("6. Print Income Report");
+            System.out.println("7. Print Accomidation Bill");
+            System.out.println("8. Main Screen");
 
             System.out.println("Selection: ");
             command = getCommand();
@@ -614,16 +617,16 @@ public class ConsolePrototype {
                     ReportGeneration.writeDailyArrivalsReport();
                     break;
                 case 3:
-                    ReportGeneration.writeOccupancyReport();
-                    break;
-                case 4:
                     ReportGeneration.writeDailyOccupancyReport();
                     break;
+                case 4:
+                    ReportGeneration.writeIncentiveReport();
+                    break;
                 case 5:
-                    ReportGeneration.writeIncomeReport();
+                    ReportGeneration.writeOccupancyReport();
                     break;
                 case 6:
-                    ReportGeneration.writeIncentiveReport();
+                    ReportGeneration.writeIncomeReport();
                     break;
                 case 7:
                     System.out.println("Reservation ID:");
