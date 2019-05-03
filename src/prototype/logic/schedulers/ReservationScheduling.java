@@ -179,6 +179,83 @@ public class ReservationScheduling implements Scheduler {
     }
 //</editor-fold>
 
+    
+    
+    public static void checkOutReservation(int rsvID){
+        short roomID = ReservationDriver.searchByID(rsvID).getRoom().getRoomID();
+        ReservationDriver.deattachRoom(rsvID);
+        RoomDriver.deattachReservation(rsvID);
+        ReservationDriver.searchByID(rsvID).setIsConcluded(true);
+    }
+    public static ReservationModel searchByID(int RsvID){
+        return ReservationDriver.searchByID(RsvID);
+    }
+    
+    public static List<ReservationModel> searchByDateArrive(LocalDate arrv){
+        return ReservationDriver.searchByDateArrive(arrv);
+    }
+    public static List<ReservationModel> searchByDateDepart(LocalDate dprt){
+        return EntityDatabase.ReservationTable.retrieveByDateDepart(dprt);
+    }
+    public static List<ReservationModel> searchByDateInMiddle(LocalDate inclsv){
+        return ReservationDriver.searchByDateInMiddle(inclsv);
+    }
+    public static List<ReservationModel> searchByDate(LocalDate date){
+        return ReservationDriver.searchByDate(date);
+    }
+    
+    public static List<ReservationModel> searchByGuest(int guestID){
+        return ReservationDriver.searchByGuest(guestID);
+    }
+    public static List<ReservationModel> searchByGuest(GuestModel guest){
+        return ReservationDriver.searchByGuest(guest);
+    }
+    
+    public static ReservationModel searchByRoom(int RoomID) {
+        return ReservationDriver.searchByRoom(RoomID);
+    }
+    public static ReservationModel searchByRoom(RoomModel room){
+        return ReservationDriver.searchByRoom(room);
+    }
+    
+    public static List<ReservationModel> searchByType(ReservationType rsvType){
+        return ReservationDriver.searchByType(rsvType);
+    }
+ 
+    // returns reservations
+    public static List<ReservationModel> returnAllReservations(){
+        return ReservationDriver.returnAllReservations();
+    }
+    public static List<ReservationModel> returnAllNoShow(){
+        return ReservationDriver.returnAllNoShow();
+    }
+    public static List<ReservationModel> returnAllPaid(){
+        return ReservationDriver.returnAllPaid();
+    }
+    public static List<ReservationModel> returnAllConcluded(){
+        return ReservationDriver.returnAllConcluded();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public static ArrayList<ReservationModel> getReservations() {
         // this will be used to retreive more than one reservation based on some
         // criteria. any modifications will be done in a seperate method simillar
