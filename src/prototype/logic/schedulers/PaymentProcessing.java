@@ -63,7 +63,8 @@ public class PaymentProcessing implements Scheduler {
 
     public static double generateBillTotal(ReservationModel reservation) {
         double totalCharge = 0;
-        for (int i = 1; i < reservation.getListBillCharges().size(); i++) {
+        for (int i = 0; i < reservation.getListBillCharges().size(); i++) {
+            //System.out.println("Charge: " + reservation.getListBillCharges().get(i).getAmount() + "");
             totalCharge += reservation.getListBillCharges().get(i).getAmount();
         }
         return totalCharge;
@@ -105,14 +106,14 @@ public class PaymentProcessing implements Scheduler {
         boolean paymentAccepted = false;
         
         if (!paymentAccepted) {
-            System.out.println("Process payment successful, payment accepted on day: "
+            System.out.println("Process payment successful, payment accepted on day"
                     + currentDay);
             totalCharge = reservation.getListBillCharges()
                     .get(reservation.getListBillCharges().size()-1).getAmount();
             reservation.setDatePaid(currentDay);
             reservation.setIsPaid(true);
         } else {
-            System.out.println("There was an error processing the CC entered.");
+            System.out.println("there was an error processing the CC entered");
             reservation.setIsPaid(false);
         }
         return totalCharge;
@@ -141,7 +142,13 @@ public class PaymentProcessing implements Scheduler {
         return totalCharge;
 
     }
-      
+        public static void makeMyFolder(String path) {
+        File directory = new File(path);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+    }
+        
     public static void printAccmBill(ReservationModel reservation) {
         /*This is a systmem.out print, wasns't sure how we are suppose to do it
         double charge = 0.0;
@@ -152,7 +159,8 @@ public class PaymentProcessing implements Scheduler {
          charge += reservation.getListBillCharges().get(i).getAmount();}
             System.out.println("The charge is" +charge);
          */
-        File accmbill = new File("AccomondationBill.txt");
+        makeMyFolder("AccommodationBills");
+        File accmbill = new File("AccommodationBills\\AccomondationBill" + reservation.getReservationID() + ".txt");
         FileOutputStream accmbillreport;
         // added a try catch gave an error so I added it seperately for this method.
 
@@ -161,9 +169,9 @@ public class PaymentProcessing implements Scheduler {
             //String filePath = fileDevision+"Documents"+fileDevision+"AccomondationBill.txt";
             //File accmbill = new File(filePath);
             if (accmbill.createNewFile()) {
-                System.out.println("AccomondationBill.txt created.");
+                System.out.println("\"AccommodationBills\\AccomondationBill" + reservation.getReservationID() + ".txt created.");
             } else {
-                System.out.println("AccomondationBill.txt already exists.");
+               // System.out.println("\"AccommodationBills\\AccomondationBill" + reservation.getReservationID() + ".txt already exists.");
             }
 
             accmbillreport = new FileOutputStream(accmbill);
@@ -173,11 +181,10 @@ public class PaymentProcessing implements Scheduler {
             double totalCharge = 0;
 
             totalCharge = generateBillTotal(reservation);
-
             long diff = 0;
             diff = (reservation.getDateArrive().equals(reservation.getDateDepart())) ? 0
                     : DAYS.between(reservation.getDateArrive(), reservation.getDateDepart()) + 1;
-            accmBillInfo += "-----Accomndation Bill for Guest------ " + System.getProperty("line.separator")
+            accmBillInfo += "----- Accommodation Bill for Guest------ " + System.getProperty("line.separator")
                     + "Current Day:       | "
                     + currentDay + System.getProperty("line.separator")
                     + "Guest Name:        | "
@@ -202,7 +209,9 @@ public class PaymentProcessing implements Scheduler {
 
             accmbuf.close();
         } catch (FileNotFoundException ex) {
+             System.out.println(ex);
         } catch (IOException ex) {
+            System.out.println(ex);
         }
 
     }
