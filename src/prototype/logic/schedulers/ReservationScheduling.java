@@ -265,9 +265,10 @@ public class ReservationScheduling implements Scheduler {
         long diff = DAYS.between(LocalDate.now(), start) + 1;
         int roomCount = 0;
         double avg = 0;
-        if (diff >= 30) {
+        if (diff < 30) {
             for (int i = 0; start.plusDays(i).isBefore(end.plusDays(1)); i++) {
-                roomCount += ReservationDriver.searchByDate(start.plusDays(i)).size();
+                roomCount += ReservationDriver.searchByDate(start.plusDays(i)).size() 
+                        - ReservationDriver.searchByDateDepart(start.plusDays(i)).size();
             }
 
             avg = roomCount / (45 * diff);
@@ -337,7 +338,7 @@ public class ReservationScheduling implements Scheduler {
             long diff = DAYS.between(start, end) + 1;
 
             if (diff == occupancyCount) {
-                 System.out.println("Is Available!");
+                System.out.println("Is Available!");
                 //Can Create Reservation
 
                 int testRsvID = ReservationDriver.createReservationReturnID(start,
