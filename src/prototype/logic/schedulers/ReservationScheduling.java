@@ -7,11 +7,14 @@ import prototype.data.models.ReservationModel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import prototype.data.drivers.GuestDriver;
+import prototype.data.drivers.RateDriver;
 import prototype.data.drivers.RoomDriver;
 import prototype.data.models.GuestModel;
 import prototype.data.models.ReservationType;
 import prototype.data.models.RoomModel;
+import prototype.data.persistence.EntityDatabase;
 
 public class ReservationScheduling implements Scheduler {
 
@@ -42,29 +45,29 @@ public class ReservationScheduling implements Scheduler {
             List<ReservationModel> listOccupancy
                     = ReservationDriver.searchByDate(dateArrive.plusDays(i));
 
-            if (listOccupancy.size() < 45) {
+            if (listOccupancy.size() - ReservationDriver.searchByDate(dateDepart).size() < 45) {
                 occupancyCount++;
             }
         }
         long diff = DAYS.between(dateArrive, dateDepart) + 1;
-
         if (diff == occupancyCount) {
-            if (getRsvType(dateArrive, dateDepart).equals(ReservationType.PREPAID)) {
-                int testRsvID = ReservationDriver.createReservationReturnID(dateArrive,
-                        dateDepart);
-                ReservationDriver.modifyReservationType(
-                        testRsvID, getRsvType(dateArrive, dateDepart));
-                returnID = testRsvID;
 
-                PaymentProcessing.
-                        generateAccmBill(ReservationDriver.searchByID(testRsvID));
-            }
+            int testRsvID = ReservationDriver.createReservationReturnID(dateArrive,
+                    dateDepart);
+            ReservationDriver.modifyReservationType(
+                    testRsvID, getRsvType(dateArrive, dateDepart));
+            returnID = testRsvID;
+
+            PaymentProcessing.
+                    generateAccmBill(ReservationDriver.searchByID(testRsvID));
+
         }
 
         return returnID;
+
     }
 
-    public static int creatGuest(String name, String email, String ccInfo) {
+    public static int createGuest(String name, String email, String ccInfo) {
         int newGuestID = GuestDriver.createGuestReturnID(name, email);
         GuestDriver.modifyGuestCreditCardInfo(newGuestID, ccInfo);
         GuestModel tempGuest = GuestDriver.searchByID(newGuestID);
@@ -72,7 +75,7 @@ public class ReservationScheduling implements Scheduler {
         return newGuestID;
     }
 
-        public static boolean attachReservationToGuest(int rsvID, int guestID) {
+    public static boolean attachReservationToGuest(int rsvID, int guestID) {
         ReservationModel rsv = ReservationDriver.searchByID(rsvID);
         GuestModel guest = GuestDriver.searchByID(guestID);
         boolean isModified = false;
@@ -85,7 +88,7 @@ public class ReservationScheduling implements Scheduler {
         }
         return isModified;
     }
-        
+
     public static void proccessNewReservation(int rsvID) {
         ReservationModel rsv = ReservationDriver.searchByID(rsvID);
 
@@ -93,7 +96,6 @@ public class ReservationScheduling implements Scheduler {
             PaymentProcessing.processAccmBill(rsv);
         }
     }
-
 
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Modify Reservations">
@@ -116,10 +118,7 @@ public class ReservationScheduling implements Scheduler {
         LocalDate departDate
                 = ReservationDriver.searchByID(rsvID).getDateDepart();
 
-      
-            ReservationDriver.modifyReservationType(rsvID, getRsvType(arriveDate,departDate));
-
-        
+        ReservationDriver.modifyReservationType(rsvID, getRsvType(arriveDate, departDate));
 
         return changeMade;
     }
@@ -154,6 +153,7 @@ public class ReservationScheduling implements Scheduler {
     }
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Modify Guest">
+
     public static void modifyGuestNameByRsvID(int rsvID, String name) {
         GuestDriver.searchByReservation(rsvID).setName(name);
     }
@@ -197,7 +197,7 @@ public class ReservationScheduling implements Scheduler {
         //Incentive -> Conventional: cancel more than 3 days in advance (no charge)
         // Incentive -> Conventional: cancel less than 3 days in advance (charge)
         // SixtyDayIn Advance: cancel when is Paid is false (no Charge)
-        
+
         //steps 
         //Apply charge if needed
         //mark room as vacant
@@ -205,17 +205,16 @@ public class ReservationScheduling implements Scheduler {
         ReservationModel rsv = ReservationDriver.searchByID(rsvID);
         LocalDate dateArrive = rsv.getDateArrive();
         long diff = DAYS.between(LocalDate.now(), dateArrive) + 1;
-        if ((rsv.getReservationType().equals(ReservationType.INCENTIVE) && 
-                (rsv.getReservationType().equals(ReservationType.CONVENTIONAL)))){
-            if(diff <= 3){
+        if ((rsv.getReservationType().equals(ReservationType.INCENTIVE)
+                && (rsv.getReservationType().equals(ReservationType.CONVENTIONAL)))) {
+            if (diff <= 3) {
                 PaymentProcessing.processAccmBillCancel(rsv);
                 ReservationDriver.deattachRoom(rsv);
                 rsv.setIsConcluded(true);
             }
-            
-        }
-        else if (rsv.getReservationType().equals(ReservationType.SIXTYADV)){
-            if (!rsv.isPaid()){
+
+        } else if (rsv.getReservationType().equals(ReservationType.SIXTYADV)) {
+            if (!rsv.isPaid()) {
                 ReservationDriver.deattachRoom(rsv);
                 //May need to negate the charge 
                 rsv.setIsConcluded(true);
@@ -223,7 +222,7 @@ public class ReservationScheduling implements Scheduler {
         } else; // Do nothing
 
     }
-    
+
     public static List<ReservationModel> getNoShowList() {
         List<ReservationModel> list
                 = ReservationDriver.searchByDate(LocalDate.now().minusDays(1));
@@ -285,22 +284,20 @@ public class ReservationScheduling implements Scheduler {
 
         if (start.isAfter(LocalDate.now().plusDays(89))) {
             rsvType = (ReservationType.PREPAID);
-        }
-        else if (start.isAfter(LocalDate.now().plusDays(59))) {
+        } else if (start.isAfter(LocalDate.now().plusDays(59))) {
             rsvType = (ReservationType.SIXTYADV);
-        }
-        else if (start.isBefore(LocalDate.now().plusDays(31))) {
+        } else if (start.isBefore(LocalDate.now().plusDays(31))) {
             if (incentiveTypeCheck(start, end)) {
-                if (incentiveTypeCheck(start, end)) rsvType = (ReservationType.INCENTIVE);
+                if (incentiveTypeCheck(start, end)) {
+                    rsvType = (ReservationType.INCENTIVE);
+                }
             }
         }
         return rsvType;
     }
 
- 
 //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Test Scripts">
-    
     public static int createReservationTest(ReservationType rsvType) {
         int returnID = 0;
         LocalDate today = LocalDate.now();
@@ -340,7 +337,7 @@ public class ReservationScheduling implements Scheduler {
             long diff = DAYS.between(start, end) + 1;
 
             if (diff == occupancyCount) {
-                System.out.println("Is Available!");
+                System.out.println("Is Avaliable!");
                 //Can Create Reservation
 
                 int testRsvID = ReservationDriver.createReservationReturnID(start,
@@ -396,9 +393,6 @@ public class ReservationScheduling implements Scheduler {
             System.out.println(testRsvID_2 + " = " + rsvList.get(1).getReservationID());
         }
     }
-    
-    
-
 
     public static void retrieveByName(String guestName) {
         GuestModel searchResult = GuestDriver.searchByName(guestName);
@@ -413,7 +407,7 @@ public class ReservationScheduling implements Scheduler {
         GuestModel searchResult = GuestDriver.searchByEmail(guestEmail);
 
         if (searchResult == GuestModel.EMPTY_ENTITY) {
-            System.out.println("No guest associated with this email address.");
+            System.out.println("No guest with this email address.");
         }
 
     }
@@ -464,11 +458,177 @@ public class ReservationScheduling implements Scheduler {
 
     }
     //</editor-fold>
+
+    protected static int getRand(int min, int max) {
+        Random rand = new Random();
+        return (rand.nextInt((max - min) + 1) + min);
+    }
+
+    private static int makeDummyGuest() {
+        String guestName = "";
+        final String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
+        final int N = lexicon.length();
+
+        Random r = new Random();
+        for (int i = 0; i < 10; i++) {
+            guestName += lexicon.charAt(r.nextInt(N));
+        }
+        int id = GuestDriver.createGuestReturnID(guestName,
+                (guestName + "gmail.com"), ("8679309"));
+
+        return id;
+
+    }
+
+    private static void makeDummyOccupancies(int numRuns, LocalDate today) {
+        for (int i = 0; i < numRuns + 1; i++) {
+
+            int rsvID = createReservation(today,
+                    today.plusDays(getRand(1, 7)));
+            if (rsvID != 0) {
+                ReservationDriver.attachRoom(rsvID, i + 1);
+                RoomDriver.flagRoomAsOccupied(i + 1);
+                RoomDriver.attachReservation(i + 1, rsvID);
+                int guestID = makeDummyGuest();
+
+                attachReservationToGuest(rsvID, guestID);
+                proccessNewReservation(rsvID);
+
+                ReservationScheduling.modifyReservationIsPaid(rsvID, false);
+                PaymentProcessing.printAccmBill(ReservationDriver.searchByID(rsvID));
+            }
+        }
+    }
+
     
-    
-    public static void generateDummyDataSet1(){
+     private static void makeDummyFutureReservations(int numRuns, LocalDate today) {
+        for (int i = 0; i < numRuns ; i++) {
+            int caseType = getRand(1,4);
+            int dayModifier = 0;
+            switch(caseType){
+                case 1:
+                    //Prepaid
+                    dayModifier = 91;
+                    break;
+                case 2:
+                    //Sixty Adv
+                    dayModifier = 61;
+                    break;
+                case 3:
+                    //Conventional
+                    dayModifier = 42;
+                    break;
+                default: 
+                    dayModifier = 28;
+                    break;
+            }
+
+            int rsvID = createReservation(today.plusDays(dayModifier),
+                    today.plusDays(dayModifier + getRand(1, 7)));
+            if (rsvID != 0) {
+                int guestID = makeDummyGuest();
+
+                attachReservationToGuest(rsvID, guestID);
+                proccessNewReservation(rsvID);
+
+                ReservationScheduling.modifyReservationIsPaid(rsvID, false);
+
+                //Error may have to change bill list when paid look at
+                //proccessing tomorrow
+            }
+        }
+    }
+
+    public static void generateDummyDataSet1() {
         // under 60% occupancy for seven day period
         // 40 reservations In Advance   
+        //under 27
+        EntityDatabase.DevUtilities.generateRoomTableAllAvailable();
+        List<String> guestNameList = new ArrayList<>();
+
+        for (int i = 0; LocalDate.now().minusDays(50).plusDays(i).isBefore(LocalDate.now().plusDays(462)); i++) {
+            RateDriver.createRate(LocalDate.now().minusDays(50).plusDays(i), 70 + getRand(0, 25));
+        }
+
+        makeDummyOccupancies(26, LocalDate.now().minusDays(getRand(1,5)));
+        for (int i = 0; LocalDate.now().plusDays(i).isBefore(LocalDate.now().plusDays(8)); i++) {
+            int actualOccupancy = (26
+                    - ReservationDriver.searchByDateDepart(LocalDate.now().plusDays(i)).size());
+            
+            if (actualOccupancy < 26) {
+                makeDummyOccupancies((26 - actualOccupancy), LocalDate.now().plusDays(i));
+
+            }
+        }
+        
+        //Occupancy may be higher than number of rooms if you include departures
+        
+        //System.out.println(RoomDriver.returnOccupiedRooms().size() + " WH");
+
+            makeDummyFutureReservations(40, LocalDate.now());
+            ReportGeneration.writeDailyOccupancyReport();
+        
+
+    }
+    
+    
+    public static void generateDummyDataSet2() {
+        // over 60% occupancy for seven day period
+        // 40 reservations In Advance   
+        //at 35
+       EntityDatabase.DevUtilities.generateRoomTableAllAvailable();
+        List<String> guestNameList = new ArrayList<>();
+
+        for (int i = 0; LocalDate.now().minusDays(50).plusDays(i).isBefore(LocalDate.now().plusDays(462)); i++) {
+            RateDriver.createRate(LocalDate.now().minusDays(50).plusDays(i), 70 + getRand(0, 25));
+        }
+
+        makeDummyOccupancies(35, LocalDate.now().minusDays(getRand(1,5)));
+        for (int i = 0; LocalDate.now().plusDays(i).isBefore(LocalDate.now().plusDays(8)); i++) {
+            int actualOccupancy = (35
+                    - ReservationDriver.searchByDateDepart(LocalDate.now().plusDays(i)).size());
+            
+            if (actualOccupancy < 35) {
+                makeDummyOccupancies((35 - actualOccupancy), LocalDate.now().plusDays(i));
+
+            }
+        }
+        
+        //Occupancy may be higher than number of rooms if you include departures
+        //System.out.println(RoomDriver.returnOccupiedRooms().size() + " WH");
+            makeDummyFutureReservations(40, LocalDate.now());
+            ReportGeneration.writeDailyOccupancyReport();
+        
+
+    }
+    
+    public static void generateDummyDataSet3() {
+        EntityDatabase.DevUtilities.generateRoomTableAllAvailable();
+        List<String> guestNameList = new ArrayList<>();
+
+        for (int i = 0; LocalDate.now().minusDays(50).plusDays(i).isBefore(LocalDate.now().plusDays(462)); i++) {
+            RateDriver.createRate(LocalDate.now().minusDays(50).plusDays(i), 70 + getRand(0, 25));
+        }
+
+        makeDummyOccupancies(45, LocalDate.now().minusDays(getRand(1,5)));
+        for (int i = 0; LocalDate.now().plusDays(i).isBefore(LocalDate.now().plusDays(8)); i++) {
+            int actualOccupancy = (45
+                    - ReservationDriver.searchByDateDepart(LocalDate.now().plusDays(i)).size());
+            
+            if (actualOccupancy < 45) {
+                makeDummyOccupancies((45 - actualOccupancy), LocalDate.now().plusDays(i));
+
+            }
+        }
+        
+        //Occupancy may be higher than number of rooms if you include departures
+        
+        //System.out.println(RoomDriver.returnOccupiedRooms().size() + " WH");
+
+            makeDummyFutureReservations(40, LocalDate.now());
+            ReportGeneration.writeDailyOccupancyReport();
+        
+
     }
 
 }
