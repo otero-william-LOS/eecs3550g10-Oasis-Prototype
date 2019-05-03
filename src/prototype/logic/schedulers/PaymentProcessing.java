@@ -216,6 +216,26 @@ public class PaymentProcessing implements Scheduler {
 
     }
 
+     public static void applyCancelation(ReservationModel reservation) {
+        final String penaltyApplied = "Cancelation penalty applied on: ";
+        RateModel currentRate = RateDriver.searchByDate(reservation.getDateArrive());
+        double dayCharge = 0;
+        String tempString = penaltyApplied + LocalDate.now().toString();
+        int currentBillID = 0;
+
+        if (reservation.getReservationType() == ReservationType.CONVENTIONAL
+                || reservation.getReservationType() == ReservationType.INCENTIVE) {
+                currentBillID = BillChargeDriver.createBillChargeReturnID(LocalDate.now(), (-1 * generateBillTotal(reservation)), tempString);
+                BillChargeDriver.attachReservation(currentBillID, reservation.getReservationID());
+                ReservationDriver.attachBillCharge(reservation.getReservationID(), currentBillID);
+
+            reservation.setIsConcluded(true);
+
+            //*****Call Payment Processing****
+            reservation.setIsPaid(true);
+            reservation.setRoom(RoomModel.EMPTY_ENTITY);
+        }
+    }
     public static void applyCancelationCharge(ReservationModel reservation) {
         final String penaltyApplied = "Cancelation penalty applied on: ";
         RateModel currentRate = RateDriver.searchByDate(reservation.getDateArrive());
