@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import prototype.data.models.BillChargeModel;
 import prototype.data.models.ReservationType;
 import prototype.logic.schedulers.RateScheduling;
+import prototype.logic.schedulers.ReservationScheduling;
 import prototype.logic.schedulers.RoomOrganizer;
 
 
@@ -40,7 +41,7 @@ public class UserStoryPrototype {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+     /*   // TODO code application logic here
         
         //<editor-fold defaultstate="collapsed" desc="Room Driver Test Scripts">
         System.out.println("Testing Gen All Empty");
@@ -258,6 +259,18 @@ public class UserStoryPrototype {
         List<ReservationModel> rsvTable =  ReservationDriver.returnAllReservations();
         EntityDatabase.exportEntityTables();
         int x = 5;
+        
+        
+        */
+        /*ReservationScheduling.generateDummyDataSet1();
+       /* ReportGeneration.writeDailyArrivalsReport();
+            ReportGeneration.writeOccupancyReport();
+            ReportGeneration.writeDailyOccupancyReport();
+            ReportGeneration.writeIncomeReport();
+            ReportGeneration.writeIncentiveReport();*/
+   
+        ConsolePrototype.startSystem();
+        
     }
     
 }
