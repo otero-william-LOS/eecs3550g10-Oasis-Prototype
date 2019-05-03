@@ -519,7 +519,7 @@ public class ConsolePrototype {
             ReservationScheduling.attachReservationToGuest(rsvID, guestID);
             System.out.println("Proccesssing~!");
             ReservationScheduling.proccessNewReservation(rsvID);
-            System.out.println("Complete!\nReservation Confirmed!");
+            System.out.println("Complete!\nReservation Confirmed!\nReservation Id: " + rsvID);
             System.out.println();
 
         } else {
