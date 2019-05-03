@@ -37,7 +37,7 @@ public class ConsolePrototype {
        
 
         while (returnDate.equals(LocalDate.MIN)) {
-             System.out.println("Enter Date With Format (dd/MM/yyyy): ");
+             System.out.println("Enter Date With Format (MM/dd/yyyy): ");
             try {
                 returnDate = LocalDate.parse(scanner.next(),
                         formatter);
