@@ -234,12 +234,12 @@ public class ReportGeneration implements Scheduler {
         bw.newLine();
         
         for(int i = 1; i < 31; i++){
-            List<RoomModel> rooms = RoomDriver.returnVacantRooms();
-            RateModel rate = RateDriver.searchByDate(currentDay);
+            List<ReservationModel> reservations = ReservationDriver.searchByDate(currentDay.plusDays(i));
+            RateModel rate = RateDriver.searchByDate(currentDay.plusDays(i));
                       
-            dailyLoss = rooms.size() * rate.getBaseRate();
+            dailyLoss = ((45 -reservations.size()) * rate.getBaseRate());
             totalLoss = totalLoss + dailyLoss;
-            lineContents = "Date: " + currentDay.toString() + " || Total Discount: " + dailyLoss;
+            lineContents = "Date: " + currentDay.plusDays(i).toString() + " || Total Discount: " + dailyLoss;
             bw.write(lineContents);
             bw.newLine();
         }
