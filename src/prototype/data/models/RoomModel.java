@@ -77,7 +77,7 @@ public class RoomModel extends DataModel {
     public String toString() {
         String info = "Room [ roomID=" + Short.toString(m_RoomID);
         info += " | isOccupied=" + Boolean.toString(m_IsOccupied);
-        if (m_Rsv != null)
+        if (m_Rsv != null && !m_Rsv.equals(ReservationModel.EMPTY_ENTITY))
             info += " | Rsv [ rsvID=" + Integer.toString(m_Rsv.getReservationID()) + " ]";
         info += " ]";
         return  info;

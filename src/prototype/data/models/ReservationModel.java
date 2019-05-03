@@ -223,19 +223,19 @@ public class ReservationModel extends DataModel {
     
         String info = "Rsv [ rsvID=" + Integer.toString(m_RsvID);
         
-        if (m_DateArrive != null)
+        if (m_DateArrive != null && !m_DateArrive.equals(new Date(Long.MIN_VALUE)))
             info += " | dateArrive=" + fm.format(m_DateArrive);
-        if (m_DateDepart != null)
+        if (m_DateDepart != null && !m_DateDepart.equals(new Date(Long.MIN_VALUE)))
             info += " | dateDepart=" + fm.format(m_DateDepart);
-        if (m_DatePaid != null)
+        if (m_DatePaid != null && !m_DatePaid.equals(new Date(Long.MIN_VALUE)))
             info += " | datePaid=" + fm.format(m_DatePaid);
         
         if (m_RsvType != null)
             info += " | rsvType=" + m_RsvType.name();
-        if (m_Room != null)
+        if (m_Room != null && !m_Room.equals(RoomModel.EMPTY_ENTITY))
             info += " | Room [ roomID=" + Integer.toString(m_Room.getRoomID()) + " ]";
-        if (m_Guest != null)
-            info += " | Guest [ guestID=" + Integer.toString(m_Guest.getGuestID());
+        if (m_Guest != null && !m_Guest.equals(GuestModel.EMPTY_ENTITY))
+            info += " | Guest [ guestID=" + Integer.toString(m_Guest.getGuestID()) + " ]";
         if (m_ListBllchrg != null){
             info += " | ListBllchrg.size=" + Integer.toString(m_ListBllchrg.size());
         }

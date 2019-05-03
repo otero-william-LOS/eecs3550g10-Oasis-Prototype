@@ -84,7 +84,7 @@ public class RateModel extends DataModel {
     public String toString() {
         SimpleDateFormat fm = new SimpleDateFormat("MM-dd-yyyy");
         String info = "Rate [";
-        if(m_RateDate != null)
+        if(m_RateDate != null && !m_RateDate.equals(new Date(Long.MIN_VALUE)))
             info += " rateDate=" + fm.format(m_RateDate);
         info += " | baseRate=" + Double.toString(m_BaseRate);
         info += " ]";

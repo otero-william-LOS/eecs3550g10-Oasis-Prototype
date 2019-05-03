@@ -149,14 +149,14 @@ public class BillChargeModel extends DataModel {
         SimpleDateFormat fm = new SimpleDateFormat("MM-dd-yyyy");
         
         String info = "Bllchrg [ bllchrgID=" + m_BllchrgID;
-        if (m_Rsv != null)
+        if (m_Rsv != null && !m_Rsv.equals(ReservationModel.EMPTY_ENTITY))
         {info += " | Rsv [ rsvID=" + Integer.toString(m_Rsv.getReservationID()) + " ]";}
         if (m_LineDesc != null)
         {info += " | lineDesc=" + m_LineDesc;}
         info += " | amount=" + Double.toString(m_Amount);
-        if (m_DateCharged != null)
+        if (m_DateCharged != null && !m_DateCharged.equals(new Date(Long.MIN_VALUE)))
         {info += " | dateCharged=" + fm.format(m_DateCharged);}
-        if (m_DatePaid != null)
+        if (m_DatePaid != null && !m_DatePaid.equals(new Date(Long.MIN_VALUE)))
         {info += " | datePaid=" + fm.format(m_DatePaid);}
         info += " | isPaid=" + Boolean.toString(m_IsPaid);
         info += " ]";
