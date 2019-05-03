@@ -290,7 +290,7 @@ public class ConsolePrototype {
                         command = 6;
                     } else {
                         System.out.println("Failed To Check In (Not Found)!.."
-                                + "Returning to main Screen...\n");
+                                + "Returning to Main Screen...\n");
                         command = 6;
                     }
                     break;
@@ -463,9 +463,9 @@ public class ConsolePrototype {
             System.out.println("\nCheckingOut....");
             if (rsvList.get(selection).getReservationType().equals(ReservationType.CONVENTIONAL)
                     || rsvList.get(selection).getReservationType().equals(ReservationType.INCENTIVE)) {
-                System.out.println("Proccessing Payment...");
+                System.out.println("Processing Payment...");
                 PaymentProcessing.printAccmBill(rsvList.get(selection));
-                System.out.println(" Payment Proccessed!");
+                System.out.println(" Payment Processed!");
 
             }
             ReservationScheduling.
@@ -517,7 +517,7 @@ public class ConsolePrototype {
             System.out.println("Attaching Guest To Reservation...");
             guestID = ReservationScheduling.createGuest(name, email, ccInfo);
             ReservationScheduling.attachReservationToGuest(rsvID, guestID);
-            System.out.println("Proccesssing~!");
+            System.out.println("Processing~!");
             ReservationScheduling.proccessNewReservation(rsvID);
             System.out.println("Complete!\nReservation Confirmed!\nReservation Id: " + rsvID);
             System.out.println();
