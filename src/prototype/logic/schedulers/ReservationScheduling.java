@@ -15,11 +15,8 @@ import prototype.data.models.RoomModel;
 
 public class ReservationScheduling implements Scheduler {
 
-    // receive a date and dte depart
-    // send these to payment processing, 
-    //Creates reservation and generates BillCharge **NEEED TO ATTACH GUEST***
-    // IF PREPAID NEEEED GUEST AND SEND CHARGE
-    public static int createReservation(LocalDate dateArrive, LocalDate dateDepart, ReservationType rsvType) {
+    //<editor-fold defaultstate="collapsed" desc="Create New Reservation">
+    public static int createReservation(LocalDate dateArrive, LocalDate dateDepart) {
 
         // received dates. create reservation using basic contstructor
         // there will need to be logic to determine if the hotel will be full
@@ -52,11 +49,11 @@ public class ReservationScheduling implements Scheduler {
         long diff = DAYS.between(dateArrive, dateDepart) + 1;
 
         if (diff == occupancyCount) {
-            if (typeAvliableCheck(rsvType, dateArrive, dateDepart)) {
+            if (getRsvType(dateArrive, dateDepart).equals(ReservationType.PREPAID)) {
                 int testRsvID = ReservationDriver.createReservationReturnID(dateArrive,
                         dateDepart);
                 ReservationDriver.modifyReservationType(
-                        testRsvID, rsvType);
+                        testRsvID, getRsvType(dateArrive, dateDepart));
                 returnID = testRsvID;
 
                 PaymentProcessing.
@@ -67,6 +64,39 @@ public class ReservationScheduling implements Scheduler {
         return returnID;
     }
 
+    public static int creatGuest(String name, String email, String ccInfo) {
+        int newGuestID = GuestDriver.createGuestReturnID(name, email);
+        GuestDriver.modifyGuestCreditCardInfo(newGuestID, ccInfo);
+        GuestModel tempGuest = GuestDriver.searchByID(newGuestID);
+
+        return newGuestID;
+    }
+
+        public static boolean attachReservationToGuest(int rsvID, int guestID) {
+        ReservationModel rsv = ReservationDriver.searchByID(rsvID);
+        GuestModel guest = GuestDriver.searchByID(guestID);
+        boolean isModified = false;
+        if ((rsv.getReservationType() != ReservationType.SIXTYADV)
+                && (guest.getCCInfo().equals(""))) {
+            System.out.println("Error: Missing CCInfo!");
+        } else {
+            ReservationDriver.attachGuest(rsvID, guestID);
+            isModified = true;
+        }
+        return isModified;
+    }
+        
+    public static void proccessNewReservation(int rsvID) {
+        ReservationModel rsv = ReservationDriver.searchByID(rsvID);
+
+        if (rsv.getReservationType() == ReservationType.PREPAID) {
+            PaymentProcessing.processAccmBill(rsv);
+        }
+    }
+
+
+//</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="Modify Reservations">
     public static void modifyReservationArriveDate(int rsvID, LocalDate arriveDate) {
         ReservationDriver.modifyDateArrive(rsvID, arriveDate);
     }
@@ -79,17 +109,17 @@ public class ReservationScheduling implements Scheduler {
         ReservationDriver.modifyDatePaid(rsvID, datePaid);
     }
 
-    public static boolean modifyReservationType(int rsvID, ReservationType rsvType) {
+    public static boolean modifyReservationType(int rsvID) {
         boolean changeMade = false;
-        LocalDate dateArrive
+        LocalDate arriveDate
                 = ReservationDriver.searchByID(rsvID).getDateArrive();
-        LocalDate dateDepart
+        LocalDate departDate
                 = ReservationDriver.searchByID(rsvID).getDateDepart();
 
-        if (typeAvliableCheck(rsvType, dateArrive, dateDepart)) {
-            ReservationDriver.modifyReservationType(rsvID, rsvType);
-            changeMade = false;
-        }
+      
+            ReservationDriver.modifyReservationType(rsvID, getRsvType(arriveDate,departDate));
+
+        
 
         return changeMade;
     }
@@ -122,31 +152,33 @@ public class ReservationScheduling implements Scheduler {
     public static void modifyReservationIsPaid(int rsvID, boolean ins) {
         ReservationDriver.searchByID(rsvID).setIsPaid(ins);
     }
-
+//</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="Modify Guest">
     public static void modifyGuestNameByRsvID(int rsvID, String name) {
         GuestDriver.searchByReservation(rsvID).setName(name);
     }
+
     public static void modifyGuestEmailByRsvID(int rsvID, String email) {
         GuestDriver.searchByReservation(rsvID).setEmail(email);
     }
-    
+
     public static void modifyGuestCCInfoByRsvID(int rsvID, String ccinfo) {
         GuestDriver.searchByReservation(rsvID).setCCInfo(ccinfo);
     }
-    
-  
 
     public static void modifyGuestNameByGuestID(int guestID, String name) {
         GuestDriver.searchByID(guestID).setName(name);
     }
+
     public static void modifyGuestEmailByGuestID(int guestID, String email) {
         GuestDriver.searchByID(guestID).setEmail(email);
     }
-    
+
     public static void modifyGuestCCInfoByGuestID(int guestID, String ccinfo) {
         GuestDriver.searchByID(guestID).setCCInfo(ccinfo);
     }
-    
+//</editor-fold>
+
     public static ArrayList<ReservationModel> getReservations() {
         // this will be used to retreive more than one reservation based on some
         // criteria. any modifications will be done in a seperate method simillar
@@ -156,12 +188,54 @@ public class ReservationScheduling implements Scheduler {
         return reservations;
     }
 
-    public static void applyNowShowReservation() {
-
+    public static void applyNowShowReservation(int rsvID, boolean ins) {
+        ReservationDriver.searchByID(rsvID).setIsNoShow(ins);
     }
 
-    public static void cancelReservation() {
+    public static void cancelReservation(int rsvID) {
+        //three cases
+        //Incentive -> Conventional: cancel more than 3 days in advance (no charge)
+        // Incentive -> Conventional: cancel less than 3 days in advance (charge)
+        // SixtyDayIn Advance: cancel when is Paid is false (no Charge)
+        
+        //steps 
+        //Apply charge if needed
+        //mark room as vacant
+        // set is concluded 
+        ReservationModel rsv = ReservationDriver.searchByID(rsvID);
+        LocalDate dateArrive = rsv.getDateArrive();
+        long diff = DAYS.between(LocalDate.now(), dateArrive) + 1;
+        if ((rsv.getReservationType().equals(ReservationType.INCENTIVE) && 
+                (rsv.getReservationType().equals(ReservationType.CONVENTIONAL)))){
+            if(diff <= 3){
+                PaymentProcessing.processAccmBillCancel(rsv);
+                ReservationDriver.deattachRoom(rsv);
+                rsv.setIsConcluded(true);
+            }
+            
+        }
+        else if (rsv.getReservationType().equals(ReservationType.SIXTYADV)){
+            if (!rsv.isPaid()){
+                ReservationDriver.deattachRoom(rsv);
+                //May need to negate the charge 
+                rsv.setIsConcluded(true);
+            }
+        } else; // Do nothing
 
+    }
+    
+    public static List<ReservationModel> getNoShowList() {
+        List<ReservationModel> list
+                = ReservationDriver.searchByDate(LocalDate.now().minusDays(1));
+        List<ReservationModel> nowShowList = new ArrayList<>();
+
+        for (ReservationModel rsv : list) {
+            if (rsv.isNoShow()) {
+                nowShowList.add(rsv);
+            }
+        }
+
+        return nowShowList;
     }
 
     @Override
@@ -184,20 +258,7 @@ public class ReservationScheduling implements Scheduler {
         //  TODO will be updated as new user stories are created.
     }
 
-    public static List<ReservationModel> getNoShowList() {
-        List<ReservationModel> list
-                = ReservationDriver.searchByDate(LocalDate.now().minusDays(1));
-        List<ReservationModel> nowShowList = new ArrayList<>();
-
-        for (ReservationModel rsv : list) {
-            if (rsv.isNoShow()) {
-                nowShowList.add(rsv);
-            }
-        }
-
-        return nowShowList;
-    }
-
+    //<editor-fold defaultstate="collapsed" desc="Check Scripts">
     private static boolean incentiveTypeCheck(LocalDate start, LocalDate end) {
         boolean isAv = false;
         List<ReservationModel> rsvList = new ArrayList<>();
@@ -219,45 +280,27 @@ public class ReservationScheduling implements Scheduler {
         return isAv;
     }
 
-    private static List<ReservationType> getAvaliableRsvTypes(LocalDate start, LocalDate end) {
-        List<ReservationType> rsvTypeList = new ArrayList<>();
+    private static ReservationType getRsvType(LocalDate start, LocalDate end) {
+        ReservationType rsvType = ReservationType.CONVENTIONAL;
 
-        rsvTypeList.add(ReservationType.CONVENTIONAL);
         if (start.isAfter(LocalDate.now().plusDays(89))) {
-            rsvTypeList.add(ReservationType.PREPAID);
+            rsvType = (ReservationType.PREPAID);
         }
-        if (start.isAfter(LocalDate.now().plusDays(59))) {
-            rsvTypeList.add(ReservationType.SIXTYADV);
+        else if (start.isAfter(LocalDate.now().plusDays(59))) {
+            rsvType = (ReservationType.SIXTYADV);
         }
-        if (start.isBefore(LocalDate.now().plusDays(31))) {
+        else if (start.isBefore(LocalDate.now().plusDays(31))) {
             if (incentiveTypeCheck(start, end)) {
-                rsvTypeList.add(ReservationType.INCENTIVE);
+                if (incentiveTypeCheck(start, end)) rsvType = (ReservationType.INCENTIVE);
             }
         }
-        return rsvTypeList;
+        return rsvType;
     }
 
-    private static boolean typeAvliableCheck(ReservationType rsvType, LocalDate start, LocalDate end) {
-        List<ReservationType> avaliableRsvTypes = new ArrayList<>();
-        boolean containsType = false;
-
-        avaliableRsvTypes = getAvaliableRsvTypes(start, end);
-        for (int i = 0; i < avaliableRsvTypes.size(); i++) {
-            if (avaliableRsvTypes.get(i) == rsvType) {
-                containsType = true;
-            }
-
-        }
-        if (!containsType || rsvType == ReservationType.CONVENTIONAL) {
-            // System.out.println("Type Check: Pass");
-        } else {
-            // System.out.println("Type Check: Fail");
-        }
-
-        return containsType;
-
-    }
-
+ 
+//</editor-fold>
+    //<editor-fold defaultstate="collapsed" desc="Test Scripts">
+    
     public static int createReservationTest(ReservationType rsvType) {
         int returnID = 0;
         LocalDate today = LocalDate.now();
@@ -279,7 +322,7 @@ public class ReservationScheduling implements Scheduler {
 
         }
 
-        if (typeAvliableCheck(rsvType, today.plusDays(typeModifier), today.plusDays(typeModifier))) {
+        if (true) {
             //Check For at least one occupany for duration of stay 
             int occupancyCount = 0;
 
@@ -297,7 +340,7 @@ public class ReservationScheduling implements Scheduler {
             long diff = DAYS.between(start, end) + 1;
 
             if (diff == occupancyCount) {
-                System.out.println("Is Avaliable!");
+                System.out.println("Is Available!");
                 //Can Create Reservation
 
                 int testRsvID = ReservationDriver.createReservationReturnID(start,
@@ -353,21 +396,26 @@ public class ReservationScheduling implements Scheduler {
             System.out.println(testRsvID_2 + " = " + rsvList.get(1).getReservationID());
         }
     }
+    
+    
 
-    public static GuestModel retrieveByName(String guestName) {
+
+    public static void retrieveByName(String guestName) {
         GuestModel searchResult = GuestDriver.searchByName(guestName);
-        System.out.println("No guest under this name.");
 
-        if (searchResult == GuestModel.EMPTY_ENTITY);
-        return null;
+        if (searchResult == GuestModel.EMPTY_ENTITY) {
+            System.out.println("No guest under this name.");
+        }
+
     }
 
-    public static GuestModel retrieveByEmail(String guestEmail) {
+    public static void retrieveByEmail(String guestEmail) {
         GuestModel searchResult = GuestDriver.searchByEmail(guestEmail);
-        System.out.println("No guest with this email address.");
 
-        if (searchResult == GuestModel.EMPTY_ENTITY);
-        return null;
+        if (searchResult == GuestModel.EMPTY_ENTITY) {
+            System.out.println("No guest associated with this email address.");
+        }
+
     }
 
     // Create Guest with Two Fields (Name, Email)
@@ -414,6 +462,13 @@ public class ReservationScheduling implements Scheduler {
             System.out.println("Guest Attached");
         }
 
+    }
+    //</editor-fold>
+    
+    
+    public static void generateDummyDataSet1(){
+        // under 60% occupancy for seven day period
+        // 40 reservations In Advance   
     }
 
 }
