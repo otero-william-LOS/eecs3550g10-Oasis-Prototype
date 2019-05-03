@@ -34,9 +34,10 @@ public class ConsolePrototype {
     public static LocalDate getDateInput() {
         LocalDate returnDate = LocalDate.MIN;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        System.out.println("Enter Date With Format (dd/MM/yyyy): ");
+       
 
         while (returnDate.equals(LocalDate.MIN)) {
+             System.out.println("Enter Date With Format (dd/MM/yyyy): ");
             try {
                 returnDate = LocalDate.parse(scanner.next(),
                         formatter);
@@ -44,6 +45,8 @@ public class ConsolePrototype {
             } catch (Exception e) {
                 System.out.println("\t\tFailed Conversion!: " + e);
             }
+            
+            
         }
 
         return returnDate;
@@ -57,6 +60,7 @@ public class ConsolePrototype {
         int command = 0;
 
         while (command == 0) {
+             System.out.println("Enter Integer: ");
             try {
                 command = Integer.parseInt(scanner.nextLine());
 
