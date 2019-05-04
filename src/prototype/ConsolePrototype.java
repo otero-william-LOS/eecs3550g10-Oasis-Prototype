@@ -17,6 +17,7 @@ import prototype.data.drivers.ReservationDriver;
 import prototype.data.models.GuestModel;
 import prototype.data.models.ReservationModel;
 import prototype.data.models.ReservationType;
+import prototype.data.persistence.EntityDatabase;
 import prototype.logic.schedulers.PaymentProcessing;
 import prototype.logic.schedulers.RateScheduling;
 import prototype.logic.schedulers.ReportGeneration;
@@ -34,9 +35,10 @@ public class ConsolePrototype {
     public static LocalDate getDateInput() {
         LocalDate returnDate = LocalDate.MIN;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        System.out.println("Enter Date With Format (dd/MM/yyyy): ");
+       
 
         while (returnDate.equals(LocalDate.MIN)) {
+             System.out.println("Enter Date With Format (MM/dd/yyyy): ");
             try {
                 returnDate = LocalDate.parse(scanner.next(),
                         formatter);
@@ -44,6 +46,8 @@ public class ConsolePrototype {
             } catch (Exception e) {
                 System.out.println("\t\tFailed Conversion!: " + e);
             }
+            
+            
         }
 
         return returnDate;
@@ -57,8 +61,9 @@ public class ConsolePrototype {
         int command = 0;
 
         while (command == 0) {
+             System.out.println("Enter Integer: ");
             try {
-                command = Integer.parseInt(scanner.next());
+                command = Integer.parseInt(scanner.nextLine());
 
             } catch (Exception e) {
                 System.out.println("\t\tFailed Conversion!: " + e);
@@ -73,7 +78,7 @@ public class ConsolePrototype {
 
         while (command == 0) {
             try {
-                command = Double.parseDouble(scanner.next());
+                command = Double.parseDouble(scanner.nextLine());
 
             } catch (Exception e) {
                 System.out.println("\t\tFailed Conversion!: " + e);
@@ -268,7 +273,7 @@ public class ConsolePrototype {
                     + "4.Search By ArriveDate\n"
                     + "5.Search By DepartDate\n"
                     + "6.Main Screen\n");
-            System.out.print(": ");
+            System.out.print("Selection: ");
             command = getCommand();
 
             GuestModel guest = GuestModel.EMPTY_ENTITY;
@@ -286,16 +291,17 @@ public class ConsolePrototype {
                         command = 6;
                     } else {
                         System.out.println("Failed To Check In (Not Found)!.."
-                                + "Returning to main Screen...\n");
+                                + "Returning to Main Screen...\n");
                         command = 6;
                     }
                     break;
-                case 3:
-                    System.out.print("\t Enter Guest Email: ");
+         
+                case 2:
+                    System.out.print("Enter Guest Name: ");
                     inputString = getString();
 
                     guest = GuestModel.EMPTY_ENTITY;
-                    guest = GuestDriver.searchByEmail(inputString);
+                    guest = GuestDriver.searchByName(inputString);
                     rsvList = ReservationScheduling.searchByGuest(command);
 
                     if (guest == GuestModel.EMPTY_ENTITY) {
@@ -308,12 +314,12 @@ public class ConsolePrototype {
                     }
 
                     break;
-                case 2:
-                    System.out.print("\t Enter Guest Name: ");
+                     case 3:
+                    System.out.print("\t Enter Guest Email: ");
                     inputString = getString();
 
                     guest = GuestModel.EMPTY_ENTITY;
-                    guest = GuestDriver.searchByName(inputString);
+                    guest = GuestDriver.searchByEmail(inputString);
                     rsvList = ReservationScheduling.searchByGuest(command);
 
                     if (guest == GuestModel.EMPTY_ENTITY) {
@@ -366,7 +372,7 @@ public class ConsolePrototype {
         }
     }
 
-    private static void modifyProccess(ReservationModel rsv) {
+   private static void modifyProccess(ReservationModel rsv) {
 
         int command = 0;
 
@@ -385,25 +391,31 @@ public class ConsolePrototype {
             GuestModel guest = GuestModel.EMPTY_ENTITY;
             ReservationModel reservation = ReservationModel.EMPTY_ENTITY;
             LocalDate temp = LocalDate.MIN;
+            ;
             switch (command) {
                 case 1:
                     System.out.println("New Arrival Date: ");
-                    ReservationScheduling.modifyReservationArriveDate(rsv.getReservationID(), getDateInput());
+                    ReservationDriver.modifyDateArrive(rsv.getReservationID(), getDateInput());
+                    PaymentProcessing.applyPenaltyCharge(rsv);
                     System.out.println("Complete!");
                     command = 7;
                     break;
                 case 2:
                     System.out.println("New Depart Date: ");
-                    ReservationScheduling.modifyReservationDepartDate(rsv.getReservationID(), getDateInput());
+                    temp =  getDateInput();
+                    ReservationDriver.modifyDateDepart(command, temp);
+                    // PaymentProcessing.applyPenaltyCharge(rsv);
                     System.out.println("Complete!");
                     command = 7;
                     break;
                 case 3:
                     System.out.println("New Arrival Date: ");
-                    ReservationScheduling.modifyReservationArriveDate(rsv.getReservationID(), getDateInput());
+                   ReservationDriver.modifyDateArrive(rsv.getReservationID(), getDateInput());
+                    
 
                     System.out.println("New DepartDate: ");
-                    ReservationScheduling.modifyReservationDepartDate(rsv.getReservationID(), getDateInput());
+                   ReservationDriver.modifyDateDepart(rsv.getReservationID(), getDateInput());
+                    //PaymentProcessing.applyPenaltyCharge(rsv);
                     System.out.println("Complete!");
                     command = 7;
                     break;
@@ -443,6 +455,7 @@ public class ConsolePrototype {
             System.out.println("-----CheckOut------\nDepartureList");
             for (ReservationModel rsv : rsvList) {
                 System.out.println(count + ": " + rsv.toString());
+                count++;
             }
 
             System.out.print("Selection: ");
@@ -457,9 +470,9 @@ public class ConsolePrototype {
             System.out.println("\nCheckingOut....");
             if (rsvList.get(selection).getReservationType().equals(ReservationType.CONVENTIONAL)
                     || rsvList.get(selection).getReservationType().equals(ReservationType.INCENTIVE)) {
-                System.out.println("Proccessing Payment...");
+                System.out.println("Processing Payment...");
                 PaymentProcessing.printAccmBill(rsvList.get(selection));
-                System.out.println(" Payment Proccessed!");
+                System.out.println(" Payment Processed!");
 
             }
             ReservationScheduling.
@@ -491,35 +504,47 @@ public class ConsolePrototype {
         if (rsvID != 0) {
             System.out.println("Reservation Type: "
                     + ReservationScheduling.searchByID(rsvID).getReservationType().toString());
-            System.out.println("Guest Name: ");
-            name = getString();
+            
+            double cost = PaymentProcessing.generateBillTotal(ReservationScheduling.searchByID(rsvID));
+            
+            System.out.println("That reservation is available for: " + cost + " dollars, would you like to confirm it?\n Type yes to confirm or type anything to cancel.");
+            String confirmation = getString().toLowerCase();
+            if( confirmation.equals("yes")){
+                System.out.println("Guest Name: ");
+                name = getString();
 
-            System.out.println();
-            System.out.println("Guest Email: ");
-            email = getString();
+                System.out.println();
+                System.out.println("Guest Email: ");
+                email = getString();
 
-            System.out.println();
-            System.out.println("Guest CC_Info: ");
-            if (ReservationScheduling.searchByID(rsvID).getReservationType().
-                    equals(ReservationType.SIXTYADV)) {
-                //Doesn't Preform Null check (Sixty Day adv dont have to put in info
-                ccInfo = scanner.next();
-            } else {
-                ccInfo = getString();
+                System.out.println();
+                System.out.println("Guest CC_Info: ");
+                if (ReservationScheduling.searchByID(rsvID).getReservationType().
+                        equals(ReservationType.SIXTYADV)) {
+                    //Doesn't Preform Null check (Sixty Day adv dont have to put in info
+                    ccInfo = scanner.next();
+                } else {
+                    ccInfo = getString();
+                }
+                System.out.println();
+                System.out.println("Attaching Guest To Reservation...");
+                guestID = ReservationScheduling.createGuest(name, email, ccInfo);
+                ReservationScheduling.attachReservationToGuest(rsvID, guestID);
+                System.out.println("Processing~!");
+                ReservationScheduling.proccessNewReservation(rsvID);
+                System.out.println("Complete!\nReservation Confirmed!\nReservation Id: " + rsvID);
+                System.out.println();
+            }else{
+                System.out.println("We are sorry we were not able to accomodate you and hope to see you soon");
+                List<ReservationModel> reservations = EntityDatabase.ReservationTable.retrieveAllReservations();
+                reservations.remove(rsvID - 1);
             }
-            System.out.println();
-            System.out.println("Attaching Guest To Reservation...");
-            guestID = ReservationScheduling.createGuest(name, email, ccInfo);
-            ReservationScheduling.attachReservationToGuest(rsvID, guestID);
-            System.out.println("Proccesssing~!");
-            ReservationScheduling.proccessNewReservation(rsvID);
-            System.out.println("Complete!\nReservation Confirmed!");
-            System.out.println();
 
         } else {
             System.out.println("No vaccancies for that interval!");
         }
     }
+    
 
     private static void rateProcess() {
         System.out.println("-------Rates------ ");
@@ -595,8 +620,9 @@ public class ConsolePrototype {
             System.out.println("3. Print Daily Occupancy Report");
             System.out.println("4. Print Incentive Report");
             System.out.println("5. Print Occupancy Report");
-            System.out.println("6. Print Accomidation Bill");
-            System.out.println("7. Main Screen");
+            System.out.println("6. Print Income Report");
+            System.out.println("7. Print Accomidation Bill");
+            System.out.println("8. Main Screen");
 
             System.out.println("Selection: ");
             command = getCommand();
@@ -614,16 +640,16 @@ public class ConsolePrototype {
                     ReportGeneration.writeDailyArrivalsReport();
                     break;
                 case 3:
-                    ReportGeneration.writeOccupancyReport();
-                    break;
-                case 4:
                     ReportGeneration.writeDailyOccupancyReport();
                     break;
+                case 4:
+                    ReportGeneration.writeIncentiveReport();
+                    break;
                 case 5:
-                    ReportGeneration.writeIncomeReport();
+                    ReportGeneration.writeOccupancyReport();
                     break;
                 case 6:
-                    ReportGeneration.writeIncentiveReport();
+                    ReportGeneration.writeIncomeReport();
                     break;
                 case 7:
                     System.out.println("Reservation ID:");
