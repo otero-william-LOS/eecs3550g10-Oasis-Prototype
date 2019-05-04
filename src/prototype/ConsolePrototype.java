@@ -372,7 +372,7 @@ public class ConsolePrototype {
         }
     }
 
-    private static void modifyProccess(ReservationModel rsv) {
+   private static void modifyProccess(ReservationModel rsv) {
 
         int command = 0;
 
@@ -391,29 +391,31 @@ public class ConsolePrototype {
             GuestModel guest = GuestModel.EMPTY_ENTITY;
             ReservationModel reservation = ReservationModel.EMPTY_ENTITY;
             LocalDate temp = LocalDate.MIN;
+            ;
             switch (command) {
                 case 1:
                     System.out.println("New Arrival Date: ");
-                    ReservationScheduling.modifyReservationArriveDate(rsv.getReservationID(), getDateInput());
+                    ReservationDriver.modifyDateArrive(rsv.getReservationID(), getDateInput());
                     PaymentProcessing.applyPenaltyCharge(rsv);
                     System.out.println("Complete!");
                     command = 7;
                     break;
                 case 2:
                     System.out.println("New Depart Date: ");
-                    ReservationScheduling.modifyReservationDepartDate(rsv.getReservationID(), getDateInput());
-                     PaymentProcessing.applyPenaltyCharge(rsv);
+                    temp =  getDateInput();
+                    ReservationDriver.modifyDateDepart(command, temp);
+                    // PaymentProcessing.applyPenaltyCharge(rsv);
                     System.out.println("Complete!");
                     command = 7;
                     break;
                 case 3:
                     System.out.println("New Arrival Date: ");
-                    ReservationScheduling.modifyReservationArriveDate(rsv.getReservationID(), getDateInput());
+                   ReservationDriver.modifyDateArrive(rsv.getReservationID(), getDateInput());
                     
 
                     System.out.println("New DepartDate: ");
-                    ReservationScheduling.modifyReservationDepartDate(rsv.getReservationID(), getDateInput());
-                     PaymentProcessing.applyPenaltyCharge(rsv);
+                   ReservationDriver.modifyDateDepart(rsv.getReservationID(), getDateInput());
+                    //PaymentProcessing.applyPenaltyCharge(rsv);
                     System.out.println("Complete!");
                     command = 7;
                     break;
